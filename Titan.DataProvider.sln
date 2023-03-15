@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C8CD5A5D-DD9F-4C5B-84B6-BCCFD4A1EB30}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{492B9B2E-7BF0-4AC6-8504-439A83933F65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.DataProvider.API", "src\API\Titan.DataProvider.API\Titan.DataProvider.API.csproj", "{3A673149-0907-42BB-AC31-A60035FCA53D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{1782286B-1827-423E-8594-D764858653E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.DataProvider.Application", "src\Core\Titan.DataProvider.Application\Titan.DataProvider.Application.csproj", "{01653F97-76E1-4DBE-90F2-FBE97FF5C680}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.DataProvider.Domain", "src\Core\Titan.DataProvider.Domain\Titan.DataProvider.Domain.csproj", "{20639BD3-9CD0-48C6-8382-CBD89E439CBA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{442EFBC2-6CA5-4305-8F79-BAF489476D94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Titan.DataProvider.Infrastructure", "src\Infrastructure\Titan.DataProvider.Infrastructure\Titan.DataProvider.Infrastructure.csproj", "{C6798007-DB2D-40A2-8481-96BDBBB5AC75}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A673149-0907-42BB-AC31-A60035FCA53D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A673149-0907-42BB-AC31-A60035FCA53D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A673149-0907-42BB-AC31-A60035FCA53D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A673149-0907-42BB-AC31-A60035FCA53D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01653F97-76E1-4DBE-90F2-FBE97FF5C680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01653F97-76E1-4DBE-90F2-FBE97FF5C680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01653F97-76E1-4DBE-90F2-FBE97FF5C680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01653F97-76E1-4DBE-90F2-FBE97FF5C680}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20639BD3-9CD0-48C6-8382-CBD89E439CBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20639BD3-9CD0-48C6-8382-CBD89E439CBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20639BD3-9CD0-48C6-8382-CBD89E439CBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20639BD3-9CD0-48C6-8382-CBD89E439CBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6798007-DB2D-40A2-8481-96BDBBB5AC75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6798007-DB2D-40A2-8481-96BDBBB5AC75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6798007-DB2D-40A2-8481-96BDBBB5AC75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6798007-DB2D-40A2-8481-96BDBBB5AC75}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{492B9B2E-7BF0-4AC6-8504-439A83933F65} = {C8CD5A5D-DD9F-4C5B-84B6-BCCFD4A1EB30}
+		{3A673149-0907-42BB-AC31-A60035FCA53D} = {492B9B2E-7BF0-4AC6-8504-439A83933F65}
+		{1782286B-1827-423E-8594-D764858653E7} = {C8CD5A5D-DD9F-4C5B-84B6-BCCFD4A1EB30}
+		{01653F97-76E1-4DBE-90F2-FBE97FF5C680} = {1782286B-1827-423E-8594-D764858653E7}
+		{20639BD3-9CD0-48C6-8382-CBD89E439CBA} = {1782286B-1827-423E-8594-D764858653E7}
+		{442EFBC2-6CA5-4305-8F79-BAF489476D94} = {C8CD5A5D-DD9F-4C5B-84B6-BCCFD4A1EB30}
+		{C6798007-DB2D-40A2-8481-96BDBBB5AC75} = {442EFBC2-6CA5-4305-8F79-BAF489476D94}
+	EndGlobalSection
+EndGlobal
