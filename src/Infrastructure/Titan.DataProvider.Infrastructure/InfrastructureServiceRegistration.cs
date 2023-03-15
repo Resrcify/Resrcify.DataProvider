@@ -4,6 +4,8 @@ using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
+using Titan.DataProvider.Application.Abstractions.Infrastructure;
+using Titan.ShardManagement.Infrastructure.GalaxyOfHeroesWrapper;
 
 namespace Titan.ShardManagement.Infrastructure
 {
@@ -11,6 +13,13 @@ namespace Titan.ShardManagement.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
+            var apiUrl = Environment.GetEnvironmentVariable("API");
+            services.AddHttpClient<IComlinkService, ComlinkService>(c =>
+            {
+                c.BaseAddress = new Uri(apiUrl ?? "http://localhost:10000");
+            })
+            .AddPolicyHandler(GetRetryPolicy());
+            services.AddDistributedMemoryCache();
             return services;
         }
 
