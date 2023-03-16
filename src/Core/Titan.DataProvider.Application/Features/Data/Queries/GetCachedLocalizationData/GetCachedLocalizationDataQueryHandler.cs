@@ -1,14 +1,9 @@
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
 using Titan.DataProvider.Application.Abstractions.Application.Messaging;
 using Titan.DataProvider.Domain.Shared;
-using System.IO.Compression;
-using System.IO;
-using Titan.DataProvider.Application.Models.GalaxyOfHeroes.Localization;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Titan.DataProvider.Application.Features.Data.Queries.GetCachedLocalizationData
 {

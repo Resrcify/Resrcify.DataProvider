@@ -4,10 +4,13 @@ using Newtonsoft.Json;
 using Titan.DataProvider.Application.Abstractions.Application.Messaging;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
 using Titan.DataProvider.Application.Errors;
-using Titan.DataProvider.Application.Models.GalaxyOfHeroes.GameData;
+using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Titan.DataProvider.Application.Models.GalaxyOfHeroes.Localization;
 using Titan.DataProvider.Application.Models.GalaxyOfHeroes.Metadata;
 using Titan.DataProvider.Domain.Shared;
+using MediatR;
+using Titan.DataProvider.Application.Features.Data.Events.LocalizationDataUpdated;
+using System;
 
 namespace Titan.DataProvider.Application.Features.Data.Commands.UpdateRawData
 {
@@ -15,11 +18,12 @@ namespace Titan.DataProvider.Application.Features.Data.Commands.UpdateRawData
     {
         private readonly IComlinkService _api;
         private readonly ICachingService _caching;
-
-        public UpdateRawDataCommandHandler(ICachingService caching, IComlinkService api)
+        private readonly IPublisher _publisher;
+        public UpdateRawDataCommandHandler(ICachingService caching, IComlinkService api, IPublisher publisher)
         {
             _api = api;
             _caching = caching;
+            _publisher = publisher;
         }
 
         public async Task<Result> Handle(UpdateRawDataCommand request, CancellationToken cancellationToken)
@@ -38,9 +42,9 @@ namespace Titan.DataProvider.Application.Features.Data.Commands.UpdateRawData
             var gameData = JsonConvert.DeserializeObject<GameDataResponse>(await gameDataResponse.Content.ReadAsStringAsync(cancellationToken));
             var localization = JsonConvert.DeserializeObject<LocalizationBundleResponse>(await localizationResponse.Content.ReadAsStringAsync(cancellationToken));
 
-            await _caching.SetAsync(nameof(GameDataResponse), gameData!, cancellationToken);
-            await _caching.SetAsync(nameof(LocalizationBundleResponse), localization!, cancellationToken);
+            await _caching.SetAsync("GameData", gameData!, cancellationToken);
 
+            await _publisher.Publish(new LocalizationDataUpdatedEvent(Guid.NewGuid(), localization!), cancellationToken);
             return Result.Success();
         }
     }

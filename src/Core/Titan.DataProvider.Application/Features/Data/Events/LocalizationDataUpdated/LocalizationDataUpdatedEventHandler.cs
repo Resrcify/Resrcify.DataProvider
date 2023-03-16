@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Titan.DataProvider.Application.Abstractions.Application.Messaging;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
-using Titan.DataProvider.Application.Models.GalaxyOfHeroes.Localization;
 
 namespace Titan.DataProvider.Application.Features.Data.Events.LocalizationDataUpdated
 {
@@ -22,11 +21,8 @@ namespace Titan.DataProvider.Application.Features.Data.Events.LocalizationDataUp
 
         public async Task Handle(LocalizationDataUpdatedEvent notification, CancellationToken cancellationToken)
         {
-            var localizations = await _caching.GetAsync<LocalizationBundleResponse>(
-                nameof(LocalizationBundleResponse), cancellationToken);
-            if (localizations?.LocalizationBundle is null) return;
-
-            await CacheLocalization(localizations.LocalizationBundle, cancellationToken);
+            if (notification?.Localization?.LocalizationBundle is null) return;
+            await CacheLocalization(notification.Localization.LocalizationBundle, cancellationToken);
         }
 
         private async Task CacheLocalization(byte[] localization, CancellationToken cancellationToken = default)
