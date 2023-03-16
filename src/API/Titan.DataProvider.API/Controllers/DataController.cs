@@ -6,7 +6,7 @@ using Titan.DataProvider.API.Abstractions;
 using Titan.DataProvider.API.Extensions;
 using Titan.DataProvider.Application.Features.Data.Commands.UpdateRawData;
 using Titan.DataProvider.Application.Features.Data.Commands.UpdateRawDataFromTitan;
-using Titan.DataProvider.Application.Features.Data.Queries.GetCachedGameData;
+using Titan.DataProvider.Application.Features.Data.Queries.GetCachedBaseData;
 using Titan.DataProvider.Application.Features.Data.Queries.GetCachedLocalizationData;
 using Titan.DataProvider.Domain.Shared;
 
@@ -40,10 +40,10 @@ namespace Titan.DataProvider.API.Controllers
                 .Bind(request => _sender.Send(request, cancellationToken))
                 .Match(Ok, HandleFailure);
 
-        [HttpGet("gamedata")]
-        public async Task<IActionResult> GetCachedGameData(CancellationToken cancellationToken = default)
+        [HttpGet("base")]
+        public async Task<IActionResult> GetCachedBaseData(CancellationToken cancellationToken = default)
             => await Result
-                .Create(new GetCachedGameDataQuery())
+                .Create(new GetCachedBaseDataQuery())
                 .Bind(request => _sender.Send(request, cancellationToken))
                 .Match(Ok, HandleFailure);
     }
