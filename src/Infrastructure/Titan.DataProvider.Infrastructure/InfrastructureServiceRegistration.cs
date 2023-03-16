@@ -5,7 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
-using Titan.ShardManagement.Infrastructure.GalaxyOfHeroesWrapper;
+using Titan.DataProvider.Infrastructure.Caching;
+using Titan.DataProvider.Infrastructure.HttpClients;
 
 namespace Titan.ShardManagement.Infrastructure
 {
@@ -14,12 +15,19 @@ namespace Titan.ShardManagement.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             var apiUrl = Environment.GetEnvironmentVariable("API");
-            services.AddHttpClient<IComlinkService, ComlinkService>(c =>
+            services.AddHttpClient<IGalaxyOfHeroesWrapperService, GalaxyOfHeroesWrapperService>(c =>
             {
                 c.BaseAddress = new Uri(apiUrl ?? "http://localhost:10000");
+            }).AddPolicyHandler(GetRetryPolicy());
+
+            services.AddHttpClient<IComlinkService, ComlinkService>(c =>
+            {
+                c.BaseAddress = new Uri(apiUrl ?? "http://localhost:5000");
             })
             .AddPolicyHandler(GetRetryPolicy());
+
             services.AddDistributedMemoryCache();
+            services.AddSingleton<ICachingService, CachingService>();
             return services;
         }
 

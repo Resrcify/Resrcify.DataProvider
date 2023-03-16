@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -12,7 +10,6 @@ namespace Titan.DataProvider.Infrastructure.Caching
     public class CachingService : ICachingService
     {
         private readonly IDistributedCache _distributedCache;
-        private static readonly ConcurrentDictionary<string, bool> CacheKeys = new();
 
         public CachingService(IDistributedCache distributedCache)
         {
@@ -30,22 +27,11 @@ namespace Titan.DataProvider.Infrastructure.Caching
         {
             string cachedValue = JsonConvert.SerializeObject(value);
             await _distributedCache.SetStringAsync(key, cachedValue, cancellationToken);
-            CacheKeys.TryAdd(key, false);
         }
 
         public async Task RemoveAsync(string key, CancellationToken cancellationToken = default)
         {
             await _distributedCache.RemoveAsync(key, cancellationToken);
-            CacheKeys.TryRemove(key, out _);
-        }
-
-        public async Task RemoveByPrefixAsync(string prefixKey, CancellationToken cancellationToken = default)
-        {
-            var tasks = CacheKeys.Keys
-                .Where(k => k.StartsWith(prefixKey))
-                .Select(k => RemoveAsync(k, cancellationToken));
-
-            await Task.WhenAll(tasks);
         }
     }
 }

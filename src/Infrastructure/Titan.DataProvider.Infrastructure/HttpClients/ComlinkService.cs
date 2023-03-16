@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
 
-namespace Titan.ShardManagement.Infrastructure.GalaxyOfHeroesWrapper
+namespace Titan.DataProvider.Infrastructure.HttpClients
 {
     public class ComlinkService : IComlinkService
     {
@@ -16,12 +16,17 @@ namespace Titan.ShardManagement.Infrastructure.GalaxyOfHeroesWrapper
             Client = client;
         }
 
-        public Task<HttpResponseMessage> GetGameData()
+        public Task<HttpResponseMessage> GetGameData(string gamedataVersion)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<HttpResponseMessage> GetLocalization()
+        public Task<HttpResponseMessage> GetLocalization(string localizationBundleVersion)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<HttpResponseMessage> GetMetadata()
         {
             throw new System.NotImplementedException();
         }
