@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace Titan.DataProvider.API
 {
@@ -8,7 +9,14 @@ namespace Titan.DataProvider.API
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args)
+                .UseSerilog((context, configuration) =>
+                    configuration
+                    .WriteTo.Console()
+                    .MinimumLevel.Information()
+                )
+                .Build()
+                .Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

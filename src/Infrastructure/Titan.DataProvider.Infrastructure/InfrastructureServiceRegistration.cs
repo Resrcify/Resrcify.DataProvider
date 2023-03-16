@@ -4,6 +4,7 @@ using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
+using Serilog;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
 using Titan.DataProvider.Infrastructure.Caching;
 using Titan.DataProvider.Infrastructure.HttpClients;
@@ -28,6 +29,12 @@ namespace Titan.ShardManagement.Infrastructure
 
             services.AddDistributedMemoryCache();
             services.AddSingleton<ICachingService, CachingService>();
+
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .CreateLogger();
             return services;
         }
 

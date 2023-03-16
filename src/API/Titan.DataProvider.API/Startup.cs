@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Serilog;
 using Titan.DataProvider.Application;
 using Titan.ShardManagement.Infrastructure;
 
@@ -60,6 +61,7 @@ namespace Titan.DataProvider.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Titan.DataProvider v1"));
             }
+            app.UseSerilogRequestLogging();
             // app.UseHttpsRedirection();
             app.UseRouting();
             app.UseCors("DataProviderCors");
