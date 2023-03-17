@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Titan.DataProvider.Domain.Internal.BaseData.Entities;
+using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
@@ -14,31 +15,43 @@ namespace Titan.DataProvider.Domain.Internal.BaseData
         public IReadOnlyDictionary<string, GearData> Gear => _gear;
         private readonly Dictionary<string, ModSetData> _modSet = new();
         public IReadOnlyDictionary<string, ModSetData> ModSet => _modSet;
-        // public CrTable CrTable { get; private set; }
+        public CrTable CrTable { get; private set; }
+        public GpTable GpTable { get; private set; }
         private BaseData(
             Guid id,
             Dictionary<string, GearData> gear,
-            Dictionary<string, ModSetData> modSet
-        // CrTable crTable
+            Dictionary<string, ModSetData> modSet,
+            CrTable crTable,
+            GpTable gpTable
         ) : base(id)
         {
             _gear = gear;
             _modSet = modSet;
-            // CrTable = crTable;
+            CrTable = crTable;
+            GpTable = gpTable;
         }
         public static Result<BaseData> Create(GameDataResponse data)
         {
             var gearData = CreateGearData(data);
             var modSetData = CreateModSetData(data);
-            // var crTable = CrTable.Create(data);
-
+            var crTable = CrTable.Create(data);
+            var crTableData = crTable.Value;
+            var gpTable = GpTable.Create(
+                data,
+                crTableData.CrewRarityCr,
+                crTableData.GearLevelCr,
+                crTableData.ShipRarityFactor,
+                crTableData.UnitLevelCr,
+                crTableData.AbilityLevelCr
+            );
 
             // TODO: FIX ERROR RESPONSES LATER
             return new BaseData(
                 Guid.NewGuid(),
                 gearData.Value,
-                modSetData.Value
-            // crTable.Value
+                modSetData.Value,
+                crTable.Value,
+                gpTable.Value
             );
         }
 

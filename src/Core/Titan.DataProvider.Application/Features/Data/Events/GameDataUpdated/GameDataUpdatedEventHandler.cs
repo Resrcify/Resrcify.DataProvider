@@ -1,10 +1,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Titan.DataProvider.Application.Abstractions.Application.Messaging;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
 using Titan.DataProvider.Domain.Internal.BaseData;
-using Titan.DataProvider.Domain.Internal.BaseData.Entities;
 
 namespace Titan.DataProvider.Application.Features.Data.Events.GameDataUpdated
 {
@@ -22,6 +22,7 @@ namespace Titan.DataProvider.Application.Features.Data.Events.GameDataUpdated
             if (notification?.Data is null) return;
             var data = BaseData.Create(notification?.Data!);
             if (data.IsFailure) return;
+            // Console.WriteLine(JsonConvert.SerializeObject(data));
             await _caching.SetAsync("BaseData", data.Value, cancellationToken);
         }
     }
