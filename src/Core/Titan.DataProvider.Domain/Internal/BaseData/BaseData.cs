@@ -54,7 +54,27 @@ namespace Titan.DataProvider.Domain.Internal.BaseData
                 gpTable.Value
             );
         }
+        public static Dictionary<string, RelicData> CreateRelicData(GameDataResponse data)
+        {
+            var statsTable = FetchStatsTable(data);
 
+            var relicData = new Dictionary<string, RelicData>();
+            foreach (var relic in data?.RelicTierDefinition.OrderBy(s => s.Id.Length).ThenBy(s => s.Id))
+            {
+                var stats = new Dictionary<long, long>();
+                foreach (var stat in relic.Stat.Stat.OrderBy(s => (int)s.UnitStatId))
+                {
+                    stats[(int)stat.UnitStatId] = stat.UnscaledDecimalValue;
+                }
+
+                relicData.Add(relic.Id, new RelicData
+                {
+                    Gms = statsTable[relic.RelicStatTable.ToString()],
+                    Stats = stats
+                });
+            }
+            return relicData;
+        }
         private static Result<Dictionary<string, GearData>> CreateGearData(GameDataResponse data)
         {
             var gearData = new Dictionary<string, GearData>();
