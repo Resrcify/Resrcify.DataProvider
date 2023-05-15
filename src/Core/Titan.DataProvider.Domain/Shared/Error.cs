@@ -19,7 +19,7 @@ namespace Titan.DataProvider.Domain.Shared
 
         public static implicit operator string(Error error) => error.Code;
 
-        public static bool operator ==(Error a, Error b)
+        public static bool operator ==(Error? a, Error? b)
         {
             if (a is null && b is null)
             {
@@ -34,7 +34,7 @@ namespace Titan.DataProvider.Domain.Shared
             return a.Equals(b);
         }
 
-        public static bool operator !=(Error a, Error b) => !(a == b);
+        public static bool operator !=(Error? a, Error? b) => !(a == b);
 
         public virtual bool Equals(Error? other)
         {
@@ -52,4 +52,5 @@ namespace Titan.DataProvider.Domain.Shared
 
         public override string ToString() => Code;
     }
+
 }

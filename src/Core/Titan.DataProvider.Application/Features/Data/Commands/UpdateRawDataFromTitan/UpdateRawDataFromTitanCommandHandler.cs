@@ -35,8 +35,8 @@ namespace Titan.DataProvider.Application.Features.Data.Commands.UpdateRawDataFro
             var gameData = JsonConvert.DeserializeObject<GameDataResponse>(await gameDataResponse.Content.ReadAsStringAsync(cancellationToken));
             var localization = JsonConvert.DeserializeObject<LocalizationBundleResponse>(await localizationResponse.Content.ReadAsStringAsync(cancellationToken));
 
-            await _publisher.Publish(new GameDataUpdatedEvent(Guid.NewGuid(), gameData!), cancellationToken);
             await _publisher.Publish(new LocalizationDataUpdatedEvent(Guid.NewGuid(), localization!), cancellationToken);
+            await _publisher.Publish(new GameDataUpdatedEvent(Guid.NewGuid(), gameData!), cancellationToken);
             return Result.Success();
         }
     }

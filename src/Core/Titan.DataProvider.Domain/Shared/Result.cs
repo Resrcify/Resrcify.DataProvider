@@ -61,7 +61,9 @@ namespace Titan.DataProvider.Domain.Shared
                 Failure<T>(error);
         }
 
-        public static Result<T> Ensure<T>(T value, params (Func<T, bool> predicate, Error error)[] functions)
+        public static Result<T> Ensure<T>(
+            T value,
+            params (Func<T, bool> predicate, Error error)[] functions)
         {
             var results = new List<Result<T>>();
             foreach ((Func<T, bool> predicate, Error error) in functions)

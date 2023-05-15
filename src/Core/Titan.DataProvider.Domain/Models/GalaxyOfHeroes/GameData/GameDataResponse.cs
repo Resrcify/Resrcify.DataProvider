@@ -4,6 +4,7 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData
 {
     public class GameDataResponse
     {
+        public List<Ability> Ability { get; set; } = new();
         public List<EquipmentDef> Equipment { get; set; } = new();
         public List<RelicTierDefinition> RelicTierDefinition { get; set; } = new();
         public List<SkillDefinition> Skill { get; set; } = new();

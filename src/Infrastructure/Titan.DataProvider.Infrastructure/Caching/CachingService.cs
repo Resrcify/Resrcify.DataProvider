@@ -37,9 +37,6 @@ namespace Titan.DataProvider.Infrastructure.Caching
                 ContractResolver = new DefaultContractResolver
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
-                    {
-                        OverrideSpecifiedNames = false
-                    }
                 },
                 NullValueHandling = NullValueHandling.Ignore
             };

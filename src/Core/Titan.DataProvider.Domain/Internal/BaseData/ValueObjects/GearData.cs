@@ -9,11 +9,11 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.Entities
 {
     public sealed class GearData : ValueObject
     {
-        public IReadOnlyDictionary<long, long> Stat => _stat;
-        private readonly Dictionary<long, long> _stat = new();
-        private GearData(Dictionary<long, long> stat)
+        public IReadOnlyDictionary<long, long> Stats => _stats;
+        private readonly Dictionary<long, long> _stats = new();
+        private GearData(Dictionary<long, long> stats)
         {
-            _stat = stat;
+            _stats = stats;
         }
 
         public static Result<GearData> Create(EquipmentDef data)
@@ -37,7 +37,7 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.Entities
 
         public override IEnumerable<object> GetAtomicValues()
         {
-            yield return Stat;
+            yield return Stats;
         }
     }
 }

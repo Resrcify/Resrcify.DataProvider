@@ -107,28 +107,28 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.Entities
 
         public static Result<CrTable> Create(GameDataResponse data)
         {
-            var crewContributionMultiplierPerRarityTable = data.Table.FirstOrDefault(x => x.Id == "crew_contribution_multiplier_per_rarity");
-            var crewRatingPerModRarityLevelTierTable = data.Table.FirstOrDefault(x => x.Id == "crew_rating_per_mod_rarity_level_tier");
-            var crewRatingModifierPerRelicTierTable = data.Table.FirstOrDefault(x => x.Id == "crew_rating_modifier_per_relic_tier");
-            var crewRatingPerRelicTierTable = data.Table.FirstOrDefault(x => x.Id == "crew_rating_per_relic_tier");
-            var crewRatingModifierPerAbilityCrewlessShipsTable = data.Table.FirstOrDefault(x => x.Id == "crew_rating_modifier_per_ability_crewless_ships");
-            var agilityRoleSupportMasteryTable = data.Table.FirstOrDefault(x => x.Id == "agility_role_support_mastery");
-            var agilityRoleTankMasteryTable = data.Table.FirstOrDefault(x => x.Id == "agility_role_tank_mastery");
-            var agilityRoleHealerMasteryTable = data.Table.FirstOrDefault(x => x.Id == "agility_role_healer_mastery");
-            var agilityRoleAttackerMasteryTable = data.Table.FirstOrDefault(x => x.Id == "agility_role_attacker_mastery");
-            var intelligenceRoleTankMasteryTable = data.Table.FirstOrDefault(x => x.Id == "intelligence_role_tank_mastery");
-            var intelligenceRoleHealerMasteryTable = data.Table.FirstOrDefault(x => x.Id == "intelligence_role_healer_mastery");
-            var intelligenceRoleSupportMasteryTable = data.Table.FirstOrDefault(x => x.Id == "intelligence_role_support_mastery");
-            var intelligenceRoleAttackerMasteryTable = data.Table.FirstOrDefault(x => x.Id == "intelligence_role_attacker_mastery");
-            var strengthRoleHealerMasteryTable = data.Table.FirstOrDefault(x => x.Id == "strength_role_healer_mastery");
-            var strengthRoleTankMasteryTable = data.Table.FirstOrDefault(x => x.Id == "strength_role_tank_mastery");
-            var strengthRoleAttackerMasteryTable = data.Table.FirstOrDefault(x => x.Id == "strength_role_attacker_mastery");
-            var strengthRoleSupportMasteryTable = data.Table.FirstOrDefault(x => x.Id == "strength_role_support_mastery");
-            var crewRatingPerUnitRarityTable = data.Table.FirstOrDefault(x => x.Id == "crew_rating_per_unit_rarity");
-            var galacticPowerPerCompleteGearTierTable = data.Table.FirstOrDefault(x => x.Id == "galactic_power_per_complete_gear_tier_table");
-            var crewRatingPerGearPieceAtTierTable = data.Table.FirstOrDefault(x => x.Id == "crew_rating_per_gear_piece_at_tier");
-            var crewRatingPerUnitLevel = data.XpTable.FirstOrDefault(x => x.Id == "crew_rating_per_unit_level");
-            var crewRatingPerAbilityLevel = data.XpTable.FirstOrDefault(x => x.Id == "crew_rating_per_ability_level");
+            var crewContributionMultiplierPerRarityTable = data.Table.First(x => x.Id == "crew_contribution_multiplier_per_rarity");
+            var crewRatingPerModRarityLevelTierTable = data.Table.First(x => x.Id == "crew_rating_per_mod_rarity_level_tier");
+            var crewRatingModifierPerRelicTierTable = data.Table.First(x => x.Id == "crew_rating_modifier_per_relic_tier");
+            var crewRatingPerRelicTierTable = data.Table.First(x => x.Id == "crew_rating_per_relic_tier");
+            var crewRatingModifierPerAbilityCrewlessShipsTable = data.Table.First(x => x.Id == "crew_rating_modifier_per_ability_crewless_ships");
+            var agilityRoleSupportMasteryTable = data.Table.First(x => x.Id == "agility_role_support_mastery");
+            var agilityRoleTankMasteryTable = data.Table.First(x => x.Id == "agility_role_tank_mastery");
+            var agilityRoleHealerMasteryTable = data.Table.First(x => x.Id == "agility_role_healer_mastery");
+            var agilityRoleAttackerMasteryTable = data.Table.First(x => x.Id == "agility_role_attacker_mastery");
+            var intelligenceRoleTankMasteryTable = data.Table.First(x => x.Id == "intelligence_role_tank_mastery");
+            var intelligenceRoleHealerMasteryTable = data.Table.First(x => x.Id == "intelligence_role_healer_mastery");
+            var intelligenceRoleSupportMasteryTable = data.Table.First(x => x.Id == "intelligence_role_support_mastery");
+            var intelligenceRoleAttackerMasteryTable = data.Table.First(x => x.Id == "intelligence_role_attacker_mastery");
+            var strengthRoleHealerMasteryTable = data.Table.First(x => x.Id == "strength_role_healer_mastery");
+            var strengthRoleTankMasteryTable = data.Table.First(x => x.Id == "strength_role_tank_mastery");
+            var strengthRoleAttackerMasteryTable = data.Table.First(x => x.Id == "strength_role_attacker_mastery");
+            var strengthRoleSupportMasteryTable = data.Table.First(x => x.Id == "strength_role_support_mastery");
+            var crewRatingPerUnitRarityTable = data.Table.First(x => x.Id == "crew_rating_per_unit_rarity");
+            var galacticPowerPerCompleteGearTierTable = data.Table.First(x => x.Id == "galactic_power_per_complete_gear_tier_table");
+            var crewRatingPerGearPieceAtTierTable = data.Table.First(x => x.Id == "crew_rating_per_gear_piece_at_tier");
+            var crewRatingPerUnitLevel = data.XpTable.First(x => x.Id == "crew_rating_per_unit_level");
+            var crewRatingPerAbilityLevel = data.XpTable.First(x => x.Id == "crew_rating_per_ability_level");
 
             var gearPieceCr = GetCrewRating(crewRatingPerGearPieceAtTierTable);
             var gearLevelCr = GetGearRating(galacticPowerPerCompleteGearTierTable);
@@ -191,10 +191,10 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.Entities
             return tempTable.ToDictionary(k => k.Key, v => Convert.ToInt64(v.Value, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        private static Dictionary<string, Dictionary<string, long>> GetModRating(Table? crewRatingPerModRarityLevelTierTable)
+        private static Dictionary<string, Dictionary<string, long>> GetModRating(Table crewRatingPerModRarityLevelTierTable)
         {
             Dictionary<string, Dictionary<string, long>> c = new();
-            foreach (var row in crewRatingPerModRarityLevelTierTable.Row.OrderBy(l => int.Parse(l.Key.Split(':', 4)[1])).ThenBy(p => int.Parse(p.Key.Split(':', 4)[0])))
+            foreach (var row in crewRatingPerModRarityLevelTierTable.Row.OrderBy(l => int.Parse(l.Key!.Split(':', 4)[1])).ThenBy(p => int.Parse(p.Key!.Split(':', 4)[0])))
             {
                 if (row.Key!.Last().ToString() == "0") // only 'select' set 0, as set doesn't affect CR or GP
                 {
@@ -216,7 +216,7 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.Entities
             return c;
         }
 
-        private static Dictionary<string, long> GetGearRating(Table? galacticPowerPerCompleteGearTierTable)
+        private static Dictionary<string, long> GetGearRating(Table galacticPowerPerCompleteGearTierTable)
         {
             var gearLevelGp = new Dictionary<string, long>
             {
@@ -237,7 +237,7 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.Entities
             return gearLevelGp;
         }
 
-        private static Dictionary<string, long> GetCrewRating(Table? crewRatingPerGearPieceAtTier)
+        private static Dictionary<string, long> GetCrewRating(Table crewRatingPerGearPieceAtTier)
         {
             var gearPieceCr = new Dictionary<string, long>();
             foreach (var row in crewRatingPerGearPieceAtTier.Row.OrderBy(s => s.Key))

@@ -5,6 +5,5 @@ namespace Titan.DataProvider.Application.Features.Data.Queries.GetCachedLocaliza
 {
     public sealed record GetCachedLocalizationDataQuery(GetCachedLocalizationDataQueryRequest Language) : IQuery<List<string>>
     {
-
     }
 }

@@ -86,15 +86,15 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
             var shipRarityFactorFromCr = shipRarityFactor.ToDictionary(x => x.Key, x => x.Value);
             var unitLevelGpFromCr = unitLevelGp.ToDictionary(x => x.Key, x => x.Value);
             var abilityLevelGpFromCr = abilityLevelGp.ToDictionary(x => x.Key, x => x.Value);
-            var galacticPowerModifierPerShipCrewSizeTable = data.Table.FirstOrDefault(x => x.Id == "galactic_power_modifier_per_ship_crew_size_table");
-            var galacticPowerPerTierSlotTable = data.Table.FirstOrDefault(x => x.Id == "galactic_power_per_tier_slot_table");
-            var galacticPowerPerTaggedAbilityLevelTable = data.Table.FirstOrDefault(x => x.Id == "galactic_power_per_tagged_ability_level_table"); ;
-            var crewRatingPerModRarityLevelTier = data.Table.FirstOrDefault(x => x.Id == "crew_rating_per_mod_rarity_level_tier"); ;
-            var galacticPowerModifierPerRelicTier = data.Table.FirstOrDefault(x => x.Id == "galactic_power_modifier_per_relic_tier"); ;
-            var galacticPowerPerRelicTier = data.Table.FirstOrDefault(x => x.Id == "galactic_power_per_relic_tier"); ;
-            var galacticPowerModifierPerAbilityCrewlessShips = data.Table.FirstOrDefault(x => x.Id == "galactic_power_modifier_per_ability_crewless_ships"); ;
-            var galacticPowerPerShipLevelTable = data.XpTable.FirstOrDefault(x => x.Id == "galactic_power_per_ship_level_table");
-            var galacticPowerPerShipAbilityLevelTable = data.XpTable.FirstOrDefault(x => x.Id == "galactic_power_per_ship_ability_level_table");
+            var galacticPowerModifierPerShipCrewSizeTable = data.Table.First(x => x.Id == "galactic_power_modifier_per_ship_crew_size_table");
+            var galacticPowerPerTierSlotTable = data.Table.First(x => x.Id == "galactic_power_per_tier_slot_table");
+            var galacticPowerPerTaggedAbilityLevelTable = data.Table.First(x => x.Id == "galactic_power_per_tagged_ability_level_table"); ;
+            var crewRatingPerModRarityLevelTier = data.Table.First(x => x.Id == "crew_rating_per_mod_rarity_level_tier"); ;
+            var galacticPowerModifierPerRelicTier = data.Table.First(x => x.Id == "galactic_power_modifier_per_relic_tier"); ;
+            var galacticPowerPerRelicTier = data.Table.First(x => x.Id == "galactic_power_per_relic_tier"); ;
+            var galacticPowerModifierPerAbilityCrewlessShips = data.Table.First(x => x.Id == "galactic_power_modifier_per_ability_crewless_ships"); ;
+            var galacticPowerPerShipLevelTable = data.XpTable.First(x => x.Id == "galactic_power_per_ship_level_table");
+            var galacticPowerPerShipAbilityLevelTable = data.XpTable.First(x => x.Id == "galactic_power_per_ship_ability_level_table");
             var crewSizeFactor = CreateDictionary<double>(galacticPowerModifierPerShipCrewSizeTable.Row);
             var abilitySpecialGp = CreateDictionary<long>(galacticPowerPerTaggedAbilityLevelTable.Row);
             var relicTierLevelFactor = CreateDictionaryFromRelics<double>(galacticPowerModifierPerRelicTier.Row);
@@ -123,12 +123,12 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
                 unitLevelGpFromCr);
         }
 
-        private static Dictionary<string, Dictionary<string, long>> GetGearPieceGp(Table? galacticPowerPerTierSlotTable)
+        private static Dictionary<string, Dictionary<string, long>> GetGearPieceGp(Table galacticPowerPerTierSlotTable)
         {
             var g = new Dictionary<string, Dictionary<string, long>>();
-            foreach (var row in galacticPowerPerTierSlotTable.Row.OrderBy(s => int.Parse(s.Key.Split(':', 2)[1])).ThenBy(s => int.Parse(s.Key.Split(':', 2)[0])))
+            foreach (var row in galacticPowerPerTierSlotTable.Row.OrderBy(s => int.Parse(s.Key!.Split(':', 2)[1])).ThenBy(s => int.Parse(s.Key!.Split(':', 2)[0])))
             {
-                var split = row.Key.Split(':', 2);
+                var split = row.Key!.Split(':', 2);
                 var tier = split[0];
                 var slot = int.Parse(split[1]);
 
@@ -136,19 +136,19 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
                     g[tier] = new Dictionary<string, long>();
 
                 var slotNum = --slot;
-                g[tier][slotNum.ToString()] = long.Parse(row?.Value, System.Globalization.CultureInfo.InvariantCulture); // decrement slot by 1 as .help uses 0-based indexing for slot (game table is 1-based)
+                g[tier][slotNum.ToString()] = long.Parse(row.Value!, System.Globalization.CultureInfo.InvariantCulture); // decrement slot by 1 as .help uses 0-based indexing for slot (game table is 1-based)
             }
             return g;
         }
 
-        private static Dictionary<string, Dictionary<string, Dictionary<string, long>>> GetModRating(Table? crewRatingPerModRarityLevelTier)
+        private static Dictionary<string, Dictionary<string, Dictionary<string, long>>> GetModRating(Table crewRatingPerModRarityLevelTier)
         {
             var g = new Dictionary<string, Dictionary<string, Dictionary<string, long>>>();
-            foreach (var row in crewRatingPerModRarityLevelTier.Row.OrderBy(l => int.Parse(l.Key.Split(':', 4)[1])).ThenBy(p => int.Parse(p.Key.Split(':', 4)[0])))
+            foreach (var row in crewRatingPerModRarityLevelTier.Row.OrderBy(l => int.Parse(l.Key!.Split(':', 4)[1])).ThenBy(p => int.Parse(p.Key!.Split(':', 4)[0])))
             {
-                if (row.Key.Last().ToString() == "0") // only 'select' set 0, as set doesn't affect CR or GP
+                if (row.Key!.Last().ToString() == "0") // only 'select' set 0, as set doesn't affect CR or GP
                 {
-                    var split = row.Key.Split(':', 4);
+                    var split = row.Key!.Split(':', 4);
                     var pips = split[0];
                     var level = split[1];
                     var tier = split[2];
@@ -158,7 +158,7 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
                         g[pips] = new Dictionary<string, Dictionary<string, long>>();
                     if (!g[pips].ContainsKey(level)) // ensure level table exists
                         g[pips][level] = new Dictionary<string, long>();
-                    g[pips][level][tier] = long.Parse(row?.Value, System.Globalization.CultureInfo.InvariantCulture);
+                    g[pips][level][tier] = long.Parse(row.Value!, System.Globalization.CultureInfo.InvariantCulture);
                 }
             }
             return g;
@@ -187,7 +187,6 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
             foreach (var row in table.Row)
             {
                 int key = ++row.Index;
-                Console.WriteLine(row.Index);
                 tempTable[key.ToString()] = row.Xp;
             }
 

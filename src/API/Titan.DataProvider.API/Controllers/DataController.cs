@@ -40,10 +40,10 @@ namespace Titan.DataProvider.API.Controllers
                 .Bind(request => _sender.Send(request, cancellationToken))
                 .Match(Ok, HandleFailure);
 
-        [HttpGet("base")]
-        public async Task<IActionResult> GetCachedBaseData(CancellationToken cancellationToken = default)
+        [HttpGet("base/{language}")]
+        public async Task<IActionResult> GetCachedBaseData([FromRoute] GetCachedBaseDataQueryRequest language, CancellationToken cancellationToken = default)
             => await Result
-                .Create(new GetCachedBaseDataQuery())
+                .Create(new GetCachedBaseDataQuery(language))
                 .Bind(request => _sender.Send(request, cancellationToken))
                 .Match(Ok, HandleFailure);
     }
