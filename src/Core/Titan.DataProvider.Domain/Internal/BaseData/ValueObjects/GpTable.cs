@@ -186,7 +186,7 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
             var tempTable = new Dictionary<string, long>();
             foreach (var row in table.Row)
             {
-                int key = ++row.Index;
+                int key = row.Index + 1;
                 tempTable[key.ToString()] = row.Xp;
             }
 

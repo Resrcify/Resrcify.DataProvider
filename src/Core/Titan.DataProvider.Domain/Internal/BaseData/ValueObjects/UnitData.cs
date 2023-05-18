@@ -1,12 +1,14 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
+using GameDataStat = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData.Stat;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
 {
-    public sealed class UnitData : ValueObject
+    public sealed partial class UnitData : ValueObject
     {
         public string Id { get; private set; }
         public string NameKey { get; private set; }
@@ -159,6 +161,132 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
             );
         }
 
+        public static Dictionary<string, UnitData> Create(
+           GameDataResponse data,
+           Dictionary<string, string> local,
+           Dictionary<string, Skill> skills,
+           Dictionary<string, Dictionary<string, Dictionary<string, long>>> growthModifiers,
+           Dictionary<string, Dictionary<string, long>> statsTable)
+        {
+            var unitData = new Dictionary<string, UnitData>();
+            foreach (var unit in data.Units.Where(u => u.Obtainable && u.ObtainableTime == 0 && (int)u.Rarity == 7))
+            {
+                var combatType = (int)unit.CombatType;
+                var primaryUnitStat = (int)unit.PrimaryUnitStat;
+                var forceAlignment = (int)unit.ForceAlignment;
+                var thumbnailName = unit.ThumbnailName;
+                var nameKey = unit.NameKey;
+                var baseId = unit.BaseId;
+                var categoryIdList = unit.CategoryId;
+                var skillReferenceList = unit.SkillReference;
+                var baseStat = unit.BaseStat;
+                var unitClass = (int)unit.UnitClass;
+                var relicDefinition = unit.RelicDefinition;
+
+                var skillRef = skillReferenceList.Select(skill => skills[skill!.SkillId!]).ToList();
+
+                if (combatType == 1) // character
+                {
+                    var unitTierList = unit.UnitTier;
+                    var modRecommendationList = new List<ModRecommendation>();
+                    foreach (var rec in unit.ModRecommendation)
+                    {
+                        modRecommendationList.Add(ModRecommendation.Create(rec.RecommendationSetId!, (long)rec.UnitTier).Value);
+                    }
+
+                    var tierData = new Dictionary<string, GearLevel>();
+
+                    foreach (var gearTier in unitTierList.OrderBy(s => (int)s.Tier))
+                    {
+                        var stats = new Dictionary<long, long>();
+                        var tier = (int)gearTier.Tier;
+                        foreach (var stat in gearTier.BaseStat!.Stat.OrderBy(s => (int)s.UnitStatId))
+                            stats[(int)stat.UnitStatId] = stat.UnscaledDecimalValue;
+                        tierData[tier.ToString()] = GearLevel.Create(gearTier.EquipmentSet, stats).Value;
+                    }
+
+                    var relicData = new Dictionary<string, string>();
+                    foreach (var relic in relicDefinition!.RelicTierDefinitionId.OrderBy(s => s[^1..] + 2))
+                    {
+                        var id = int.Parse(relic[^1..]) + 2;
+                        relicData[id.ToString()] = relic;
+                    }
+                    unitData[baseId!] =
+                        Create(
+                            baseId!,
+                            nameKey!,
+                            local[nameKey!],
+                            combatType,
+                            forceAlignment,
+                            categoryIdList,
+                            unitClass,
+                            thumbnailName!,
+                            primaryUnitStat,
+                            tierData,
+                            growthModifiers[baseId!],
+                            skillRef,
+                            relicData,
+                            FetchMasteryMultiplierName(primaryUnitStat.ToString(), categoryIdList),
+                            modRecommendationList
+                        )
+                        .Value;
+                }
+                else //ships
+                {
+                    var crewContributionTableId = unit.CrewContributionTableId;
+                    var crewList = unit?.Crew ?? Enumerable.Empty<CrewMember>();
+                    var stats = new Dictionary<long, long>();
+                    foreach (var stat in baseStat?.Stat ?? Enumerable.Empty<GameDataStat>())
+                        stats[(long)stat.UnitStatId] = stat.UnscaledDecimalValue;
+
+
+                    foreach (var cm in crewList)
+                        foreach (var s in cm.SkillReference)
+                            skillRef.Add(skills[s.SkillId!]);
+
+
+                    var crew = crewList.Select(cm => cm.UnitId!).ToList() ?? Enumerable.Empty<string>();
+
+                    unitData[baseId!] =
+                        Create(
+                            baseId!,
+                            nameKey!,
+                            local[nameKey!],
+                            combatType,
+                            forceAlignment,
+                            categoryIdList,
+                            unitClass,
+                            thumbnailName!,
+                            primaryUnitStat,
+                            growthModifiers[baseId!],
+                            skillRef,
+                            FetchMasteryMultiplierName(primaryUnitStat.ToString(), categoryIdList),
+                            stats,
+                            statsTable[crewContributionTableId!],
+                            crew.ToList()
+                        )
+                        .Value;
+                }
+            }
+            return unitData;
+        }
+
+        private static string FetchMasteryMultiplierName(string primaryStatId, List<string> tags)
+        {
+            var primaryStats = new Dictionary<string, string>
+            {
+                { "2", "strength" },
+                { "3", "agility" },
+                { "4", "intelligence" }
+            };
+            var role = tags.FirstOrDefault(tag => // select 'role' tag that isn't role_leader
+            {
+                Regex rgx = MasteryRegex();
+                return rgx.IsMatch(tag);
+            });
+            return $"{primaryStats[primaryStatId]}_{role}_mastery";
+        }
+
         public override IEnumerable<object> GetAtomicValues()
         {
             yield return Id;
@@ -180,5 +308,8 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
             yield return MasteryModifierId;
             yield return ModRecommendations;
         }
+
+        [GeneratedRegex("^role_(?!leader)[^_]+")]
+        private static partial Regex MasteryRegex();
     }
 }

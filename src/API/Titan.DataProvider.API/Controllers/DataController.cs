@@ -39,11 +39,23 @@ namespace Titan.DataProvider.API.Controllers
                 .Create(new GetCachedLocalizationDataQuery(language))
                 .Bind(request => _sender.Send(request, cancellationToken))
                 .Match(Ok, HandleFailure);
+        [HttpGet("localization")]
+        public async Task<IActionResult> GetCachedLocalization(CancellationToken cancellationToken = default)
+            => await Result
+                .Create(new GetCachedLocalizationDataQuery(GetCachedLocalizationDataQueryRequest.ENG_US))
+                .Bind(request => _sender.Send(request, cancellationToken))
+                .Match(Ok, HandleFailure);
 
         [HttpGet("base/{language}")]
         public async Task<IActionResult> GetCachedBaseData([FromRoute] GetCachedBaseDataQueryRequest language, CancellationToken cancellationToken = default)
             => await Result
                 .Create(new GetCachedBaseDataQuery(language))
+                .Bind(request => _sender.Send(request, cancellationToken))
+                .Match(Ok, HandleFailure);
+        [HttpGet("base")]
+        public async Task<IActionResult> GetCachedBaseData(CancellationToken cancellationToken = default)
+            => await Result
+                .Create(new GetCachedBaseDataQuery(GetCachedBaseDataQueryRequest.ENG_US))
                 .Bind(request => _sender.Send(request, cancellationToken))
                 .Match(Ok, HandleFailure);
     }

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 
@@ -24,6 +26,22 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
         {
             yield return Gms;
             yield return Stats;
+        }
+        public static Result<Dictionary<string, RelicData>> Create(GameDataResponse data, Dictionary<string, Dictionary<string, long>> statsTable)
+        {
+            var relicData = new Dictionary<string, RelicData>();
+            foreach (var relic in data.RelicTierDefinition.OrderBy(s => s.Id!.Length).ThenBy(s => s.Id))
+            {
+                var stats = new Dictionary<long, long>();
+                foreach (var stat in relic.Stat!.Stat.OrderBy(s => (int)s.UnitStatId))
+                {
+                    stats[(int)stat.UnitStatId] = stat.UnscaledDecimalValue;
+                }
+                var statsTableForRelics = statsTable[relic.RelicStatTable!.ToString()];
+                var relicDataItem = Create(statsTableForRelics, stats);
+                relicData.Add(relic.Id!, relicDataItem.Value);
+            }
+            return relicData;
         }
     }
 }

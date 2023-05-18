@@ -1,5 +1,6 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 
@@ -31,6 +32,32 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
         public static Result<Skill> Create(string id, string name, string nameKey, int maxTier, long type, string image, Dictionary<string, string> powerOverrideTags, bool isZeta, bool isOmicron)
         {
             return new Skill(id, name, nameKey, maxTier, type, image, powerOverrideTags, isZeta, isOmicron);
+        }
+
+        public static Result<Dictionary<string, Skill>> Create(GameDataResponse data, Dictionary<string, string> local)
+        {
+            var skills = new Dictionary<string, Skill>();
+            foreach (var skill in data.Skill)
+            {
+                var ability = data.Ability.Find(a => a.Id == skill.AbilityReference);
+                var powerOverrideTags = new Dictionary<string, string>();
+                foreach (var tier in skill.Tier.Select((Value, i) => new { i, Value }))
+                {
+                    if (!string.IsNullOrEmpty(tier.Value.PowerOverrideTag))
+                        powerOverrideTags[(tier.i + 2).ToString()] = tier.Value.PowerOverrideTag;
+                }
+                skills[skill.Id!] = Create(
+                    skill.Id!,
+                    local[ability!.NameKey!],
+                    ability.NameKey!,
+                    skill.Tier.Count + 1,
+                    (long)skill.SkillType,
+                    ability.Icon!,
+                    powerOverrideTags,
+                    powerOverrideTags.ContainsValue("zeta"),
+                    skill.Tier.Any(t => t.RecipeId!.Contains("OMICRON"))).Value;
+            }
+            return skills;
         }
 
         public override IEnumerable<object> GetAtomicValues()

@@ -35,6 +35,25 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.Entities
             return stat;
         }
 
+        public static Result<Dictionary<string, GearData>> Create(GameDataResponse data)
+        {
+            var gearData = new Dictionary<string, GearData>();
+            foreach (var item in data.Equipment.OrderBy(s => s.Id!.Length).ThenBy(s => s.Id))
+            {
+                var stat = new Dictionary<long, long>();
+                if (item?.EquipmentStat?.Stat is not null && item?.EquipmentStat?.Stat.Count > 0)
+                {
+                    foreach (var subItem in item.EquipmentStat.Stat.OrderBy(s => s.UnitStatId))
+                    {
+                        long key = (int)subItem.UnitStatId;
+                        stat.Add(key, subItem.UnscaledDecimalValue);
+                    }
+                }
+                gearData.Add(item!.Id!, Create(item).Value);
+            }
+            return gearData;
+        }
+
         public override IEnumerable<object> GetAtomicValues()
         {
             yield return Stats;

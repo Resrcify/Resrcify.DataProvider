@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
@@ -26,6 +27,16 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.Entities
                 value.SetCount,
                 value.CompleteBonus.Stat.UnscaledDecimalValue,
                 value.MaxLevelBonus!.Stat!.UnscaledDecimalValue);
+        }
+        public static Result<Dictionary<string, ModSetData>> Create(GameDataResponse data)
+        {
+            var modSet = new Dictionary<string, ModSetData>();
+            foreach (var item in data.StatModSet.OrderBy(s => s.Id!.Length).ThenBy(s => s.Id))
+            {
+                var mod = ModSetData.Create(item);
+                modSet.Add(item.Id!, mod.Value);
+            }
+            return modSet;
         }
 
         public override IEnumerable<object> GetAtomicValues()
