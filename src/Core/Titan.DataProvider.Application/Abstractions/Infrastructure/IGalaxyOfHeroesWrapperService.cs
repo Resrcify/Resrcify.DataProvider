@@ -7,5 +7,6 @@ namespace Titan.DataProvider.Application.Abstractions.Infrastructure
     {
         Task<HttpResponseMessage> GetGameData();
         Task<HttpResponseMessage> GetLocalization();
+        Task<HttpResponseMessage> GetMetadata();
     }
 }

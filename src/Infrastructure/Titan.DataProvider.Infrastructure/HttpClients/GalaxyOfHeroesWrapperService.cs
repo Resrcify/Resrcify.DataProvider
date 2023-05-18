@@ -25,5 +25,10 @@ namespace Titan.DataProvider.Infrastructure.HttpClients
         {
             return await Client.GetAsync("api/data/getlocalizationdata");
         }
+
+        public async Task<HttpResponseMessage> GetMetadata()
+        {
+            return await Client.GetAsync("api/content/getmetadata");
+        }
     }
 }

@@ -18,8 +18,6 @@ namespace Titan.DataProvider.Application.Features.Data.Queries.GetCachedBaseData
 
         public async Task<Result<BaseData>> Handle(GetCachedBaseDataQuery request, CancellationToken cancellationToken)
         {
-            System.Console.WriteLine("GOING IN");
-
             var cached = await _caching.GetAsync<BaseData>($"BaseData-{request.Language}", cancellationToken);
             if (cached is null) return Result.Failure<BaseData>(new Error("test", "test")); //TODO: FIX PROPER ERROR
             return cached;

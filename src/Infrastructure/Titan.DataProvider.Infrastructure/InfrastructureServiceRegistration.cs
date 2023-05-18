@@ -4,10 +4,12 @@ using System.Net.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
+using Quartz;
 using Serilog;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
 using Titan.DataProvider.Infrastructure.Caching;
 using Titan.DataProvider.Infrastructure.HttpClients;
+using Titan.TournamentManagement.Infrastructure.BackgroundJobs;
 
 namespace Titan.ShardManagement.Infrastructure
 {
@@ -35,6 +37,25 @@ namespace Titan.ShardManagement.Infrastructure
                 .MinimumLevel.Information()
                 .WriteTo.Console()
                 .CreateLogger();
+
+            services.AddQuartz(configure =>
+            {
+                var jobKey = new JobKey(nameof(CheckMetadataVersionJob));
+                configure
+                    .AddJob<CheckMetadataVersionJob>(jobKey)
+                    .AddTrigger(
+                        trigger =>
+                            trigger.ForJob(jobKey)
+                                .StartAt(DateTime.UtcNow.AddSeconds(30))
+                                .WithSimpleSchedule(
+                                    schedule =>
+                                        schedule.WithIntervalInMinutes(15)
+                                            .RepeatForever()));
+
+                configure.UseMicrosoftDependencyInjectionJobFactory();
+            });
+
+            services.AddQuartzHostedService();
             return services;
         }
 
