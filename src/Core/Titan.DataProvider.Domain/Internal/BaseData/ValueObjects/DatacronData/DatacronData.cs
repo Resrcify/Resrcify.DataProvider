@@ -9,6 +9,7 @@ using MappedAbility = Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.D
 using Ability = Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData.Ability;
 using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects;
 using Stat = Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.Stat;
+using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.Entities
 {

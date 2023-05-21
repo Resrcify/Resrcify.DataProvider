@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using GameDataStat = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData.Stat;
+using GameDataStat = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common.Stat;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 
