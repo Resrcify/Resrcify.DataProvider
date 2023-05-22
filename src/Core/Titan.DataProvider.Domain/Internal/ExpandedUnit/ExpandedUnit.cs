@@ -38,9 +38,13 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit
             if (combatType == CombatType.SQUAD)
             {
                 var stats = CalculateCharacterStats(unit, gameData);
-                foreach (var statValue in stats._base)
+                foreach (var statKey in stats._base.Keys)
                 {
-                    var stat = Stat.Create((int)statValue.Key, statValue.Value, 0);
+                    var baseValue = stats._base[statKey];
+                    var modValue = 0.0;
+                    if (stats._mods.TryGetValue(statKey, out var foundModValue))
+                        modValue = foundModValue;
+                    var stat = Stat.Create((int)statKey, baseValue, modValue);
                     formattedStats.Add(stat.Value);
                 }
             }
@@ -62,6 +66,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit
             var statCalcBase = StatCalcBase.Create();
             statCalcBase.Value.CalculateRawStats(unit, gameData);
             statCalcBase.Value.CalculateBaseStats(unit, gameData);
+            statCalcBase.Value.CalculateModStats(unit, gameData);
             statCalcBase.Value.FormatStats(unit.CurrentLevel);
             return statCalcBase.Value;
         }

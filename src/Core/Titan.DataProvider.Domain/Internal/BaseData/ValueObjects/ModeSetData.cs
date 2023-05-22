@@ -33,7 +33,7 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.Entities
             var modSet = new Dictionary<string, ModSetData>();
             foreach (var item in data.StatModSet.OrderBy(s => s.Id!.Length).ThenBy(s => s.Id))
             {
-                var mod = ModSetData.Create(item);
+                var mod = Create(item);
                 modSet.Add(item.Id!, mod.Value);
             }
             return modSet;

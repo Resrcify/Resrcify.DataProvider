@@ -193,27 +193,6 @@ namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
             return tempTable.ToDictionary(k => k.Key, v => Convert.ToInt64(v.Value, System.Globalization.CultureInfo.InvariantCulture));
         }
 
-        // private static Dictionary<string, long> GetShipLevelGp(XpTable table)
-        // {
-        //     return GetXpTempTable(table);
-        // }
-        // private static Dictionary<string, long> GetShipAbilityLevelGp(GameDataResponse data)
-        // {
-        //     foreach (var table in data.XpTable)
-        //     {
-        //         if (table.Id!.StartsWith("crew_rating") || table.Id.StartsWith("galactic_power"))
-        //         {
-        //             Dictionary<string, long> tempTable = GetXpTempTable(table);
-        //             switch (table.Id)
-        //             {
-        //                 case "galactic_power_per_ship_ability_level_table":
-        //                     return tempTable.ToDictionary(k => k.Key, v => Convert.ToInt64(v.Value, System.Globalization.CultureInfo.InvariantCulture));
-        //             }
-        //         }
-        //     }
-        //     return null;
-        // }
-
         private static Dictionary<string, V> CreateDictionaryFromRelics<V>(List<TableRow> rows)
         {
             var dictionary = new Dictionary<string, V>();
