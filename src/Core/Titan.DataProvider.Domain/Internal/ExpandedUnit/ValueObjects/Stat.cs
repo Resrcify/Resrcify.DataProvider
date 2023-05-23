@@ -42,7 +42,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
         private static bool CheckIfPercentage(int enumValue)
             => enumValue switch
             {
-                8 or 9 or 14 or 15 or 17 or 18 or 27 or 12 or 13 or 16 => true,
+                8 or 9 or 14 or 15 or 17 or 18 or 27 or 12 or 13 or 16 or 35 or 36 or 39 or 40 => true,
                 _ => false
             };
 

@@ -123,6 +123,12 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
             ConvertPercent(13, val => ConvertFlatAccToPercent(val, scale * 1e8)); // Deflection
             ConvertPercent(39, val => ConvertFlatCritAvoidToPercent(val, scale * 1e8)); // Physical Crit Avoidance
             ConvertPercent(40, val => ConvertFlatCritAvoidToPercent(val, scale * 1e8)); // Special Crit Avoidance
+
+            // stats with both Percent Stats get added to the ID for their flat stat (which was converted to % above)
+            _mods[21 - 7] = _mods.GetOrDefault(21 - 7) + _mods.GetOrDefault(21); // Ph. Crit Chance // 21-14 = 7 = 22-15 ==> subtracting 7 from statID gets the correct flat stat
+            _mods[22 - 7] = _mods.GetOrDefault(22 - 7) + _mods.GetOrDefault(22);// Sp. Crit Chance
+            _mods[35 + 4] = _mods.GetOrDefault(35 + 4) + _mods.GetOrDefault(35);// Ph. Crit Avoid // 39-35 = 4 = 40-36 ==> adding 4 to statID gets the correct flat stat
+            _mods[36 + 4] = _mods.GetOrDefault(36 + 4) + _mods.GetOrDefault(36);// Sp. Crit Avoid
         }
 
         private void CalculateRelicStats(string definitionId, int relicEnumValue, GameData gameData)
@@ -250,12 +256,6 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
         {
             var modSets = CreateModSets(unit);
             var rawModStats = GetRawModStats(unit);
-            foreach (var item in rawModStats)
-            {
-                Console.WriteLine("--------------");
-                Console.WriteLine(item.Key);
-                Console.WriteLine(item.Value);
-            }
 
             foreach (var modSet in modSets)
             {
