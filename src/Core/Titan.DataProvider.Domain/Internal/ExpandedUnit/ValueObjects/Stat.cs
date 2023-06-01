@@ -11,16 +11,18 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
         public UnitStat UnitStat { get; private set; }
         public double BaseValue { get; private set; }
         public double ModValue { get; private set; }
+        public double GearValue { get; private set; }
         public double TotalValue { get; private set; }
         public bool IsPercentage { get; private set; }
 
-        public Stat(string name, UnitStat unitStat, double baseValue, double modValue, bool isPercentage)
+        public Stat(string name, UnitStat unitStat, double baseValue, double gearValue, double modValue, bool isPercentage)
         {
             Name = name;
             UnitStat = unitStat;
             BaseValue = baseValue;
+            GearValue = gearValue;
             ModValue = modValue;
-            TotalValue = BaseValue + ModValue;
+            TotalValue = BaseValue + gearValue + ModValue;
             IsPercentage = isPercentage;
         }
         public override IEnumerable<object> GetAtomicValues()
@@ -33,10 +35,10 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
             yield return IsPercentage;
 
         }
-        public static Result<Stat> Create(int enumValue, double baseValue, double modValue)
+        public static Result<Stat> Create(int enumValue, double baseValue, double gearValue, double modValue)
         {
 
-            return new Stat(GetInGameName(enumValue), (UnitStat)enumValue, baseValue, modValue, CheckIfPercentage(enumValue));
+            return new Stat(GetInGameName(enumValue), (UnitStat)enumValue, baseValue, gearValue, modValue, CheckIfPercentage(enumValue));
         }
 
         private static bool CheckIfPercentage(int enumValue)
