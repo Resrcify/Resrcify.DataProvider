@@ -11,5 +11,11 @@ namespace Titan.DataProvider.Domain.Errors
                 "ExpandedUnit.CombatTypeNotFound",
                 $"Undefined combat type. Unable to proceed.");
         }
+        public static class Stat
+        {
+            public static readonly Error AllStatValuesZero = new(
+                "Stat.AllStatValuesZero",
+                $"All stat values cannot be zero. Unable to proceed.");
+        }
     }
 }

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Titan.DataProvider.Domain.Extensions;
-using Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
-using Titan.DataProvider.Domain.Shared;
 using GameData = Titan.DataProvider.Domain.Internal.BaseData.BaseData;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
@@ -111,12 +109,15 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
                 _growthModifiers[stat.Key] = stat.Value * scale;
 
             foreach (var statId in _mods)
-                _mods[statId.Key] = Math.Round(statId.Value) * scale;
+                _mods[statId.Key] = statId.Value * scale;
+
+            foreach (var statId in _crew)
+                _crew[statId.Key] = statId.Value * scale;
 
             ConvertPercent(14, val => ConvertFlatCritToPercent(val, scale * 1e8)); // Ph. Crit Rating -> Chance
             ConvertPercent(15, val => ConvertFlatCritToPercent(val, scale * 1e8)); // Sp. Crit Rating -> Chance
-            ConvertPercent(8, val => ConvertFlatDefToPercent(val, _unit.CurrentLevel, scale * 1e8, false)); // Armor
-            ConvertPercent(9, val => ConvertFlatDefToPercent(val, _unit.CurrentLevel, scale * 1e8, false)); // Resistance
+            ConvertPercent(8, val => ConvertFlatDefToPercent(val, _unit.CurrentLevel, scale * 1e8, _crew.Count != 0)); // Armor
+            ConvertPercent(9, val => ConvertFlatDefToPercent(val, _unit.CurrentLevel, scale * 1e8, _crew.Count != 0)); // Resistance
             ConvertPercent(37, val => ConvertFlatAccToPercent(val, scale * 1e8)); // Physical Accuracy
             ConvertPercent(38, val => ConvertFlatAccToPercent(val, scale * 1e8)); // Special Accuracy
             ConvertPercent(12, val => ConvertFlatAccToPercent(val, scale * 1e8)); // Dodge
@@ -129,6 +130,12 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
             _mods[22 - 7] = _mods.GetOrDefault(22 - 7) + _mods.GetOrDefault(22);// Sp. Crit Chance
             _mods[35 + 4] = _mods.GetOrDefault(35 + 4) + _mods.GetOrDefault(35);// Ph. Crit Avoid // 39-35 = 4 = 40-36 ==> adding 4 to statID gets the correct flat stat
             _mods[36 + 4] = _mods.GetOrDefault(36 + 4) + _mods.GetOrDefault(36);// Sp. Crit Avoid
+
+            //Reseting moved mod values
+            _mods[21] = 0;
+            _mods[22] = 0;
+            _mods[35] = 0;
+            _mods[36] = 0;
         }
 
 
@@ -145,8 +152,12 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
             var percent = ConvertFunc(flat);
             _base[statId] = percent;
             var last = percent;
-
-            if (_gear is not null && _gear.ContainsKey(statId))
+            if (_crew.ContainsKey(statId))
+            {
+                flat += _crew[statId];
+                _crew[statId] = ConvertFunc(flat) - last;
+            }
+            if (_gear.ContainsKey(statId))
             {
                 flat += _gear[statId];
                 percent = ConvertFunc(flat);
@@ -154,7 +165,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
                 last = percent;
             }
 
-            if (_mods is not null && _mods.ContainsKey(statId))
+            if (_mods.ContainsKey(statId))
             {
                 flat += _mods[statId];
                 _mods[statId] = ConvertFunc(flat) - last;
@@ -185,7 +196,5 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
             var val = value / scale;
             return val / 2400 * scale;
         }
-
-
     }
 }

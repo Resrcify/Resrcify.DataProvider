@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common;
+using Titan.DataProvider.Domain.Errors;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
 {
@@ -12,17 +13,19 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
         public double BaseValue { get; private set; }
         public double ModValue { get; private set; }
         public double GearValue { get; private set; }
+        public double CrewValue { get; private set; }
         public double TotalValue { get; private set; }
         public bool IsPercentage { get; private set; }
 
-        public Stat(string name, UnitStat unitStat, double baseValue, double gearValue, double modValue, bool isPercentage)
+        public Stat(string name, UnitStat unitStat, double baseValue, double gearValue, double modValue, double crewValue, bool isPercentage)
         {
             Name = name;
             UnitStat = unitStat;
             BaseValue = baseValue;
             GearValue = gearValue;
             ModValue = modValue;
-            TotalValue = BaseValue + gearValue + ModValue;
+            CrewValue = crewValue;
+            TotalValue = baseValue + gearValue + modValue + crewValue;
             IsPercentage = isPercentage;
         }
         public override IEnumerable<object> GetAtomicValues()
@@ -35,10 +38,11 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
             yield return IsPercentage;
 
         }
-        public static Result<Stat> Create(int enumValue, double baseValue, double gearValue, double modValue)
+        public static Result<Stat> Create(int enumValue, double baseValue, double gearValue, double modValue, double crewValue)
         {
-
-            return new Stat(GetInGameName(enumValue), (UnitStat)enumValue, baseValue, gearValue, modValue, CheckIfPercentage(enumValue));
+            if (baseValue == 0 && gearValue == 0 && modValue == 0 && crewValue == 0)
+                return Result.Failure<Stat>(DomainErrors.Stat.AllStatValuesZero);
+            return new Stat(GetInGameName(enumValue), (UnitStat)enumValue, baseValue, gearValue, modValue, crewValue, CheckIfPercentage(enumValue));
         }
 
         private static bool CheckIfPercentage(int enumValue)
