@@ -8,5 +8,6 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services
         IReadOnlyDictionary<long, double> Gear { get; }
         IReadOnlyDictionary<long, double> Mods { get; }
         IReadOnlyDictionary<long, double> Crew { get; }
+        double Gp { get; }
     }
 }

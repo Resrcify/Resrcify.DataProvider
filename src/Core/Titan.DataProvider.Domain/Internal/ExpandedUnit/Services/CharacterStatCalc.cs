@@ -14,6 +14,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services
         public IReadOnlyDictionary<long, double> Gear => _gear;
         public IReadOnlyDictionary<long, double> Mods => _mods;
         public IReadOnlyDictionary<long, double> Crew => _crew;
+        public double Gp => BaseGp;
         private CharacterStatCalc(
             Unit unit,
             GameData gameData) : base(unit, gameData)
@@ -22,6 +23,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services
             CalculateBaseStats();
             CalculateModStats();
             FormatStats();
+            BaseGp = CalculateCharacterGp();
         }
         public static Result<IStatCalc> Create(Unit unit, GameData gameData)
         {
@@ -36,8 +38,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services
 
             var definitionId = _unit.DefinitionId!.Split(":")[0];
 
-            var stats = _gameData.Units[definitionId].GearLevels[tierEnumValue.ToString()].Stats;
-            foreach (var stat in stats)
+            foreach (var stat in _gameData.Units[definitionId].GearLevels[tierEnumValue.ToString()].Stats)
                 _base.Add(stat.Key, stat.Value);
 
             foreach (var stat in _gameData.Units[definitionId].GrowthModifiers[rarityEnumValue.ToString()])

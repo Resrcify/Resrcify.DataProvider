@@ -1,8 +1,11 @@
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using Titan.DataProvider.Domain.Extensions;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 using GameData = Titan.DataProvider.Domain.Internal.BaseData.BaseData;
+using PlayerSkill = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Skill;
+using System.Runtime.InteropServices;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
 {
@@ -13,6 +16,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
         public readonly Dictionary<long, double> _gear = new();
         public readonly Dictionary<long, double> _mods = new();
         public readonly Dictionary<long, double> _crew = new();
+        public double BaseGp { get; set; }
         public readonly GameData _gameData;
         public readonly Unit _unit;
         public StatCalcBase(Unit unit, GameData gameData)
@@ -39,13 +43,14 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
                 foreach (var statId in mms)
                 {
                     var longKey = long.Parse(statId.Key);
-                    if (_base.ContainsKey(longKey))
+                    ref var baseValue = ref CollectionsMarshal.GetValueRefOrAddDefault(_base, longKey, out var baseExisted);
+                    if (baseExisted)
                     {
-                        _base[longKey] += _base[61] * mms[statId.Key];
+                        baseValue += _base[61] * mms[statId.Key];
                     }
                     else
                     {
-                        _base.Add(longKey, _base[61] * mms[statId.Key]);
+                        baseValue = _base[61] * mms[statId.Key];
                     }
                 }
             }
@@ -138,7 +143,90 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
             _mods[36] = 0;
         }
 
+        public double CalculateCharacterGp(Unit? unit = null)
+        {
+            unit ??= _unit;
+            var definitionId = unit.DefinitionId!.Split(":")[0];
+            var rarityEnumValue = (int)unit.CurrentRarity;
+            var tierEnumValue = (int)unit.CurrentTier;
+            var gp = 0.0;
+            gp += _gameData.GpTable.UnitLevelGp[unit.CurrentLevel.ToString()];
+            gp += _gameData.GpTable.UnitRarityGp[rarityEnumValue.ToString()];
+            gp += _gameData.GpTable.GearLevelGp[tierEnumValue.ToString()];
+            // Game tables for current gear include the possibility of differect GP per slot.
+            // Currently, all values are identical across each gear level, so a simpler method is possible.
+            // But that could change at any time.
+            if (unit.Equipment?.Count > 0)
+                foreach (var piece in unit.Equipment)
+                    gp += _gameData.GpTable.GearPieceGp[tierEnumValue.ToString()][piece.Slot.ToString()];
 
+            foreach (var skill in unit.Skill)
+                gp += GetSkillGp(definitionId, skill);
+
+            if (unit.PurchasedAbilityId?.Count > 0)
+                gp += unit.PurchasedAbilityId.Count * _gameData.GpTable.AbilitySpecialGp["ultimate"];
+
+            if (unit.EquippedStatMod?.Count > 0)
+                gp += unit.EquippedStatMod.Sum(x => _gameData.GpTable.ModRarityLevelTierGp[x.DefinitionId![1].ToString()][x.Level.ToString()][((int)x.Tier).ToString()]);
+
+            var relicEnumValue = unit.Relic?.CurrentTier ?? 0;
+            if ((int)relicEnumValue > 2)
+            {
+                gp += _gameData.GpTable.RelicTierGp[((int)relicEnumValue).ToString()];
+                gp += unit.CurrentLevel * _gameData.GpTable.RelicTierLevelFactor[((int)relicEnumValue).ToString()];
+            }
+
+            return Floor(gp * 1.5);
+        }
+
+        public double GetSkillGp(string defId, PlayerSkill skill)
+        {
+            var oSkill = _gameData.Units[defId].Skills.FirstOrDefault(x => x.Id == skill.Id);
+            if (oSkill is null) return 0.0;
+            if (oSkill.PowerOverrideTags.TryGetValue((skill.Tier + 2).ToString(), out var oTag))
+                if (_gameData.GpTable.AbilitySpecialGp.TryGetValue(oTag.ToString(), out var spValue))
+                    return spValue;
+
+            if (_gameData.GpTable.AbilityLevelGp.TryGetValue((skill.Tier + 2).ToString(), out var lvlValue))
+                return lvlValue;
+
+            return 0.0;
+        }
+
+        public double GetCrewlessReinforcementGp()
+        {
+            var gp = 0.0;
+            foreach (var skill in _unit.Skill)
+            {
+                var defId = _unit.DefinitionId?.Split(":")[0];
+                if (defId is null) continue;
+                var oSkill = _gameData.Units[defId].Skills.FirstOrDefault(x => x.Id == skill.Id);
+                if (oSkill is not null && oSkill.PowerOverrideTags.TryGetValue((skill.Tier + 2).ToString(), out var oTag))
+                {
+                    if (oTag[..13] != "reinforcement") continue;
+                    gp += _gameData.GpTable.AbilitySpecialGp[oTag];
+                }
+            }
+            return gp;
+        }
+        public double GetCrewlessAbilityGp()
+        {
+            var gp = 0.0;
+            foreach (var skill in _unit.Skill)
+            {
+                var defId = _unit.DefinitionId?.Split(":")[0];
+                if (defId is null) continue;
+                var oSkill = _gameData.Units[defId].Skills.FirstOrDefault(x => x.Id == skill.Id);
+                if (oSkill is not null && oSkill.PowerOverrideTags.TryGetValue((skill.Tier + 2).ToString(), out var oTag))
+                {
+                    if (oTag[..13] == "reinforcement") continue;
+                    gp += _gameData.GpTable.AbilitySpecialGp[oTag];
+                    continue;
+                }
+                gp += _gameData.GpTable.AbilityLevelGp[(skill.Tier + 2).ToString()];
+            }
+            return gp;
+        }
 
         public static double Floor(double value, long digits = 0)
         {
@@ -152,23 +240,26 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects
             var percent = ConvertFunc(flat);
             _base[statId] = percent;
             var last = percent;
-            if (_crew.ContainsKey(statId))
+
+            ref var crewValue = ref CollectionsMarshal.GetValueRefOrAddDefault(_crew, statId, out var crewExisted);
+            if (crewExisted)
             {
-                flat += _crew[statId];
-                _crew[statId] = ConvertFunc(flat) - last;
+                flat += crewValue;
+                crewValue = ConvertFunc(flat) - last;
             }
-            if (_gear.ContainsKey(statId))
+            ref var gearValue = ref CollectionsMarshal.GetValueRefOrAddDefault(_gear, statId, out var gearExisted);
+            if (gearExisted)
             {
-                flat += _gear[statId];
+                flat += gearValue;
                 percent = ConvertFunc(flat);
-                _gear[statId] = percent - last;
+                gearValue = percent - last;
                 last = percent;
             }
-
-            if (_mods.ContainsKey(statId))
+            ref var modValue = ref CollectionsMarshal.GetValueRefOrAddDefault(_mods, statId, out var modExisted);
+            if (modExisted)
             {
-                flat += _mods[statId];
-                _mods[statId] = ConvertFunc(flat) - last;
+                flat += modValue;
+                modValue = ConvertFunc(flat) - last;
             }
         }
 

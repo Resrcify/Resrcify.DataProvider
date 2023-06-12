@@ -4,7 +4,6 @@ using GameData = Titan.DataProvider.Domain.Internal.BaseData.BaseData;
 using Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 using System.Linq;
 using Titan.DataProvider.Domain.Shared;
-using System;
 using Skill = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Skill;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services
@@ -15,6 +14,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services
         public IReadOnlyDictionary<long, double> Gear => _gear;
         public IReadOnlyDictionary<long, double> Mods => _mods;
         public IReadOnlyDictionary<long, double> Crew => _crew;
+        public double Gp => BaseGp;
         private readonly Dictionary<string, Unit> _crewUnits;
         private ShipStatCalc(
             Unit unit,
@@ -25,6 +25,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services
             CalculateRawStats();
             CalculateBaseStats();
             FormatStats();
+            BaseGp = CalculateShipGp();
         }
         public static Result<IStatCalc> Create(Unit unit, GameData gameData, Dictionary<string, Unit> crew)
         {
@@ -32,9 +33,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services
         }
         private void CalculateRawStats()
         {
-            // var tierEnumValue = (int)_unit.CurrentTier;
             var rarityEnumValue = (int)_unit.CurrentRarity;
-            // var relicEnumValue = _unit.Relic?.CurrentTier ?? 0;
             var definitionId = _unit.DefinitionId!.Split(":")[0];
 
             foreach (var stat in _gameData.Units[definitionId].Stats)
@@ -74,7 +73,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services
         private double GetCrewRating()
         {
             var crewRating = 0.0;
-            foreach (var (key, member) in _crewUnits)
+            foreach (var member in _crewUnits.Values)
             {
                 var definitionId = member.DefinitionId!.Split(":")[0];
                 var tierEnumValue = (int)member.CurrentTier;
@@ -100,6 +99,34 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services
                 }
             }
             return crewRating;
+        }
+
+        public double CalculateShipGp()
+            => _crewUnits.Count == 0 ?
+                CalculateCrewlessShipGp() :
+                CalculateCrewShipGp();
+
+        public double CalculateCrewlessShipGp()
+        {
+            var levelGp = _gameData.GpTable.UnitLevelGp[_unit.CurrentLevel.ToString()];
+            var abilityGp = GetCrewlessAbilityGp();
+            var reinforcementGp = GetCrewlessReinforcementGp();
+            var gp = (levelGp * 3.5 + abilityGp * 5.74 + reinforcementGp * 1.61) * _gameData.GpTable.ShipRarityFactor[((int)_unit.CurrentRarity).ToString()];
+            gp += levelGp + abilityGp + reinforcementGp;
+            return Floor(gp * 1.5);
+        }
+
+        public double CalculateCrewShipGp()
+        {
+            var defId = _unit.DefinitionId?.Split(":")[0];
+            if (defId is null) return 0;
+            var gp = _crewUnits.Sum(c => CalculateCharacterGp(c.Value));
+            if (_gameData.GpTable.ShipRarityFactor.TryGetValue(((int)_unit.CurrentRarity).ToString(), out var value))
+                gp *= value * _gameData.GpTable.CrewSizeFactor[_crewUnits.Count.ToString()];
+            gp += _gameData.GpTable.UnitLevelGp[_unit.CurrentLevel.ToString()];
+            foreach (var skill in _unit.Skill)
+                gp += GetSkillGp(defId, skill);
+            return Floor(gp * 1.5);
         }
     }
 }
