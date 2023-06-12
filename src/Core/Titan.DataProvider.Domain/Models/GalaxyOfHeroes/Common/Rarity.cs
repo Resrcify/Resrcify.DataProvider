@@ -1,14 +1,13 @@
-namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common
+namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common;
+
+public enum Rarity
 {
-    public enum Rarity
-    {
-        ONESTAR = 1,
-        TWOSTAR = 2,
-        THREESTAR = 3,
-        FOURSTAR = 4,
-        FIVESTAR = 5,
-        SIXSTAR = 6,
-        SEVENSTAR = 7,
-        NOSTAR = 8,
-    }
+    ONESTAR = 1,
+    TWOSTAR = 2,
+    THREESTAR = 3,
+    FOURSTAR = 4,
+    FIVESTAR = 5,
+    SIXSTAR = 6,
+    SEVENSTAR = 7,
+    NOSTAR = 8,
 }

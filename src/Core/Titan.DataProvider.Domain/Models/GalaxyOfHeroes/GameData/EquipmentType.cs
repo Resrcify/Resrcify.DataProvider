@@ -1,9 +1,8 @@
-namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData
+namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
+
+public enum EquipmentType
 {
-    public enum EquipmentType
-    {
-        EQUIPMENTEQUIPPABLE = 1,
-        EQUIPMENTUNRELEASED = 2,
-        EQUIPMENTMATERIAL = 3,
-    }
+    EQUIPMENTEQUIPPABLE = 1,
+    EQUIPMENTUNRELEASED = 2,
+    EQUIPMENTMATERIAL = 3,
 }

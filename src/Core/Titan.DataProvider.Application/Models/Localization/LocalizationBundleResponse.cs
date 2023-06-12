@@ -1,8 +1,6 @@
-namespace Titan.DataProvider.Application.Models.GalaxyOfHeroes.Localization
+namespace Titan.DataProvider.Application.Models.GalaxyOfHeroes.Localization;
+public class LocalizationBundleResponse
 {
-    public class LocalizationBundleResponse
-    {
-        public byte[]? LocalizationBundle { get; set; }
+    public byte[]? LocalizationBundle { get; set; }
 
-    }
 }

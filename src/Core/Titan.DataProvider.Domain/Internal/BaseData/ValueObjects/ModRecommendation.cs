@@ -2,28 +2,27 @@ using System.Collections.Generic;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 
-namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects
+namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects;
+
+public sealed class ModRecommendation : ValueObject
 {
-    public sealed class ModRecommendation : ValueObject
+    public string RecommendationSetId { get; private set; }
+    public long UnitTier { get; private set; }
+
+    private ModRecommendation(string recommendationSetId, long unitTier)
     {
-        public string RecommendationSetId { get; private set; }
-        public long UnitTier { get; private set; }
+        RecommendationSetId = recommendationSetId;
+        UnitTier = unitTier;
+    }
 
-        private ModRecommendation(string recommendationSetId, long unitTier)
-        {
-            RecommendationSetId = recommendationSetId;
-            UnitTier = unitTier;
-        }
+    public static Result<ModRecommendation> Create(string recommendationSetId, long unitTier)
+    {
+        return new ModRecommendation(recommendationSetId, unitTier);
+    }
 
-        public static Result<ModRecommendation> Create(string recommendationSetId, long unitTier)
-        {
-            return new ModRecommendation(recommendationSetId, unitTier);
-        }
-
-        public override IEnumerable<object> GetAtomicValues()
-        {
-            yield return RecommendationSetId;
-            yield return UnitTier;
-        }
+    public override IEnumerable<object> GetAtomicValues()
+    {
+        yield return RecommendationSetId;
+        yield return UnitTier;
     }
 }

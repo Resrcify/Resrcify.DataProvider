@@ -1,13 +1,12 @@
 ﻿using Titan.DataProvider.Domain.Shared;
 
-namespace Titan.DataProvider.Domain.Abstractions
-{
-    public interface IValidationResult
-    {
-        public static readonly Error ValidationError = new(
-            "ValidationError",
-            "A validation problem occurred.");
+namespace Titan.DataProvider.Domain.Abstractions;
 
-        Error[] Errors { get; }
-    }
+public interface IValidationResult
+{
+    public static readonly Error ValidationError = new(
+        "ValidationError",
+        "A validation problem occurred.");
+
+    Error[] Errors { get; }
 }

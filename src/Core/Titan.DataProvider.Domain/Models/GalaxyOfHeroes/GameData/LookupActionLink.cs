@@ -1,8 +1,7 @@
-namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData
+namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
+
+public class LookupActionLink
 {
-    public class LookupActionLink
-    {
-        public string? DeskKey { get; set; }
-        public ActionLink? ActionLink { get; set; }
-    }
+    public string? DeskKey { get; set; }
+    public ActionLink? ActionLink { get; set; }
 }

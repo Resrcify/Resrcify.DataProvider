@@ -1,78 +1,75 @@
-using System.IO.Compression;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Serilog;
 using Titan.DataProvider.Application;
-using Titan.ShardManagement.Infrastructure;
+using Titan.DataProvider.Infrastructure;
 
-namespace Titan.DataProvider.API
+namespace Titan.DataProvider.API;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        Configuration = configuration;
+    }
 
-        public IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers()
-                .AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                });
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen(options =>
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddControllers()
+            .AddNewtonsoftJson(options =>
             {
-                options.CustomSchemaIds(type => type.ToString());
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("DataProviderCors", builder =>
-                {
-                    builder
-                        .AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
-
-            services.AddRouting();
-            services.AddApplicationServices();
-            services.AddInfrastructureServices();
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(options =>
         {
-            // Configure the HTTP request pipeline.
-            if (env.IsDevelopment())
+            options.CustomSchemaIds(type => type.ToString());
+        });
+
+        services.AddCors(options =>
+        {
+            options.AddPolicy("DataProviderCors", builder =>
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Titan.DataProvider v1"));
-            }
-            app.UseSerilogRequestLogging();
-            // app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseCors("DataProviderCors");
-            app.UseAuthorization();
-            app.UseAuthentication();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
+                builder
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
             });
+        });
+
+        services.AddRouting();
+        services.AddApplicationServices();
+        services.AddInfrastructureServices();
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        // Configure the HTTP request pipeline.
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Titan.DataProvider v1"));
         }
+        app.UseSerilogRequestLogging();
+        // app.UseHttpsRedirection();
+        app.UseRouting();
+        app.UseCors("DataProviderCors");
+        app.UseAuthorization();
+        app.UseAuthentication();
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
     }
 }

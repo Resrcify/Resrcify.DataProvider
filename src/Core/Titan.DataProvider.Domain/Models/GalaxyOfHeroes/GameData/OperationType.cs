@@ -1,8 +1,7 @@
-namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData
+namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
+
+public enum OperationType
 {
-    public enum OperationType
-    {
-        ADDITIVE = 1,
-        MULTIPLICATIVE = 2,
-    }
+    ADDITIVE = 1,
+    MULTIPLICATIVE = 2,
 }

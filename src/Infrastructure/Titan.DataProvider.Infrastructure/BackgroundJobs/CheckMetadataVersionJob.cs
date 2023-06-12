@@ -5,7 +5,7 @@ using Titan.DataProvider.Application.Abstractions.Infrastructure;
 using Titan.DataProvider.Application.Features.Data.Commands.UpdateRawDataFromTitan;
 using Titan.DataProvider.Application.Features.Data.Queries.GetMetadataVersion;
 
-namespace Titan.TournamentManagement.Infrastructure.BackgroundJobs;
+namespace Titan.DataProvider.Infrastructure.BackgroundJobs;
 
 [DisallowConcurrentExecution]
 public class CheckMetadataVersionJob : IJob

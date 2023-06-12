@@ -1,8 +1,7 @@
-namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Enums
+namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Enums;
+
+public enum CombatType
 {
-    public enum CombatType
-    {
-        SQUAD = 0,
-        SHIP = 1
-    }
+    SQUAD = 0,
+    SHIP = 1
 }

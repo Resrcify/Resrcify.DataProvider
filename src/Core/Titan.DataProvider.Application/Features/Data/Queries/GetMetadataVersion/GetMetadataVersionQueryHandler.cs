@@ -5,6 +5,7 @@ using Titan.DataProvider.Application.Abstractions.Application.Messaging;
 using Titan.DataProvider.Domain.Shared;
 using Titan.DataProvider.Application.Models.GalaxyOfHeroes.Metadata;
 using Newtonsoft.Json;
+using Titan.DataProvider.Application.Errors;
 
 namespace Titan.DataProvider.Application.Features.Data.Queries.GetMetadataVersion
 {
@@ -13,15 +14,13 @@ namespace Titan.DataProvider.Application.Features.Data.Queries.GetMetadataVersio
         private readonly IGalaxyOfHeroesWrapperService _api;
 
         public GetMetadataVersionQueryHandler(IGalaxyOfHeroesWrapperService api)
-        {
-            _api = api;
-        }
+            => _api = api;
 
         public async Task<Result<MetadataResponse>> Handle(GetMetadataVersionQuery request, CancellationToken cancellationToken)
         {
             var response = await _api.GetMetadata();
             if (!response.IsSuccessStatusCode)
-                return Result.Failure<MetadataResponse>(new Error("test", "test")); //TODO: FIX PROPER ERROR
+                return Result.Failure<MetadataResponse>(ApplicationErrors.HttpClient.RequestNotSuccessful);
             return JsonConvert.DeserializeObject<MetadataResponse>(
                     await response.Content.ReadAsStringAsync(cancellationToken));
         }

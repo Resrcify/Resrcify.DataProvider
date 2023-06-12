@@ -100,30 +100,4 @@ public sealed class ExpandedUnit
             CombatType.SHIP => ShipStatCalc.Create(unit, gameData, crew),
             _ => Result.Failure<IStatCalc>(DomainErrors.ExpandedUnit.CombatTypeNotFound)
         };
-
-    // private static Dictionary<string, Dictionary<string, Unit>> GetCrewHashmap(PlayerProfileResponse playerProfile, GameData gameData, Dictionary<string, Unit> rosterUnits)
-    // {
-    //     Dictionary<string, Dictionary<string, Unit>> crewDict = new();
-    //     foreach (var unit in playerProfile.RosterUnit)
-    //     {
-    //         var definitionId = unit.DefinitionId!.Split(":")[0];
-    //         var combatType = (CombatType)gameData.Units[definitionId].CombatType - 1;
-    //         var crew = combatType != CombatType.SHIP ? new Dictionary<string, Unit>() : GetCrewUnitsFromRoster(definitionId, rosterUnits, gameData);
-    //         crewDict.Add(definitionId, crew);
-    //     }
-    //     return crewDict;
-    // }
-
-    // private static Dictionary<string, Unit> GetCrewUnitsFromRoster(string definitionId, Dictionary<string, Unit> rosterUnits, GameData gameData)
-    // {
-    //     var crewUnits = new Dictionary<string, Unit>();
-    //     foreach (var member in gameData.Units[definitionId].Crew)
-    //     {
-    //         if (!rosterUnits.TryGetValue(member, out var crewUnit)) continue;
-    //         crewUnits.Add(member, crewUnit);
-    //     }
-    //     return crewUnits;
-    // }
-
-
 }

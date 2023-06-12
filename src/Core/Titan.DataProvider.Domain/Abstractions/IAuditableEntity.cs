@@ -1,10 +1,9 @@
 using System;
 
-namespace Titan.DataProvider.Domain.Abstractions
+namespace Titan.DataProvider.Domain.Abstractions;
+
+public interface IAuditableEntity
 {
-    public interface IAuditableEntity
-    {
-        DateTime CreatedOnUtc { get; set; }
-        DateTime ModifiedOnUtc { get; set; }
-    }
+    DateTime CreatedOnUtc { get; set; }
+    DateTime ModifiedOnUtc { get; set; }
 }

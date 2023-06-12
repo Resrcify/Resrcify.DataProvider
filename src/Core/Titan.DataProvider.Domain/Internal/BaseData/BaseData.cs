@@ -7,124 +7,123 @@ using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 
-namespace Titan.DataProvider.Domain.Internal.BaseData
+namespace Titan.DataProvider.Domain.Internal.BaseData;
+
+public sealed class BaseData : AggregateRoot
 {
-    public sealed class BaseData : AggregateRoot
+    private readonly Dictionary<string, GearData> _gear = new();
+    public IReadOnlyDictionary<string, GearData> Gear => _gear;
+    private readonly Dictionary<string, ModSetData> _modSets = new();
+    public IReadOnlyDictionary<string, ModSetData> ModSets => _modSets;
+    public CrTable CrTable { get; private set; }
+    public GpTable GpTable { get; private set; }
+    private readonly Dictionary<string, RelicData> _relics = new();
+    public IReadOnlyDictionary<string, RelicData> Relics => _relics;
+    private readonly Dictionary<string, UnitData> _units = new();
+    public IReadOnlyDictionary<string, UnitData> Units => _units;
+    public IReadOnlyList<DatacronData> Datacrons => _datacrons;
+    private readonly List<DatacronData> _datacrons = new();
+
+    private BaseData(
+        Guid id,
+        Dictionary<string, GearData> gear,
+        Dictionary<string, ModSetData> modSets,
+        CrTable crTable,
+        GpTable gpTable,
+        Dictionary<string, RelicData> relics,
+        Dictionary<string, UnitData> units,
+        List<DatacronData> datacrons
+    ) : base(id)
     {
-        private readonly Dictionary<string, GearData> _gear = new();
-        public IReadOnlyDictionary<string, GearData> Gear => _gear;
-        private readonly Dictionary<string, ModSetData> _modSets = new();
-        public IReadOnlyDictionary<string, ModSetData> ModSets => _modSets;
-        public CrTable CrTable { get; private set; }
-        public GpTable GpTable { get; private set; }
-        private readonly Dictionary<string, RelicData> _relics = new();
-        public IReadOnlyDictionary<string, RelicData> Relics => _relics;
-        private readonly Dictionary<string, UnitData> _units = new();
-        public IReadOnlyDictionary<string, UnitData> Units => _units;
-        public IReadOnlyList<DatacronData> Datacrons => _datacrons;
-        private readonly List<DatacronData> _datacrons = new();
+        _gear = gear;
+        _modSets = modSets;
+        CrTable = crTable;
+        GpTable = gpTable;
+        _relics = relics;
+        _units = units;
+        _datacrons = datacrons;
+    }
+    public static Result<BaseData> Create(GameDataResponse data, List<string> localization)
+    {
+        var gearData = GearData.Create(data);
+        var modSetData = ModSetData.Create(data);
+        var crTable = CrTable.Create(data);
+        var crTableData = crTable.Value;
+        var gpTable = GpTable.Create(
+            data,
+            crTableData.CrewRarityCr,
+            crTableData.GearLevelCr,
+            crTableData.ShipRarityFactor,
+            crTableData.UnitLevelCr,
+            crTableData.AbilityLevelCr
+        );
+        var statsTable = FetchStatsTable(data);
+        var relicData = RelicData.Create(data, statsTable);
 
-        private BaseData(
-            Guid id,
-            Dictionary<string, GearData> gear,
-            Dictionary<string, ModSetData> modSets,
-            CrTable crTable,
-            GpTable gpTable,
-            Dictionary<string, RelicData> relics,
-            Dictionary<string, UnitData> units,
-            List<DatacronData> datacrons
-        ) : base(id)
+        var local = GetLocalizationDictionary(localization);
+        var skills = Skill.Create(data, local);
+        var growthModifiers = CreateGrowthModifiers(data, statsTable);
+        var unitData = UnitData.Create(data, local, skills.Value, growthModifiers, statsTable);
+        var datacronData = DatacronData.Create(data, local);
+
+        // TODO: FIX ERROR RESPONSES LATER
+        return new BaseData(
+            Guid.NewGuid(),
+            gearData.Value,
+            modSetData.Value,
+            crTable.Value,
+            gpTable.Value,
+            relicData.Value,
+            unitData,
+            datacronData.Value
+        );
+    }
+
+    private static Dictionary<string, Dictionary<string, long>> FetchStatsTable(GameDataResponse data)
+    {
+        var statsTable = new Dictionary<string, Dictionary<string, long>>();
+        foreach (var table in data.StatProgression)
         {
-            _gear = gear;
-            _modSets = modSets;
-            CrTable = crTable;
-            GpTable = gpTable;
-            _relics = relics;
-            _units = units;
-            _datacrons = datacrons;
-        }
-        public static Result<BaseData> Create(GameDataResponse data, List<string> localization)
-        {
-            var gearData = GearData.Create(data);
-            var modSetData = ModSetData.Create(data);
-            var crTable = CrTable.Create(data);
-            var crTableData = crTable.Value;
-            var gpTable = GpTable.Create(
-                data,
-                crTableData.CrewRarityCr,
-                crTableData.GearLevelCr,
-                crTableData.ShipRarityFactor,
-                crTableData.UnitLevelCr,
-                crTableData.AbilityLevelCr
-            );
-            var statsTable = FetchStatsTable(data);
-            var relicData = RelicData.Create(data, statsTable);
-
-            var local = GetLocalizationDictionary(localization);
-            var skills = Skill.Create(data, local);
-            var growthModifiers = CreateGrowthModifiers(data, statsTable);
-            var unitData = UnitData.Create(data, local, skills.Value, growthModifiers, statsTable);
-            var datacronData = DatacronData.Create(data, local);
-
-            // TODO: FIX ERROR RESPONSES LATER
-            return new BaseData(
-                Guid.NewGuid(),
-                gearData.Value,
-                modSetData.Value,
-                crTable.Value,
-                gpTable.Value,
-                relicData.Value,
-                unitData,
-                datacronData.Value
-            );
-        }
-
-        private static Dictionary<string, Dictionary<string, long>> FetchStatsTable(GameDataResponse data)
-        {
-            var statsTable = new Dictionary<string, Dictionary<string, long>>();
-            foreach (var table in data.StatProgression)
+            if (table.Id!.StartsWith("stattable_"))
             {
-                if (table.Id!.StartsWith("stattable_"))
+                var statsLine = new Dictionary<string, long>();
+                foreach (var stat in table.Stat!.Stat.OrderBy(s => (int)s.UnitStatId))
                 {
-                    var statsLine = new Dictionary<string, long>();
-                    foreach (var stat in table.Stat!.Stat.OrderBy(s => (int)s.UnitStatId))
-                    {
-                        var id = (int)stat.UnitStatId;
-                        statsLine[id.ToString()] = stat.UnscaledDecimalValue;
-                    }
-                    statsTable[table.Id] = statsLine;
+                    var id = (int)stat.UnitStatId;
+                    statsLine[id.ToString()] = stat.UnscaledDecimalValue;
                 }
+                statsTable[table.Id] = statsLine;
             }
-            return statsTable;
         }
+        return statsTable;
+    }
 
-        private static Dictionary<string, string> GetLocalizationDictionary(List<string> localization)
+    private static Dictionary<string, string> GetLocalizationDictionary(List<string> localization)
+    {
+        var tmp = new Dictionary<string, string>();
+        foreach (string line in localization)
         {
-            var tmp = new Dictionary<string, string>();
-            foreach (string line in localization)
-            {
-                var split = line.Split("|");
-                if (split.Length > 1)
-                    tmp[split[0]] = split[1];
-            }
-            return tmp;
+            var split = line.Split("|");
+            if (split.Length > 1)
+                tmp[split[0]] = split[1];
         }
+        return tmp;
+    }
 
-        private static Dictionary<string, Dictionary<string, Dictionary<string, long>>> CreateGrowthModifiers(GameDataResponse data, Dictionary<string, Dictionary<string, long>> statsTable)
+    private static Dictionary<string, Dictionary<string, Dictionary<string, long>>> CreateGrowthModifiers(GameDataResponse data, Dictionary<string, Dictionary<string, long>> statsTable)
+    {
+        var ul = new Dictionary<string, Dictionary<string, Dictionary<string, long>>>();
+        foreach (var unit in data.Units.Where(u => u.Obtainable && u.ObtainableTime == 0).OrderBy(s => (int)s.Rarity))
         {
-            var ul = new Dictionary<string, Dictionary<string, Dictionary<string, long>>>();
-            foreach (var unit in data.Units.Where(u => u.Obtainable && u.ObtainableTime == 0).OrderBy(s => (int)s.Rarity))
-            {
-                var rarity = (int)unit.Rarity;
-                var baseId = unit.BaseId;
-                var statProgressionId = unit.StatProgressionId;
+            var rarity = (int)unit.Rarity;
+            var baseId = unit.BaseId;
+            var statProgressionId = unit.StatProgressionId;
 
-                if (!ul.ContainsKey(baseId!))
-                    ul[baseId!] = new Dictionary<string, Dictionary<string, long>>();
+            if (!ul.ContainsKey(baseId!))
+                ul[baseId!] = new Dictionary<string, Dictionary<string, long>>();
 
-                ul[baseId!][rarity.ToString()] = statsTable[statProgressionId!];
-            }
-            return ul;
+            ul[baseId!][rarity.ToString()] = statsTable[statProgressionId!];
         }
+        return ul;
     }
 }

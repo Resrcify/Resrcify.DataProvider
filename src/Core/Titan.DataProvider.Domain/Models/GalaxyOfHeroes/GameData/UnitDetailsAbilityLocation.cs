@@ -1,10 +1,9 @@
-namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData
+namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
+
+public enum UnitDetailsAbilityLocation
 {
-    public enum UnitDetailsAbilityLocation
-    {
-        ABILITYLOCATIONNORMAL = 1,
-        ABILITYLOCATIONADVANCED = 2,
-        ABILITYLOCATIONCREW = 3,
-        ABILITYLOCATIONHIDDEN = 4,
-    }
+    ABILITYLOCATIONNORMAL = 1,
+    ABILITYLOCATIONADVANCED = 2,
+    ABILITYLOCATIONCREW = 3,
+    ABILITYLOCATIONHIDDEN = 4,
 }

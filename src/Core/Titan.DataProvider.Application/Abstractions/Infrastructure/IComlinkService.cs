@@ -1,12 +1,11 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Titan.DataProvider.Application.Abstractions.Infrastructure
+namespace Titan.DataProvider.Application.Abstractions.Infrastructure;
+
+public interface IComlinkService
 {
-    public interface IComlinkService
-    {
-        Task<HttpResponseMessage> GetGameData(string gamedataVersion);
-        Task<HttpResponseMessage> GetLocalization(string localizationBundleVersion);
-        Task<HttpResponseMessage> GetMetadata();
-    }
+    Task<HttpResponseMessage> GetGameData(string gamedataVersion);
+    Task<HttpResponseMessage> GetLocalization(string localizationBundleVersion);
+    Task<HttpResponseMessage> GetMetadata();
 }

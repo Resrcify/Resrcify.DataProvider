@@ -1,11 +1,10 @@
-namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData
+namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
+
+public enum EffectTargetBattleSide
 {
-    public enum EffectTargetBattleSide
-    {
-        BOTHSIDES = 1,
-        ALLYSIDE = 2,
-        ENEMYSIDE = 3,
-        PLAYERSIDE = 4,
-        OPPONENTSIDE = 5,
-    }
+    BOTHSIDES = 1,
+    ALLYSIDE = 2,
+    ENEMYSIDE = 3,
+    PLAYERSIDE = 4,
+    OPPONENTSIDE = 5,
 }

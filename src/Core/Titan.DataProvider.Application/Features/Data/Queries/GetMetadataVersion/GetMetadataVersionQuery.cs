@@ -1,9 +1,8 @@
 using Titan.DataProvider.Application.Abstractions.Application.Messaging;
 using Titan.DataProvider.Application.Models.GalaxyOfHeroes.Metadata;
 
-namespace Titan.DataProvider.Application.Features.Data.Queries.GetMetadataVersion
+namespace Titan.DataProvider.Application.Features.Data.Queries.GetMetadataVersion;
+
+public sealed record GetMetadataVersionQuery() : IQuery<MetadataResponse>
 {
-    public sealed record GetMetadataVersionQuery() : IQuery<MetadataResponse>
-    {
-    }
 }

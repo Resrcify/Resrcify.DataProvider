@@ -4,23 +4,21 @@ using Titan.DataProvider.Application.Abstractions.Infrastructure;
 using Titan.DataProvider.Application.Abstractions.Application.Messaging;
 using Titan.DataProvider.Domain.Shared;
 using Titan.DataProvider.Domain.Internal.BaseData;
+using Titan.DataProvider.Domain.Errors;
 
-namespace Titan.DataProvider.Application.Features.Data.Queries.GetCachedBaseData
+namespace Titan.DataProvider.Application.Features.Data.Queries.GetCachedBaseData;
+
+public sealed class GetCachedBaseDataQueryHandler : IQueryHandler<GetCachedBaseDataQuery, BaseData>
 {
-    public sealed class GetCachedBaseDataQueryHandler : IQueryHandler<GetCachedBaseDataQuery, BaseData>
+    private readonly ICachingService _caching;
+
+    public GetCachedBaseDataQueryHandler(ICachingService caching)
+        => _caching = caching;
+
+    public async Task<Result<BaseData>> Handle(GetCachedBaseDataQuery request, CancellationToken cancellationToken)
     {
-        private readonly ICachingService _caching;
-
-        public GetCachedBaseDataQueryHandler(ICachingService caching)
-        {
-            _caching = caching;
-        }
-
-        public async Task<Result<BaseData>> Handle(GetCachedBaseDataQuery request, CancellationToken cancellationToken)
-        {
-            var cached = await _caching.GetAsync<BaseData>($"BaseData-{request.Language}", cancellationToken);
-            if (cached is null) return Result.Failure<BaseData>(new Error("test", "test")); //TODO: FIX PROPER ERROR
-            return cached;
-        }
+        var cached = await _caching.GetAsync<BaseData>($"BaseData-{request.Language}", cancellationToken);
+        if (cached is null) return Result.Failure<BaseData>(DomainErrors.BaseData.GameDataFileNotFound);
+        return cached;
     }
 }

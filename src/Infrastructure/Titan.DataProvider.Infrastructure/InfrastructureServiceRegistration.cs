@@ -7,11 +7,11 @@ using Polly.Extensions.Http;
 using Quartz;
 using Serilog;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
+using Titan.DataProvider.Infrastructure.BackgroundJobs;
 using Titan.DataProvider.Infrastructure.Caching;
 using Titan.DataProvider.Infrastructure.HttpClients;
-using Titan.TournamentManagement.Infrastructure.BackgroundJobs;
 
-namespace Titan.ShardManagement.Infrastructure
+namespace Titan.DataProvider.Infrastructure
 {
     public static class InfrastructureServiceRegistration
     {

@@ -1,8 +1,7 @@
-namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile
+namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
+
+public class Skill
 {
-    public class Skill
-    {
-        public string? Id { get; set; }
-        public int Tier { get; set; }
-    }
+    public string? Id { get; set; }
+    public int Tier { get; set; }
 }

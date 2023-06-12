@@ -2,89 +2,88 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Titan.DataProvider.Domain.Shared
+namespace Titan.DataProvider.Domain.Shared;
+
+public class Result
 {
-    public class Result
+    protected internal Result(bool isSuccess, Error error)
     {
-        protected internal Result(bool isSuccess, Error error)
+        if (isSuccess && error != Error.None)
         {
-            if (isSuccess && error != Error.None)
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (!isSuccess && error == Error.None)
-            {
-                throw new InvalidOperationException();
-            }
-
-            IsSuccess = isSuccess;
-            Errors = new[] { error };
+            throw new InvalidOperationException();
         }
 
-        protected internal Result(bool isSuccess, Error[] errors)
+        if (!isSuccess && error == Error.None)
         {
-            IsSuccess = isSuccess;
-            Errors = errors;
+            throw new InvalidOperationException();
         }
 
-        public bool IsSuccess { get; }
+        IsSuccess = isSuccess;
+        Errors = new[] { error };
+    }
 
-        public bool IsFailure => !IsSuccess;
+    protected internal Result(bool isSuccess, Error[] errors)
+    {
+        IsSuccess = isSuccess;
+        Errors = errors;
+    }
 
-        public Error[] Errors { get; }
+    public bool IsSuccess { get; }
 
-        public static Result Success() => new(true, Error.None);
+    public bool IsFailure => !IsSuccess;
 
-        public static Result<TValue> Success<TValue>(TValue value) =>
-            new(value, true, Error.None);
+    public Error[] Errors { get; }
 
-        public static Result Failure(Error error) =>
-            new(false, error);
+    public static Result Success() => new(true, Error.None);
 
-        public static Result Failure(Error[] errors) =>
-            new(false, errors);
+    public static Result<TValue> Success<TValue>(TValue value) =>
+        new(value, true, Error.None);
 
-        public static Result<TValue> Failure<TValue>(Error error) =>
-            new(default, false, error);
+    public static Result Failure(Error error) =>
+        new(false, error);
 
-        public static Result<TValue> Failure<TValue>(Error[] errors) =>
-            new(default, false, errors);
+    public static Result Failure(Error[] errors) =>
+        new(false, errors);
 
-        public static Result<TValue> Create<TValue>(TValue? value) =>
-            value is not null ? Success(value) : Failure<TValue>(Error.NullValue);
+    public static Result<TValue> Failure<TValue>(Error error) =>
+        new(default, false, error);
 
-        public static Result<T> Ensure<T>(T value, Func<T, bool> predicate, Error error)
+    public static Result<TValue> Failure<TValue>(Error[] errors) =>
+        new(default, false, errors);
+
+    public static Result<TValue> Create<TValue>(TValue? value) =>
+        value is not null ? Success(value) : Failure<TValue>(Error.NullValue);
+
+    public static Result<T> Ensure<T>(T value, Func<T, bool> predicate, Error error)
+    {
+        return predicate(value) ?
+            Success(value) :
+            Failure<T>(error);
+    }
+
+    public static Result<T> Ensure<T>(
+        T value,
+        params (Func<T, bool> predicate, Error error)[] functions)
+    {
+        var results = new List<Result<T>>();
+        foreach ((Func<T, bool> predicate, Error error) in functions)
+            results.Add(Ensure(value, predicate, error));
+
+        return Combine(results.ToArray());
+    }
+
+    public static Result<T> Combine<T>(params Result<T>[] results)
+    {
+        if (results.Any(r => r.IsFailure))
         {
-            return predicate(value) ?
-                Success(value) :
-                Failure<T>(error);
+            return Failure<T>(
+                results
+                    .SelectMany(r => r.Errors)
+                    .Where(e => e != Error.None)
+                    .Distinct()
+                    .ToArray());
         }
 
-        public static Result<T> Ensure<T>(
-            T value,
-            params (Func<T, bool> predicate, Error error)[] functions)
-        {
-            var results = new List<Result<T>>();
-            foreach ((Func<T, bool> predicate, Error error) in functions)
-                results.Add(Ensure(value, predicate, error));
-
-            return Combine(results.ToArray());
-        }
-
-        public static Result<T> Combine<T>(params Result<T>[] results)
-        {
-            if (results.Any(r => r.IsFailure))
-            {
-                return Failure<T>(
-                    results
-                        .SelectMany(r => r.Errors)
-                        .Where(e => e != Error.None)
-                        .Distinct()
-                        .ToArray());
-            }
-
-            return Success(results[0].Value);
-        }
+        return Success(results[0].Value);
     }
 }

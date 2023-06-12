@@ -1,9 +1,8 @@
-namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData
-{
-    public class EffectTargetCategory
-    {
-        public bool Exclude { get; set; }
-        public string? CategoryId { get; set; }
+namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
-    }
+public class EffectTargetCategory
+{
+    public bool Exclude { get; set; }
+    public string? CategoryId { get; set; }
+
 }
