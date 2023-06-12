@@ -15,7 +15,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit;
 
 public sealed class ExpandedUnit
 {
-    public ExpandedUnit(string definitionId, string name, string image, CombatType combatType, List<Stat> stats, double gp)
+    public ExpandedUnit(string definitionId, string name, string image, CombatType combatType, List<Stat> stats, double gp, List<Skill> skills)
     {
         DefinitionId = definitionId;
         Name = name;
@@ -23,6 +23,7 @@ public sealed class ExpandedUnit
         CombatType = combatType;
         _stats = stats;
         Gp = gp;
+        _skills = skills;
     }
     public string DefinitionId { get; private set; }
     public string Name { get; private set; }
@@ -39,10 +40,11 @@ public sealed class ExpandedUnit
         var definitionId = unit.DefinitionId!.Split(":")[0];
         var combatType = (CombatType)gameData.Units[definitionId].CombatType - 1;
         var stats = GetStats(combatType, unit, gameData, crew);
+        var skills = Skill.Create(unit, gameData.Units[definitionId]);
         if (stats.IsFailure)
             return Result.Failure<ExpandedUnit>(stats.Errors);
         var formattedStats = GetFormattedStats(stats.Value);
-        return new ExpandedUnit(definitionId, gameData.Units[definitionId].Name, gameData.Units[definitionId].Image, combatType, formattedStats.ToList(), stats.Value.Gp);
+        return new ExpandedUnit(definitionId, gameData.Units[definitionId].Name, gameData.Units[definitionId].Image, combatType, formattedStats.ToList(), stats.Value.Gp, skills.Value);
     }
 
     private static IEnumerable<Stat> GetFormattedStats(IStatCalc stats)

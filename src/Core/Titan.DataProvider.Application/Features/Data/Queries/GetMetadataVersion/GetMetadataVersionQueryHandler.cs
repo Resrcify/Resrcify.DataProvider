@@ -11,14 +11,14 @@ namespace Titan.DataProvider.Application.Features.Data.Queries.GetMetadataVersio
 {
     public sealed class GetMetadataVersionQueryHandler : IQueryHandler<GetMetadataVersionQuery, MetadataResponse>
     {
-        private readonly IGalaxyOfHeroesWrapperService _api;
+        private readonly IGalaxyOfHeroesService _api;
 
-        public GetMetadataVersionQueryHandler(IGalaxyOfHeroesWrapperService api)
+        public GetMetadataVersionQueryHandler(IGalaxyOfHeroesService api)
             => _api = api;
 
         public async Task<Result<MetadataResponse>> Handle(GetMetadataVersionQuery request, CancellationToken cancellationToken)
         {
-            var response = await _api.GetMetadata();
+            var response = await _api.GetMetadata(cancellationToken: cancellationToken);
             if (!response.IsSuccessStatusCode)
                 return Result.Failure<MetadataResponse>(ApplicationErrors.HttpClient.RequestNotSuccessful);
             return JsonConvert.DeserializeObject<MetadataResponse>(

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Titan.DataProvider.API.Abstractions;
 using Titan.DataProvider.API.Extensions;
 using Titan.DataProvider.Application.Features.Data.Commands.UpdateRawData;
-using Titan.DataProvider.Application.Features.Data.Commands.UpdateRawDataFromTitan;
 using Titan.DataProvider.Application.Features.Data.Queries.GetCachedBaseData;
 using Titan.DataProvider.Application.Features.Data.Queries.GetCachedLocalizationData;
 using Titan.DataProvider.Domain.Shared;
@@ -23,13 +22,6 @@ public class DataController : ApiController
     public async Task<IActionResult> UpdateRawData(CancellationToken cancellationToken = default)
         => await Result
             .Create(new UpdateRawDataCommand())
-            .Bind(request => _sender.Send(request, cancellationToken))
-            .Match(Ok, HandleFailure);
-
-    [HttpPost("titan/update")]
-    public async Task<IActionResult> UpdateRawDataFromTitan(CancellationToken cancellationToken = default)
-        => await Result
-            .Create(new UpdateRawDataFromTitanCommand())
             .Bind(request => _sender.Send(request, cancellationToken))
             .Match(Ok, HandleFailure);
 

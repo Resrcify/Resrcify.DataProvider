@@ -17,7 +17,7 @@ public sealed class Stat : ValueObject
     public double TotalValue { get; private set; }
     public bool IsPercentage { get; private set; }
 
-    public Stat(string name, UnitStat unitStat, double baseValue, double gearValue, double modValue, double crewValue, bool isPercentage)
+    private Stat(string name, UnitStat unitStat, double baseValue, double gearValue, double modValue, double crewValue, bool isPercentage)
     {
         Name = name;
         UnitStat = unitStat;

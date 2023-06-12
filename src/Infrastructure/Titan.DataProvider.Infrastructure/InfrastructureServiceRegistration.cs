@@ -18,16 +18,18 @@ namespace Titan.DataProvider.Infrastructure
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             var apiUrl = Environment.GetEnvironmentVariable("API");
-            services.AddHttpClient<IGalaxyOfHeroesWrapperService, GalaxyOfHeroesWrapperService>(c =>
-            {
-                c.BaseAddress = new Uri(apiUrl ?? "http://localhost:10000");
-            }).AddPolicyHandler(GetRetryPolicy());
 
-            services.AddHttpClient<IComlinkService, ComlinkService>(c =>
-            {
-                c.BaseAddress = new Uri(apiUrl ?? "http://localhost:5000");
-            })
-            .AddPolicyHandler(GetRetryPolicy());
+            if (bool.TryParse(Environment.GetEnvironmentVariable("ISTITAN"), out var isTitan) && isTitan)
+                services.AddHttpClient<IGalaxyOfHeroesService, GalaxyOfHeroesService>(c =>
+                {
+                    c.BaseAddress = new Uri(apiUrl ?? "http://localhost:10000");
+                }).AddPolicyHandler(GetRetryPolicy());
+            else
+                services.AddHttpClient<IGalaxyOfHeroesService, ComlinkService>(c =>
+                {
+                    c.BaseAddress = new Uri(apiUrl ?? "http://localhost:3200");
+                })
+                .AddPolicyHandler(GetRetryPolicy());
 
             services.AddDistributedMemoryCache();
             services.AddSingleton<ICachingService, CachingService>();

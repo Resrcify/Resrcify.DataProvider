@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Quartz;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
-using Titan.DataProvider.Application.Features.Data.Commands.UpdateRawDataFromTitan;
+using Titan.DataProvider.Application.Features.Data.Commands.UpdateRawData;
 using Titan.DataProvider.Application.Features.Data.Queries.GetMetadataVersion;
 
 namespace Titan.DataProvider.Infrastructure.BackgroundJobs;
@@ -22,24 +22,24 @@ public class CheckMetadataVersionJob : IJob
     public async Task Execute(IJobExecutionContext context)
     {
         var metadata = await _sender.Send(new GetMetadataVersionQuery(), context.CancellationToken);
-        var latestGamedataVersion = metadata.Value?.LatestGamedataVersion?.Split(":")[1];
+        var latestGameDataVersion = metadata.Value?.LatestGamedataVersion?.Split(":")[1];
         var latestLocalizationBundleVersion = metadata.Value?.LatestLocalizationBundleVersion;
 
         var cachedLocalVersion = await _cache.GetAsync<string>("LatestLocalizationBundleVersion", context.CancellationToken);
-        var cachedGamedataVersion = await _cache.GetAsync<string>("LatestGamedataVersion", context.CancellationToken);
+        var cachedGameDataVersion = await _cache.GetAsync<string>("LatestGameDataVersion", context.CancellationToken);
 
-        if (metadata.IsFailure || latestGamedataVersion is null || latestLocalizationBundleVersion is null)
+        if (metadata.IsFailure || latestGameDataVersion is null || latestLocalizationBundleVersion is null)
             return;
 
-        if (cachedLocalVersion is not null && cachedGamedataVersion is not null &&
-            latestGamedataVersion == cachedGamedataVersion &&
+        if (cachedLocalVersion is not null && cachedGameDataVersion is not null &&
+            latestGameDataVersion == cachedGameDataVersion &&
             latestLocalizationBundleVersion == cachedLocalVersion)
             return;
 
-        var result = await _sender.Send(new UpdateRawDataFromTitanCommand());
+        var result = await _sender.Send(new UpdateRawDataCommand());
         if (result.IsFailure) return;
         await _cache.SetAsync("LatestLocalizationBundleVersion", latestLocalizationBundleVersion, context.CancellationToken);
-        await _cache.SetAsync("LatestGamedataVersion", latestGamedataVersion, context.CancellationToken);
+        await _cache.SetAsync("LatestGameDataVersion", latestGameDataVersion, context.CancellationToken);
 
 
     }

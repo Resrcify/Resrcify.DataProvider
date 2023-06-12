@@ -26,4 +26,10 @@ public static class DomainErrors
             "Stat.AllStatValuesZero",
             $"All stat values cannot be zero. Unable to proceed.");
     }
+    public static class Skill
+    {
+        public static readonly Error UnableToFindSkillInGameData = new(
+            "Skill.UnableToFindSkillInGameData",
+            $"Specified skill is not found in the game data file.");
+    }
 }
