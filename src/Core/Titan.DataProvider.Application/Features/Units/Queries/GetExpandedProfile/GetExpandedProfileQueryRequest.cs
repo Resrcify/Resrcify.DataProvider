@@ -1,6 +1,6 @@
-namespace Titan.DataProvider.Application.Features.Units.Queries.GetExpandedUnitData;
+namespace Titan.DataProvider.Application.Features.Units.Queries.GetExpandedProfile;
 
-public enum GetExpandedUnitDataQueryRequest
+public enum GetExpandedProfileQueryRequest
 {
     CHS_CN,
     CHT_CN,

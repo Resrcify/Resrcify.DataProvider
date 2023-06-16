@@ -17,17 +17,23 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
     public double Gp => BaseGp;
     private CharacterStatCalc(
         Unit unit,
-        GameData gameData) : base(unit, gameData)
+        GameData gameData,
+        bool withStats,
+        bool withoutGp,
+        bool withoutMods) : base(unit, gameData)
     {
-        CalculateRawStats();
-        CalculateBaseStats();
-        CalculateModStats();
-        FormatStats();
-        BaseGp = CalculateCharacterGp();
+        if (withStats)
+        {
+            CalculateRawStats();
+            CalculateBaseStats();
+            if (!withoutMods) CalculateModStats();
+            FormatStats();
+        }
+        if (!withoutGp) BaseGp = CalculateCharacterGp();
     }
-    public static Result<IStatCalc> Create(Unit unit, GameData gameData)
+    public static Result<IStatCalc> Create(Unit unit, GameData gameData, bool withStats, bool withoutGp, bool withoutMods)
     {
-        return new CharacterStatCalc(unit, gameData);
+        return new CharacterStatCalc(unit, gameData, withStats, withoutGp, withoutMods);
     }
 
     private void CalculateRawStats()

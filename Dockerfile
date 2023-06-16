@@ -4,8 +4,9 @@ EXPOSE 16000
 
 ENV ASPNETCORE_URLS=http://+:16000
 ENV ASPNETCORE_ENVIRONMENT ASPNETCORE_ENVIRONMENT
-ENV API API
-ENV ISTITAN ISTITAN
+ENV PORT PORT
+ENV CLIENT_URL CLIENT_URL
+ENV IS_TITAN IS_TITAN
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-dotnet-configure-containers

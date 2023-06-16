@@ -19,17 +19,22 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
     private ShipStatCalc(
         Unit unit,
         GameData gameData,
-        Dictionary<string, Unit> crewUnits) : base(unit, gameData)
+        Dictionary<string, Unit> crewUnits,
+        bool withStats,
+        bool withoutGp) : base(unit, gameData)
     {
         _crewUnits = crewUnits;
-        CalculateRawStats();
-        CalculateBaseStats();
-        FormatStats();
-        BaseGp = CalculateShipGp();
+        if (withStats)
+        {
+            CalculateRawStats();
+            CalculateBaseStats();
+            FormatStats();
+        }
+        if (!withoutGp) BaseGp = CalculateShipGp();
     }
-    public static Result<IStatCalc> Create(Unit unit, GameData gameData, Dictionary<string, Unit> crew)
+    public static Result<IStatCalc> Create(Unit unit, GameData gameData, Dictionary<string, Unit> crew, bool withStats, bool withoutGp)
     {
-        return new ShipStatCalc(unit, gameData, crew);
+        return new ShipStatCalc(unit, gameData, crew, withStats, withoutGp);
     }
     private void CalculateRawStats()
     {

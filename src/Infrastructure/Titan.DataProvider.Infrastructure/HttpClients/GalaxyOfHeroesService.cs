@@ -20,12 +20,9 @@ public class GalaxyOfHeroesService : IGalaxyOfHeroesService
     public async Task<HttpResponseMessage> GetGameData(string? version = null, CancellationToken cancellationToken = default)
         => await Client.GetAsync("api/data/getgamedata", cancellationToken);
 
-
     public async Task<HttpResponseMessage> GetLocalization(string? version = null, CancellationToken cancellationToken = default)
         => await Client.GetAsync("api/data/getlocalizationdata", cancellationToken);
 
-
     public async Task<HttpResponseMessage> GetMetadata(string? version = null, CancellationToken cancellationToken = default)
        => await Client.GetAsync("api/content/getmetadata", cancellationToken);
-
 }

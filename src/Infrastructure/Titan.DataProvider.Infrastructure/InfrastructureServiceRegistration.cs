@@ -17,23 +17,40 @@ namespace Titan.DataProvider.Infrastructure
     {
         public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
-            var apiUrl = Environment.GetEnvironmentVariable("API");
-
-            if (bool.TryParse(Environment.GetEnvironmentVariable("ISTITAN"), out var isTitan) && isTitan)
+            var clientUrl = Environment.GetEnvironmentVariable("CLIENT_URL") ?? "http://localhost";
+            var port = Environment.GetEnvironmentVariable("PORT") ?? "3200";
+            if (bool.TryParse(Environment.GetEnvironmentVariable("IS_TITAN"), out var isTitan) && isTitan)
                 services.AddHttpClient<IGalaxyOfHeroesService, GalaxyOfHeroesService>(c =>
                 {
-                    c.BaseAddress = new Uri(apiUrl ?? "http://localhost:10000");
-                }).AddPolicyHandler(GetRetryPolicy());
+                    if (port == "3200") port = "10000";
+                    var uri = clientUrl + ":" + port;
+                    c.BaseAddress = new Uri(uri);
+                })
+                .AddPolicyHandler(GetRetryPolicy())
+                .ConfigurePrimaryHttpMessageHandler(messageHandler =>
+                {
+                    var handler = new HttpClientHandler();
+                    if (handler.SupportsAutomaticDecompression)
+                        handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+                    return handler;
+                });
             else
                 services.AddHttpClient<IGalaxyOfHeroesService, ComlinkService>(c =>
                 {
-                    c.BaseAddress = new Uri(apiUrl ?? "http://localhost:3200");
+                    var uri = clientUrl + ":" + port;
+                    c.BaseAddress = new Uri(uri);
                 })
-                .AddPolicyHandler(GetRetryPolicy());
+                .AddPolicyHandler(GetRetryPolicy())
+                .ConfigurePrimaryHttpMessageHandler(messageHandler =>
+                {
+                    var handler = new HttpClientHandler();
+                    if (handler.SupportsAutomaticDecompression)
+                        handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+                    return handler;
+                });
 
             services.AddDistributedMemoryCache();
             services.AddSingleton<ICachingService, CachingService>();
-
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()

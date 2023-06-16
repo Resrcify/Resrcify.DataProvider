@@ -22,13 +22,14 @@ public class CheckMetadataVersionJob : IJob
     public async Task Execute(IJobExecutionContext context)
     {
         var metadata = await _sender.Send(new GetMetadataVersionQuery(), context.CancellationToken);
+        if (metadata.IsFailure) return;
         var latestGameDataVersion = metadata.Value?.LatestGamedataVersion?.Split(":")[1];
         var latestLocalizationBundleVersion = metadata.Value?.LatestLocalizationBundleVersion;
 
         var cachedLocalVersion = await _cache.GetAsync<string>("LatestLocalizationBundleVersion", context.CancellationToken);
         var cachedGameDataVersion = await _cache.GetAsync<string>("LatestGameDataVersion", context.CancellationToken);
 
-        if (metadata.IsFailure || latestGameDataVersion is null || latestLocalizationBundleVersion is null)
+        if (latestGameDataVersion is null || latestLocalizationBundleVersion is null)
             return;
 
         if (cachedLocalVersion is not null && cachedGameDataVersion is not null &&

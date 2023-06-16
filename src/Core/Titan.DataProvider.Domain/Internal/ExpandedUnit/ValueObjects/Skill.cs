@@ -48,16 +48,16 @@ public sealed class Skill : ValueObject
         }
         return new Skill(skillData.Id, skillData.Name, skillData.NameKey, skillData.Image, skillTier, (int)skillData.MaxTier, hasActivatedZeta, hasActivatedOmicron);
     }
-    public static Result<List<Skill>> Create(Unit unit, UnitData data)
+    public static Result<Dictionary<string, Skill>> Create(Unit unit, UnitData data)
     {
-        var skillList = new List<Skill>();
+        var skillDict = new Dictionary<string, Skill>();
         foreach (var skill in unit.Skill)
         {
             var newSkill = Create(skill, data);
             if (newSkill.IsSuccess)
-                skillList.Add(newSkill.Value);
+                skillDict.Add(newSkill.Value.Id, newSkill.Value);
         }
-        return skillList;
+        return skillDict;
     }
     public override IEnumerable<object> GetAtomicValues()
     {
