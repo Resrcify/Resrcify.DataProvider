@@ -11,11 +11,11 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 
 public abstract class StatCalcBase
 {
-    public readonly Dictionary<long, double> _base = new();
+    public readonly Dictionary<int, double> _base = new();
     public readonly Dictionary<string, double> _growthModifiers = new();
-    public readonly Dictionary<long, double> _gear = new();
-    public readonly Dictionary<long, double> _mods = new();
-    public readonly Dictionary<long, double> _crew = new();
+    public readonly Dictionary<int, double> _gear = new();
+    public readonly Dictionary<int, double> _mods = new();
+    public readonly Dictionary<int, double> _crew = new();
     public double BaseGp { get; set; }
     public readonly GameData _gameData;
     public readonly Unit _unit;
@@ -43,7 +43,7 @@ public abstract class StatCalcBase
             var mms = GetMasteryObject(masteryModifierId, _gameData);
             foreach (var statId in mms)
             {
-                var longKey = long.Parse(statId.Key);
+                var longKey = int.Parse(statId.Key);
                 ref var baseValue = ref CollectionsMarshal.GetValueRefOrAddDefault(_base, longKey, out var baseExisted);
                 if (baseExisted)
                 {
@@ -58,7 +58,7 @@ public abstract class StatCalcBase
         var primaryStat = _gameData.Units[definitionId].PrimaryStat;
         // calculate effects of Primary stats on Secondary stats:
         _base[1] = _base.GetOrDefault(1) + (_base[2] * 18); // Health += STR * Base
-        _base[6] = Floor(_base.GetOrDefault(6), 8) + Floor(_base[primaryStat] * 1.4, 8); // Ph. Damage += MainStat * 1.4
+        _base[6] = Floor(_base.GetOrDefault(6), 8) + Floor(_base[(int)primaryStat] * 1.4, 8); // Ph. Damage += MainStat * 1.4
         _base[7] = Floor(_base.GetOrDefault(7), 8) + Floor(_base[4] * 2.4, 8); // Sp. Damage += TAC * 2.4
         _base[8] = Floor(_base.GetOrDefault(8), 8) + Floor(_base[2] * 0.14 + _base[3] * 0.07, 8); // Armor += STR*0.14 + AGI*0.07
         _base[9] = Floor(_base.GetOrDefault(9), 8) + Floor(_base[4] * 0.1, 8); // Resistance += TAC * 0.1
@@ -148,10 +148,10 @@ public abstract class StatCalcBase
         // Currently, all values are identical across each gear level, so a simpler method is possible.
         // But that could change at any time.
         if (unit.Equipment?.Count > 0)
-            foreach (var piece in unit.Equipment)
+            foreach (var piece in CollectionsMarshal.AsSpan(unit.Equipment))
                 gp += _gameData.GpTable.GearPieceGp[tierEnumValue.ToString()][piece.Slot.ToString()];
 
-        foreach (var skill in unit.Skill)
+        foreach (var skill in CollectionsMarshal.AsSpan(unit.Skill))
             gp += GetSkillGp(definitionId, skill);
 
         if (unit.PurchasedAbilityId?.Count > 0)
@@ -187,7 +187,7 @@ public abstract class StatCalcBase
     public double GetCrewlessReinforcementGp()
     {
         var gp = 0.0;
-        foreach (var skill in _unit.Skill)
+        foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skill))
         {
             var defId = _unit.DefinitionId?.Split(":")[0];
             if (defId is null) continue;
@@ -203,7 +203,7 @@ public abstract class StatCalcBase
     public double GetCrewlessAbilityGp()
     {
         var gp = 0.0;
-        foreach (var skill in _unit.Skill)
+        foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skill))
         {
             var defId = _unit.DefinitionId?.Split(":")[0];
             if (defId is null) continue;
@@ -227,27 +227,27 @@ public abstract class StatCalcBase
 
     private void ConvertPercent(long statId, Func<double, double> ConvertFunc)
     {
-        var flat = _base.GetOrDefault(statId);
+        var flat = _base.GetOrDefault((int)statId);
         var percent = ConvertFunc(flat);
-        _base[statId] = percent;
+        _base[(int)statId] = percent;
         var last = percent;
-        if (_crew.ContainsKey(statId))
+        if (_crew.ContainsKey((int)statId))
         {
-            flat += _crew[statId];
-            _crew[statId] = ConvertFunc(flat) - last;
+            flat += _crew[(int)statId];
+            _crew[(int)statId] = ConvertFunc(flat) - last;
         }
-        if (_gear.ContainsKey(statId))
+        if (_gear.ContainsKey((int)statId))
         {
-            flat += _gear[statId];
+            flat += _gear[(int)statId];
             percent = ConvertFunc(flat);
-            _gear[statId] = percent - last;
+            _gear[(int)statId] = percent - last;
             last = percent;
         }
 
-        if (_mods.ContainsKey(statId))
+        if (_mods.ContainsKey((int)statId))
         {
-            flat += _mods[statId];
-            _mods[statId] = ConvertFunc(flat) - last;
+            flat += _mods[(int)statId];
+            _mods[(int)statId] = ConvertFunc(flat) - last;
         }
     }
 

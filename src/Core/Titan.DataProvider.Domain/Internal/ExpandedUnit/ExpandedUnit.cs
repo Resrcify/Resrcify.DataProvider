@@ -10,6 +10,7 @@ using Stat = Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects.Stat;
 using Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 using Titan.DataProvider.Domain.Errors;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit;
 
@@ -35,7 +36,7 @@ public sealed class ExpandedUnit
     private readonly Dictionary<int, Stat> _stats = new();
     private readonly Dictionary<string, Skill> _skills = new();
 
-    public static Result<ExpandedUnit> Create(Unit unit, GameData gameData, Dictionary<string, Unit> crew, bool withStats, bool withoutGp, bool withoutMods, bool withoutSkills, bool withoutDatacrons)
+    public static Result<ExpandedUnit> Create(Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp, bool withoutMods, bool withoutSkills, bool withoutDatacrons)
     {
         var definitionId = unit.DefinitionId!.Split(":")[0];
         var combatType = (CombatType)gameData.Units[definitionId].CombatType - 1;
@@ -69,39 +70,40 @@ public sealed class ExpandedUnit
 
     public static Result<Dictionary<string, ExpandedUnit>> Create(PlayerProfileResponse playerProfile, bool withStats, bool withoutGp, bool withoutMods, bool withoutSkills, bool withoutDatacrons, GameData gameData)
     {
-        var expandedUnits = new Dictionary<string, ExpandedUnit>();
         var rosterUnits = playerProfile.RosterUnit.ToDictionary(x => x.DefinitionId!.Split(":")[0]);
-
+        var expandedUnits = new Dictionary<string, ExpandedUnit>(rosterUnits.Count);
         var crewDict = GetCrewHashmap(gameData, rosterUnits);
 
-        foreach (var unit in playerProfile.RosterUnit)
+        foreach (var unit in CollectionsMarshal.AsSpan(playerProfile.RosterUnit))
         {
             var definitionId = unit.DefinitionId!.Split(":")[0];
             crewDict.TryGetValue(definitionId, out var crew);
-            crew ??= new Dictionary<string, Unit>();
-            var expandedUnit = Create(unit, gameData, crew, withStats, withoutGp, withoutMods, withoutSkills, withoutDatacrons);
+            var expandedUnit = Create(unit, gameData, crew ?? new List<Unit>(), withStats, withoutGp, withoutMods, withoutSkills, withoutDatacrons);
             expandedUnits.Add(definitionId, expandedUnit.Value);
         }
         return expandedUnits;
     }
 
-    private static Dictionary<string, Dictionary<string, Unit>> GetCrewHashmap(GameData gameData, Dictionary<string, Unit> rosterUnits)
+    private static Dictionary<string, List<Unit>> GetCrewHashmap(GameData gameData, Dictionary<string, Unit> rosterUnits)
     {
-        Dictionary<string, Dictionary<string, Unit>> crewDict = new();
         var crewStringDict = gameData.Units
             .Where(x => (CombatType)x.Value.CombatType - 1 == CombatType.SHIP)
-            .ToDictionary(x => x.Value.Id, x => x.Value.Crew);
+            .ToLookup(x => x.Value.Id, x => x.Value.Crew);
+        Dictionary<string, List<Unit>> crewDict = new(crewStringDict.Count);
 
         foreach (var val in crewStringDict)
         {
-            crewDict[val.Key] = new Dictionary<string, Unit>();
-            foreach (var crew in val.Value)
-                crewDict[val.Key].TryAdd(crew, rosterUnits[crew]);
+            crewDict[val.Key] = new List<Unit>();
+            foreach (var crew in val)
+                foreach (var unit in crew)
+                {
+                    crewDict[val.Key].Add(rosterUnits[unit]);
+                }
         }
 
         return crewDict;
     }
-    private static Result<IStatCalc> GetStats(CombatType type, Unit unit, GameData gameData, Dictionary<string, Unit> crew, bool withStats, bool withoutGp, bool withoutMods)
+    private static Result<IStatCalc> GetStats(CombatType type, Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp, bool withoutMods)
         => type switch
         {
             CombatType.SQUAD => CharacterStatCalc.Create(unit, gameData, withStats, withoutGp, withoutMods),

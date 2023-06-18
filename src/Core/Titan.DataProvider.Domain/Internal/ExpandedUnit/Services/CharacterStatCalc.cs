@@ -5,15 +5,16 @@ using Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 using Titan.DataProvider.Domain.Shared;
 using System.Collections.Generic;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 
 public class CharacterStatCalc : StatCalcBase, IStatCalc
 {
-    public IReadOnlyDictionary<long, double> Base => _base;
-    public IReadOnlyDictionary<long, double> Gear => _gear;
-    public IReadOnlyDictionary<long, double> Mods => _mods;
-    public IReadOnlyDictionary<long, double> Crew => _crew;
+    public IReadOnlyDictionary<int, double> Base => _base;
+    public IReadOnlyDictionary<int, double> Gear => _gear;
+    public IReadOnlyDictionary<int, double> Mods => _mods;
+    public IReadOnlyDictionary<int, double> Crew => _crew;
     public double Gp => BaseGp;
     private CharacterStatCalc(
         Unit unit,
@@ -45,7 +46,7 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
         var definitionId = _unit.DefinitionId!.Split(":")[0];
 
         foreach (var stat in _gameData.Units[definitionId].GearLevels[tierEnumValue.ToString()].Stats)
-            _base.Add(stat.Key, stat.Value);
+            _base.Add((int)stat.Key, stat.Value);
 
         foreach (var stat in _gameData.Units[definitionId].GrowthModifiers[rarityEnumValue.ToString()])
             _growthModifiers.Add(stat.Key, stat.Value);
@@ -61,7 +62,7 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
         var relic = _gameData.Relics[_gameData.Units[definitionId].Relics[relicEnumValue.ToString()]];
 
         foreach (var stat in relic.Stats)
-            _base[stat.Key] = _base.GetOrDefault(stat.Key) + stat.Value;
+            _base[(int)stat.Key] = _base.GetOrDefault((int)stat.Key) + stat.Value;
         foreach (var stat in relic.Gms)
             _growthModifiers[stat.Key] = _growthModifiers.GetOrDefault(stat.Key) + stat.Value;
     }
@@ -69,7 +70,7 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
     private void CalculateEquipmentStats()
     {
         if (_unit.Equipment is null) return;
-        foreach (var gearPiece in _unit.Equipment)
+        foreach (var gearPiece in CollectionsMarshal.AsSpan(_unit.Equipment))
         {
             var gearId = gearPiece.EquipmentId;
             if (gearId is null || !_gameData.Gear.ContainsKey(gearId)) continue;
@@ -80,12 +81,12 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
                 // Primary Stat, applies before mods
                 if (stat.Key == 2 || stat.Key == 3 || stat.Key == 4)
                 {
-                    _base[stat.Key] = _base.GetOrDefault(stat.Key) + stat.Value;
+                    _base[(int)stat.Key] = _base.GetOrDefault((int)stat.Key) + stat.Value;
                     continue;
                 }
                 // Secondary Stat, applies after mods
-                if (!_gear.TryAdd(stat.Key, stat.Value))
-                    _gear[stat.Key] = _gear.GetOrDefault(stat.Key) + stat.Value;
+                if (!_gear.TryAdd((int)stat.Key, stat.Value))
+                    _gear[(int)stat.Key] = _gear.GetOrDefault((int)stat.Key) + stat.Value;
             }
         }
     }
@@ -152,7 +153,7 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
                 break;
             default:
                 // other stats add like flat values
-                _mods[statId] = _mods.GetOrDefault(statId) + value;
+                _mods[(int)statId] = _mods.GetOrDefault((int)statId) + value;
                 break;
         }
     }
@@ -160,7 +161,7 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
     private Dictionary<long, double> GetRawModStats()
     {
         var rawModStats = new Dictionary<long, double>();
-        foreach (var mod in _unit.EquippedStatMod)
+        foreach (var mod in CollectionsMarshal.AsSpan(_unit.EquippedStatMod))
         {
             if (mod?.PrimaryStat?.Stat is null) continue;
             if (!rawModStats.TryAdd((int)mod.PrimaryStat.Stat.UnitStatId, mod.PrimaryStat.Stat.UnscaledDecimalValue))
@@ -178,7 +179,7 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
     private Dictionary<ModType, ModSet> CreateModSets()
     {
         var modSetBonuses = new Dictionary<ModType, ModSet>();
-        foreach (var mod in _unit.EquippedStatMod)
+        foreach (var mod in CollectionsMarshal.AsSpan(_unit.EquippedStatMod))
         {
             var modType = int.Parse(mod.DefinitionId![..1]);
             if (!modSetBonuses.TryAdd((ModType)modType, ModSet.Create((ModType)modType, mod.Level).Value))

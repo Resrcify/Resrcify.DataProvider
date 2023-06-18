@@ -4,9 +4,9 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 
 public interface IStatCalc
 {
-    IReadOnlyDictionary<long, double> Base { get; }
-    IReadOnlyDictionary<long, double> Gear { get; }
-    IReadOnlyDictionary<long, double> Mods { get; }
-    IReadOnlyDictionary<long, double> Crew { get; }
+    IReadOnlyDictionary<int, double> Base { get; }
+    IReadOnlyDictionary<int, double> Gear { get; }
+    IReadOnlyDictionary<int, double> Mods { get; }
+    IReadOnlyDictionary<int, double> Crew { get; }
     double Gp { get; }
 }

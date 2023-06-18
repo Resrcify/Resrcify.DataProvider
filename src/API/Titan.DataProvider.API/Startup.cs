@@ -32,17 +32,16 @@ public class Startup
 
         services.Configure<GzipCompressionProviderOptions>(options =>
         {
-            options.Level = CompressionLevel.SmallestSize;
+            options.Level = CompressionLevel.Fastest;
         });
         services.Configure<BrotliCompressionProviderOptions>(options =>
         {
-            options.Level = CompressionLevel.SmallestSize;
+            options.Level = CompressionLevel.Fastest;
         });
 
         services.AddControllers()
             .AddNewtonsoftJson(options =>
             {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
 

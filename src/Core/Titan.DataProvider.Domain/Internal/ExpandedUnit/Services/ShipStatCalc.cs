@@ -5,21 +5,22 @@ using Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 using System.Linq;
 using Titan.DataProvider.Domain.Shared;
 using Skill = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Skill;
+using System.Runtime.InteropServices;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 
 public class ShipStatCalc : StatCalcBase, IStatCalc
 {
-    public IReadOnlyDictionary<long, double> Base => _base;
-    public IReadOnlyDictionary<long, double> Gear => _gear;
-    public IReadOnlyDictionary<long, double> Mods => _mods;
-    public IReadOnlyDictionary<long, double> Crew => _crew;
+    public IReadOnlyDictionary<int, double> Base => _base;
+    public IReadOnlyDictionary<int, double> Gear => _gear;
+    public IReadOnlyDictionary<int, double> Mods => _mods;
+    public IReadOnlyDictionary<int, double> Crew => _crew;
     public double Gp => BaseGp;
-    private readonly Dictionary<string, Unit> _crewUnits;
+    private readonly List<Unit> _crewUnits;
     private ShipStatCalc(
         Unit unit,
         GameData gameData,
-        Dictionary<string, Unit> crewUnits,
+        List<Unit> crewUnits,
         bool withStats,
         bool withoutGp) : base(unit, gameData)
     {
@@ -32,7 +33,7 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
         }
         if (!withoutGp) BaseGp = CalculateShipGp();
     }
-    public static Result<IStatCalc> Create(Unit unit, GameData gameData, Dictionary<string, Unit> crew, bool withStats, bool withoutGp)
+    public static Result<IStatCalc> Create(Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp)
     {
         return new ShipStatCalc(unit, gameData, crew, withStats, withoutGp);
     }
@@ -42,7 +43,7 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
         var definitionId = _unit.DefinitionId!.Split(":")[0];
 
         foreach (var stat in _gameData.Units[definitionId].Stats)
-            _base.Add(stat.Key, stat.Value);
+            _base.Add((int)stat.Key, stat.Value);
 
         foreach (var stat in _gameData.Units[definitionId].GrowthModifiers[rarityEnumValue.ToString()])
             _growthModifiers.Add(stat.Key, stat.Value);
@@ -51,7 +52,7 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
         var statMultiplier = _gameData.CrTable.ShipRarityFactor[rarityEnumValue.ToString()] * crewRating;
         foreach (var (statId, statValue) in _gameData.Units[definitionId].CrewStats)
         {
-            var longStatId = long.Parse(statId);
+            var longStatId = int.Parse(statId);
             // stats 1-15 and 28 all have final integer values
             // other stats require decimals -- shrink to 8 digits of precision through 'unscaled' values this calculator uses
             _crew[longStatId] = Floor(statValue * statMultiplier, (longStatId < 16 || longStatId == 28) ? 8 : 0);
@@ -78,7 +79,7 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
     private double GetCrewRating()
     {
         var crewRating = 0.0;
-        foreach (var member in _crewUnits.Values)
+        foreach (var member in CollectionsMarshal.AsSpan(_crewUnits))
         {
             var definitionId = member.DefinitionId!.Split(":")[0];
             var tierEnumValue = (int)member.CurrentTier;
@@ -125,11 +126,11 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
     {
         var defId = _unit.DefinitionId?.Split(":")[0];
         if (defId is null) return 0;
-        var gp = _crewUnits.Sum(c => CalculateCharacterGp(c.Value));
+        var gp = _crewUnits.Sum(CalculateCharacterGp);
         if (_gameData.GpTable.ShipRarityFactor.TryGetValue(((int)_unit.CurrentRarity).ToString(), out var value))
             gp *= value * _gameData.GpTable.CrewSizeFactor[_crewUnits.Count.ToString()];
         gp += _gameData.GpTable.UnitLevelGp[_unit.CurrentLevel.ToString()];
-        foreach (var skill in _unit.Skill)
+        foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skill))
             gp += GetSkillGp(defId, skill);
         return Floor(gp * 1.5);
     }
