@@ -117,7 +117,4 @@ public sealed class Stat : ValueObject
             61 => "Mastery",
             _ => "None"
         };
-
-
-
 }

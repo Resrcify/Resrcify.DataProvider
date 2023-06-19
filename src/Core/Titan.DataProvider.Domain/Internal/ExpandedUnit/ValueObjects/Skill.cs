@@ -48,14 +48,14 @@ public sealed class Skill : ValueObject
         }
         return new Skill(skillData.Id, skillData.Name, skillData.NameKey, skillData.Image, skillTier, (int)skillData.MaxTier, hasActivatedZeta, hasActivatedOmicron);
     }
-    public static Result<Dictionary<string, Skill>> Create(Unit unit, UnitData data)
+    public static Result<List<Skill>> Create(Unit unit, UnitData data)
     {
-        var skillDict = new Dictionary<string, Skill>();
+        var skillDict = new List<Skill>();
         foreach (var skill in unit.Skill)
         {
             var newSkill = Create(skill, data);
             if (newSkill.IsSuccess)
-                skillDict.Add(newSkill.Value.Id, newSkill.Value);
+                skillDict.Add(newSkill.Value);
         }
         return skillDict;
     }

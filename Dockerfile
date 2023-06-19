@@ -24,10 +24,10 @@ COPY ["src/API/Titan.DataProvider.API/Titan.DataProvider.API.csproj", "API/Titan
 
 RUN dotnet restore "API/Titan.DataProvider.API/Titan.DataProvider.API.csproj"
 COPY . .
-RUN dotnet build -c Release -o /app/build
+RUN dotnet build -c Release --property:OutputPath=/app/build
 
 FROM build AS publish
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet publish -c Release --property:PublishDir=/app/publish
 
 FROM base AS final
 WORKDIR /app

@@ -94,13 +94,13 @@ public sealed partial class DatacronData : ValueObject
     {
         return new DatacronData(id, setId, nameKey, iconKey, detailPrefab, expirationTimeMs, allowReroll, initialTiers, maxRerolls, referenceTemplateId, setMaterial, fixedTag, setTier, tier, abilities, stats);
     }
-    public static Result<List<DatacronData>> Create(GameDataResponse data, Dictionary<string, string> local)
+    public static Result<Dictionary<int, DatacronData>> Create(GameDataResponse data, Dictionary<string, string> local)
     {
         var abilities = MapAbilites(data, local);
         var factions = MapFactions(data, local);
         var units = MapUnits(data, local, factions);
         var stats = MapStatEnums(local);
-        var datacronDataList = new List<DatacronData>();
+        var datacronDataDict = new Dictionary<int, DatacronData>();
         foreach (var cron in data.DatacronTemplate)
         {
             Dictionary<string, Ability> datacronAbilities = new();
@@ -157,9 +157,9 @@ public sealed partial class DatacronData : ValueObject
                 cron.Tier,
                 datacronAbilities,
                 datacronStats.OrderBy(x => x.Value.Id).ToDictionary(x => x.Key, x => x.Value));
-            datacronDataList.Add(datacron.Value);
+            datacronDataDict.Add(cronSet!.Id, datacron.Value);
         }
-        return datacronDataList;
+        return datacronDataDict;
     }
 
     private static TierType GetTierType(int i)
