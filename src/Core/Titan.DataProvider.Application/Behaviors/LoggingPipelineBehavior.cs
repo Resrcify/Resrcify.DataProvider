@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Titan.DataProvider.Domain.Shared;
 
-namespace Titan.TournamentManagement.Application.Behaviors;
+namespace Titan.DataProvider.Application.Behaviors;
 
 public class LoggingPipelineBehavior<TRequest, TResponse>
 : IPipelineBehavior<TRequest, TResponse>
@@ -18,21 +18,26 @@ public class LoggingPipelineBehavior<TRequest, TResponse>
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
+        var start = DateTime.UtcNow;
         _logger.LogInformation("Starting request {@RequestName}, {@DateTimeUtc}",
             typeof(TRequest).Name,
-            DateTime.UtcNow);
+            start);
 
         var result = await next();
 
+        var end = DateTime.UtcNow;
+        var differenceMs = (end - start).TotalMilliseconds;
         if (result.IsFailure)
-            _logger.LogInformation("Request failure {@RequestName}, {@Error}, {@DateTimeUtc}",
+            _logger.LogInformation("Request failure {@RequestName}, {@Error}, {@DateTimeUtc} ({@DifferenceMs} ms)",
                 typeof(TRequest).Name,
                 result.Errors,
-                DateTime.UtcNow);
+                end,
+                differenceMs);
 
-        _logger.LogInformation("Completed request {@RequestName}, {@DateTimeUtc}",
+        _logger.LogInformation("Completed request {@RequestName}, {@DateTimeUtc} ({@DifferenceMs} ms)",
             typeof(TRequest).Name,
-            DateTime.UtcNow);
+            end,
+            differenceMs);
         return result;
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
 using Quartz;
-using Serilog;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
 using Titan.DataProvider.Infrastructure.BackgroundJobs;
 using Titan.DataProvider.Infrastructure.Caching;
@@ -51,11 +50,6 @@ namespace Titan.DataProvider.Infrastructure
 
             services.AddDistributedMemoryCache();
             services.AddSingleton<ICachingService, CachingService>();
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .WriteTo.Console()
-                .CreateLogger();
 
             services.AddQuartz(configure =>
             {

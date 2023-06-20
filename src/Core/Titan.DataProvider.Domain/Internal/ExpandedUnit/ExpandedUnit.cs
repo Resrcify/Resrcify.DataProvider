@@ -34,11 +34,8 @@ public sealed class ExpandedUnit
     public IReadOnlyList<Skill> Skills => _skills;
     private readonly List<Stat> _stats = new();
     private readonly List<Skill> _skills = new();
-    public static Result<ExpandedUnit> Create(Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp, bool withoutMods, bool withoutSkills)
+    public static Result<ExpandedUnit> Create(string definitionId, CombatType combatType, Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp, bool withoutMods, bool withoutSkills)
     {
-        var definitionId = unit.DefinitionId!.Split(":")[0];
-        var combatType = (CombatType)gameData.Units[definitionId].CombatType;
-
         var stats = GetStats(combatType, unit, gameData, crew, withStats, withoutGp, withoutMods);
         if (stats.IsFailure)
             return Result.Failure<ExpandedUnit>(stats.Errors);
@@ -66,29 +63,63 @@ public sealed class ExpandedUnit
 
     public static IEnumerable<KeyValuePair<string, ExpandedUnit>> Create(PlayerProfileResponse playerProfile, bool withStats, bool withoutGp, bool withoutMods, bool withoutSkills, GameData gameData)
     {
-        var rosterUnits = playerProfile.RosterUnit.ToDictionary(x => x.DefinitionId!.Split(":")[0]);
-        var crewDict = GetCrewHashmap(gameData, rosterUnits);
-
-        foreach (var unit in playerProfile.RosterUnit)
+        var characterUnits = new Dictionary<string, Unit>();
+        foreach (var unit in playerProfile.RosterUnit
+            .OrderBy(unit => GetCombatType(gameData, unit)))
         {
             var definitionId = unit.DefinitionId!.Split(":")[0];
-            crewDict.TryGetValue(definitionId, out var crew);
-            var expandedUnit = Create(unit, gameData, crew ?? new List<Unit>(), withStats, withoutGp, withoutMods, withoutSkills);
+            if (IsCombatType(gameData, unit, CombatType.CHARACTER)) characterUnits.Add(definitionId, unit);
+
+            var crew = Enumerable.Empty<Unit>();
+            if (IsCombatType(gameData, unit, CombatType.SHIP)) crew = GetCrewUnits(gameData, characterUnits, definitionId);
+
+            var expandedUnit = Create(definitionId, GetCombatType(gameData, unit), unit, gameData, crew.ToList(), withStats, withoutGp, withoutMods, withoutSkills);
             yield return new(definitionId, expandedUnit.Value);
         }
     }
-
-    private static Dictionary<string, List<Unit>> GetCrewHashmap(GameData gameData, Dictionary<string, Unit> rosterUnits)
+    public static IEnumerable<KeyValuePair<string, ExpandedUnit>> Create(string definitionId, PlayerProfileResponse playerProfile, bool withStats, bool withoutGp, bool withoutMods, bool withoutSkills, GameData gameData)
     {
-        Dictionary<string, List<Unit>> crewDict = new();
-        foreach (var val in gameData.Units.Where(x => x.Value.CombatType == (long)CombatType.SHIP))
+
+        var unit = playerProfile.RosterUnit.FirstOrDefault(x => x.DefinitionId!.Split(":")[0] == definitionId);
+        if (unit is null) yield break;
+
+        var crew = Enumerable.Empty<Unit>();
+        if (IsCombatType(gameData, unit, CombatType.SHIP))
         {
-            crewDict[val.Key] = new List<Unit>();
-            foreach (var crew in val.Value.Crew)
-                crewDict[val.Key].Add(rosterUnits[crew]);
+            var characterUnits = new Dictionary<string, Unit>();
+            foreach (var crewId in gameData.Units[definitionId].Crew)
+            {
+                var crewMember = playerProfile.RosterUnit.FirstOrDefault(x => x.DefinitionId!.Split(":")[0] == crewId);
+                if (crewMember is null) continue;
+                characterUnits.Add(crewId, crewMember);
+            }
+            crew = GetCrewUnits(gameData, characterUnits, definitionId);
         }
-        return crewDict;
+
+        var expandedUnit = Create(definitionId, GetCombatType(gameData, unit), unit, gameData, crew.ToList(), withStats, withoutGp, withoutMods, withoutSkills);
+        yield return new(definitionId, expandedUnit.Value);
     }
+
+    private static IEnumerable<Unit> GetCrewUnits(GameData gameData, Dictionary<string, Unit> characterUnits, string definitionId)
+    {
+        foreach (var crewId in gameData.Units[definitionId].Crew)
+        {
+            characterUnits.TryGetValue(crewId, out var unit);
+            yield return unit!;
+        }
+
+    }
+
+    private static bool IsCombatType(GameData gameData, Unit unit, CombatType combatType)
+    {
+        return GetCombatType(gameData, unit) == combatType;
+    }
+    private static CombatType GetCombatType(GameData gameData, Unit unit)
+    {
+        var definitionId = unit.DefinitionId!.Split(":")[0];
+        return (CombatType)gameData.Units[definitionId].CombatType;
+    }
+
     private static Result<IStatCalc> GetStats(CombatType type, Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp, bool withoutMods)
         => type switch
         {

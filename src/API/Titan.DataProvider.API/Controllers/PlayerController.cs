@@ -21,6 +21,7 @@ public class ProfileController : ApiController
     public async Task<IActionResult> GetExpandedProfileData(
         [FromBody]
         PlayerProfileResponse playerProfile,
+        string? definitionId = null,
         bool withStats = true,
         bool withoutGp = false,
         bool withoutMods = false,
@@ -28,7 +29,7 @@ public class ProfileController : ApiController
         bool withoutDatacrons = false,
         CancellationToken cancellationToken = default)
         => await Result
-            .Create(new GetExpandedProfileQuery(playerProfile, GetExpandedProfileQueryRequest.ENG_US, withStats, withoutGp, withoutMods, withoutSkills, withoutDatacrons))
+            .Create(new GetExpandedProfileQuery(definitionId, playerProfile, GetExpandedProfileQueryRequest.ENG_US, withStats, withoutGp, withoutMods, withoutSkills, withoutDatacrons))
             .Bind(request => _sender.Send(request, cancellationToken))
             .Match(Ok, HandleFailure);
 
@@ -36,6 +37,7 @@ public class ProfileController : ApiController
     public async Task<IActionResult> GetExpandedProfileData(
         [FromBody] PlayerProfileResponse playerProfile,
         GetExpandedProfileQueryRequest language,
+        string? definitionId = null,
         bool withStats = true,
         bool withoutGp = false,
         bool withoutMods = false,
@@ -43,7 +45,7 @@ public class ProfileController : ApiController
         bool withoutDatacrons = false,
         CancellationToken cancellationToken = default)
         => await Result
-            .Create(new GetExpandedProfileQuery(playerProfile, language, withStats, withoutGp, withoutMods, withoutSkills, withoutDatacrons))
+            .Create(new GetExpandedProfileQuery(definitionId, playerProfile, language, withStats, withoutGp, withoutMods, withoutSkills, withoutDatacrons))
             .Bind(request => _sender.Send(request, cancellationToken))
             .Match(Ok, HandleFailure);
 }

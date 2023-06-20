@@ -2,7 +2,6 @@ using System.Reflection;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using FluentValidation;
-using Titan.TournamentManagement.Application.Behaviors;
 using Titan.DataProvider.Application.Behaviors;
 
 namespace Titan.DataProvider.Application;
