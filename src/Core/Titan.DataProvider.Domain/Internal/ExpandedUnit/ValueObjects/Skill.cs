@@ -6,6 +6,7 @@ using Titan.DataProvider.Domain.Shared;
 using PlayerSkill = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Skill;
 using Unit = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Unit;
 using Titan.DataProvider.Domain.Errors;
+using UnitData = Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.UnitData.UnitData;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 

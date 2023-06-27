@@ -9,6 +9,7 @@ public sealed record GetExpandedProfileQuery(
     GetExpandedProfileQueryRequest Language,
     bool WithStats,
     bool WithoutGp,
+    bool WithoutModStats,
     bool WithoutMods,
     bool WithoutSkills,
     bool WithoutDatacrons) : IQuery<GetExpandedProfileQueryResponse>

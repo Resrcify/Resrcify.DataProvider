@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Titan.DataProvider.Domain.Internal.BaseData.Enums;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 
-namespace Titan.DataProvider.Domain.Internal.BaseData.Entities;
+namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.CrTable;
 
 public sealed class CrTable : ValueObject
 {
@@ -253,9 +252,9 @@ public sealed class CrTable : ValueObject
     private static Dictionary<string, V> CreateDictionaryFromEnum<T, V>(List<TableRow> rows) where T : struct
     {
         var dictionary = new Dictionary<string, V>();
-        foreach (var row in rows.OrderBy(s => Convert.ToInt32((T)Enum.Parse<T>(s.Key!))))
+        foreach (var row in rows.OrderBy(s => Convert.ToInt32(Enum.Parse<T>(s.Key!))))
         {
-            var e = (T)Enum.Parse<T>(row.Key!);
+            var e = Enum.Parse<T>(row.Key!);
             var key = Convert.ToInt32(e);
             dictionary[key.ToString()] = (V)Convert.ChangeType(row.Value!, typeof(V), System.Globalization.CultureInfo.InvariantCulture);
         }

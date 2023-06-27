@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
+namespace Titan.DataProvider.Domain.Abstractions;
 
 public interface IStatCalc
 {

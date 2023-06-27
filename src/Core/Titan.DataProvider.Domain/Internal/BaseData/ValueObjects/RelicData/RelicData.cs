@@ -4,7 +4,7 @@ using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 
-namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects;
+namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.RelicData;
 
 public sealed class RelicData : ValueObject
 {

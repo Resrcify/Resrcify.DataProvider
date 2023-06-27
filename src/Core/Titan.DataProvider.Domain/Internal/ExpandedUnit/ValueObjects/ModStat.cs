@@ -1,60 +1,34 @@
-using System.Collections.Generic;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common;
-using Titan.DataProvider.Domain.Errors;
+using Titan.DataProvider.Domain.Shared;
+using Titan.DataProvider.Domain.Primitives;
+using System.Collections.Generic;
+using System;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 
-public sealed class Stat : ValueObject
+public sealed class ModStat : ValueObject
 {
     public string Name { get; private set; }
     public UnitStat UnitStat { get; private set; }
-    public double BaseValue { get; private set; }
-    public double ModValue { get; private set; }
-    public double GearValue { get; private set; }
-    public double CrewValue { get; private set; }
-    public double TotalValue { get; private set; }
+    public double Value { get; private set; }
+    public int StatRolls { get; private set; }
     public bool IsPercentage { get; private set; }
 
-    private Stat(string name, UnitStat unitStat, double baseValue, double gearValue, double modValue, double crewValue, bool isPercentage)
+    private ModStat(string name, UnitStat unitStat, double value, int statRolls, bool isPercentage)
     {
         Name = name;
         UnitStat = unitStat;
-        BaseValue = baseValue;
-        GearValue = gearValue;
-        ModValue = modValue;
-        CrewValue = crewValue;
-        TotalValue = baseValue + gearValue + modValue + crewValue;
+        Value = value;
+        StatRolls = statRolls;
         IsPercentage = isPercentage;
     }
-    public override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Name;
-        yield return UnitStat;
-        yield return BaseValue;
-        yield return ModValue;
-        yield return TotalValue;
-        yield return IsPercentage;
 
-    }
-    public static Result<Stat> Create(UnitStat unitStat, double baseValue, double gearValue, double modValue, double crewValue)
+    public static Result<ModStat> Create(UnitStat unitStat, double value, int statRolls)
     {
-        if (baseValue == 0 && gearValue == 0 && modValue == 0 && crewValue == 0)
-            return Result.Failure<Stat>(DomainErrors.Stat.AllStatValuesZero);
-        var baseStatValue = baseValue;
-        var gearStatValue = gearValue;
-        var modStatValue = modValue;
-        var crewStatValue = crewValue;
+        var statValue = value * 1e-8;
         var isPercentage = EnumIsPercentage(unitStat);
-        if (isPercentage)
-        {
-            baseStatValue *= 100;
-            gearStatValue *= 100;
-            modStatValue *= 100;
-            crewStatValue *= 100;
-        }
-        return new Stat(GetInGameName(unitStat), unitStat, baseStatValue, gearStatValue, modStatValue, crewStatValue, isPercentage);
+        if (isPercentage) statValue *= 100;
+        return new ModStat(GetInGameName(unitStat), unitStat, statValue, statRolls, isPercentage);
     }
 
     private static bool EnumIsPercentage(UnitStat enumValue)
@@ -179,4 +153,12 @@ public sealed class Stat : ValueObject
             UnitStat.UNITSTATMASTERY => "Mastery",
             _ => "None"
         };
+    public override IEnumerable<object> GetAtomicValues()
+    {
+        yield return Name;
+        yield return UnitStat;
+        yield return Value;
+        yield return StatRolls;
+        yield return IsPercentage;
+    }
 }

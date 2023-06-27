@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
+using Titan.DataProvider.Domain.Internal.ExpandedUnit.Enums;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 
-namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
+namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 
 public sealed class ModSet : ValueObject
 {

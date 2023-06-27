@@ -32,4 +32,16 @@ public static class DomainErrors
             "Skill.UnableToFindSkillInGameData",
             $"Specified skill is not found in the game data file.");
     }
+    public static class Mod
+    {
+        public static readonly Error PrimaryStatNotFound = new(
+            "Mod.PrimaryStatNotFound",
+            $"Specified primary stat was not found.");
+    }
+    public static class ModStat
+    {
+        public static readonly Error UnableToCreate = new(
+            "ModStat.UnableToCreate",
+            $"Was not able to create ModStat.");
+    }
 }

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 using GameData = Titan.DataProvider.Domain.Internal.BaseData.BaseData;
-using Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 using System.Linq;
 using Titan.DataProvider.Domain.Shared;
 using Skill = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Skill;
 using System.Runtime.InteropServices;
+using Titan.DataProvider.Domain.Abstractions;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 

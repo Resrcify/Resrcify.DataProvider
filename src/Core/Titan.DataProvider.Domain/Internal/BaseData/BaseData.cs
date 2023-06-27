@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Titan.DataProvider.Domain.Internal.BaseData.Entities;
-using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects;
+using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.UnitData;
+using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.CrTable;
+using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
+using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.GearData;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
+using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.GpTable;
+using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.ModeSetData;
+using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.RelicData;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData;
 

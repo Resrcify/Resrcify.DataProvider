@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
 
-namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects;
+namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 
 public sealed class StatEnum : ValueObject
 {

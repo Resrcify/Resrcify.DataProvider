@@ -13,9 +13,10 @@ public sealed class StatTier : ValueObject
     public RelicTier RequiredRelicTier { get; private set; }
     public string Name { get; private set; }
     public double Value { get; private set; }
+    public bool IsPercentage { get; private set; }
 
 
-    private StatTier(UnitStat unitStat, int tier, UnitTier requiredUnitTier, RelicTier requiredRelicTier, string name, double value)
+    private StatTier(UnitStat unitStat, int tier, UnitTier requiredUnitTier, RelicTier requiredRelicTier, string name, double value, bool isPercentage)
     {
         UnitStat = unitStat;
         Tier = tier;
@@ -23,78 +24,139 @@ public sealed class StatTier : ValueObject
         RequiredRelicTier = requiredRelicTier;
         Name = name;
         Value = value;
+        IsPercentage = isPercentage;
     }
 
     public static Result<StatTier> Create(int tier, DatacronAffix playerAffix)
     {
-        return new StatTier(playerAffix.StatType, tier, playerAffix.RequiredUnitTier, playerAffix.RequiredRelicTier, GetInGameName((int)playerAffix.StatType), playerAffix.StatValue / 1e8);
+        var isPercentage = EnumIsPercentage(playerAffix.StatType);
+        var statValue = playerAffix.StatValue / 1e8;
+        if (isPercentage) statValue *= 100;
+        return new StatTier(playerAffix.StatType, tier, playerAffix.RequiredUnitTier, playerAffix.RequiredRelicTier, GetInGameName(playerAffix.StatType), statValue, isPercentage);
     }
 
-    private static string GetInGameName(int enumValue)
-       => enumValue switch
-       {
-           1 => "Health",
-           2 => "Strength",
-           3 => "Agility",
-           4 => "Tactics",
-           5 => "Speed",
-           6 => "Physical Damage",
-           7 => "Special Damage",
-           8 => "Armor",
-           9 => "Resistance",
-           10 => "Armor Penetration",
-           11 => "Resistance Penetration",
-           12 => "Dodge Chance",
-           13 => "Deflection Chance",
-           14 => "Physical Critical Chance",
-           15 => "Special Critical Chance",
-           16 => "Critical Damage",
-           17 => "Potency",
-           18 => "Tenacity",
-           19 => "Dodge",
-           20 => "Deflection",
-           21 => "Physical Critical Chance",
-           22 => "Special Critical Chance",
-           23 => "Armor",
-           24 => "Resistance",
-           25 => "Armor Penetration",
-           26 => "Resistance Penetration",
-           27 => "Health Steal",
-           28 => "Protection",
-           29 => "Protection Ignore",
-           30 => "Health Regeneration",
-           31 => "Physical Damage",
-           32 => "Special Damage",
-           33 => "Physical Accuracy",
-           34 => "Special Accuracy",
-           35 => "Physical Critical Avoidance",
-           36 => "Special Critical Avoidance",
-           37 => "Physical Accuracy",
-           38 => "Special Accuracy",
-           39 => "Physical Critical Avoidance",
-           40 => "Special Critical Avoidance",
-           41 => "Offense",
-           42 => "Defense",
-           43 => "Defense Penetration",
-           44 => "Evasion",
-           45 => "Critical Chance",
-           46 => "Accuracy",
-           47 => "Critical Avoidance",
-           48 => "Offense",
-           49 => "Defense",
-           50 => "Defense Penetration",
-           51 => "Evasion",
-           52 => "Accuracy",
-           53 => "Critical Chance",
-           54 => "Critical Avoidance",
-           55 => "Health",
-           56 => "Protection",
-           57 => "Speed",
-           58 => "Counter Attack",
-           59 => "UnitStat_Taunt",
-           61 => "Mastery",
-           _ => "None"
-       };
+    private static bool EnumIsPercentage(UnitStat enumValue)
+        //As a rule of thumb:
+        //Additive are percentages
+        //Rating are flat values but normally calculated as percentages
+        //Without additions are flat values
+        => enumValue switch
+        {
+            UnitStat.UNITSTATARMOR or //Actually not percentage, this value is converted to percentage to mimic games presentation
+            UnitStat.UNITSTATSUPPRESSION or  //Actually not percentage, this value is converted to percentage to mimic games presentation
+            UnitStat.UNITSTATDODGERATING or //Actually not percentage, this value is converted to percentage to mimic games presentation
+            UnitStat.UNITSTATDEFLECTIONRATING or //Actually not percentage, this value is converted to percentage to mimic games presentation
+            UnitStat.UNITSTATATTACKCRITICALRATING or //Actually not percentage, however all moved to this value to handle the games using both flat and percentage types
+            UnitStat.UNITSTATABILITYCRITICALRATING or //Actually not percentage, however all moved to this value to handle the games using both flat and percentage types
+            UnitStat.UNITSTATCRITICALDAMAGE or
+            UnitStat.UNITSTATACCURACY or
+            UnitStat.UNITSTATRESISTANCE or
+            UnitStat.UNITSTATDODGEPERCENTADDITIVE or
+            UnitStat.UNITSTATDEFLECTIONPERCENTADDITIVE or
+            UnitStat.UNITSTATATTACKCRITICALPERCENTADDITIVE or
+            UnitStat.UNITSTATABILITYCRITICALPERCENTADDITIVE or
+            UnitStat.UNITSTATARMORPERCENTADDITIVE or
+            UnitStat.UNITSTATSUPPRESSIONPERCENTADDITIVE or
+            UnitStat.UNITSTATARMORPENETRATIONPERCENTADDITIVE or
+            UnitStat.UNITSTATSUPPRESSIONPENETRATIONPERCENTADDITIVE or
+            UnitStat.UNITSTATHEALTHSTEAL or
+            UnitStat.UNITSTATATTACKDAMAGEPERCENTADDITIVE or
+            UnitStat.UNITSTATABILITYPOWERPERCENTADDITIVE or
+            UnitStat.UNITSTATDODGENEGATEPERCENTADDITIVE or
+            UnitStat.UNITSTATDEFLECTIONNEGATEPERCENTADDITIVE or
+            UnitStat.UNITSTATATTACKCRITICALNEGATEPERCENTADDITIVE or //Actually not percentage, however all moved to this value to handle the games using both flat and percentage types
+            UnitStat.UNITSTATABILITYCRITICALNEGATEPERCENTADDITIVE or //Actually not percentage, however all moved to this value to handle the games using both flat and percentage types
+            UnitStat.UNITSTATDODGENEGATERATING or  //Actually not percentage, this value is converted to percentage to mimic games presentation
+            UnitStat.UNITSTATDEFLECTIONNEGATERATING or  //Actually not percentage, this value is converted to percentage to mimic games presentation
+            UnitStat.UNITSTATATTACKCRITICALNEGATERATING or
+            UnitStat.UNITSTATABILITYCRITICALNEGATERATING or
+            UnitStat.UNITSTATEVASIONRATING or
+            UnitStat.UNITSTATCRITICALRATING or
+            UnitStat.UNITSTATEVASIONNEGATERATING or
+            UnitStat.UNITSTATCRITICALNEGATERATING or
+            UnitStat.UNITSTATOFFENSEPERCENTADDITIVE or
+            UnitStat.UNITSTATDEFENSEPERCENTADDITIVE or
+            UnitStat.UNITSTATDEFENSEPENETRATIONPERCENTADDITIVE or
+            UnitStat.UNITSTATEVASIONPERCENTADDITIVE or
+            UnitStat.UNITSTATEVASIONNEGATEPERCENTADDITIVE or
+            UnitStat.UNITSTATCRITICALCHANCEPERCENTADDITIVE or
+            UnitStat.UNITSTATCRITICALNEGATECHANCEPERCENTADDITIVE or
+            UnitStat.UNITSTATMAXHEALTHPERCENTADDITIVE or
+            UnitStat.UNITSTATMAXSHIELDPERCENTADDITIVE or
+            UnitStat.UNITSTATSPEEDPERCENTADDITIVE or
+            UnitStat.UNITSTATCOUNTERATTACKRATING or
+            UnitStat.UNITSTATDEFENSEPENETRATIONTARGETPERCENTADDITIVE
+            => true,
+            _ => false
+        };
+
+
+    private static string GetInGameName(UnitStat unitStat)
+        => unitStat switch
+        {
+            UnitStat.UNITSTATMAXHEALTH => "Health",
+            UnitStat.UNITSTATSTRENGTH => "Strength",
+            UnitStat.UNITSTATAGILITY => "Agility",
+            UnitStat.UNITSTATINTELLIGENCE => "Tactics",
+            UnitStat.UNITSTATSPEED => "Speed",
+            UnitStat.UNITSTATATTACKDAMAGE => "Physical Damage",
+            UnitStat.UNITSTATABILITYPOWER => "Special Damage",
+            UnitStat.UNITSTATARMOR => "Armor",
+            UnitStat.UNITSTATSUPPRESSION => "Resistance",
+            UnitStat.UNITSTATARMORPENETRATION => "Armor Penetration",
+            UnitStat.UNITSTATSUPPRESSIONPENETRATION => "Resistance Penetration",
+            UnitStat.UNITSTATDODGERATING => "Dodge Chance",
+            UnitStat.UNITSTATDEFLECTIONRATING => "Deflection Chance",
+            UnitStat.UNITSTATATTACKCRITICALRATING => "Physical Critical Chance",
+            UnitStat.UNITSTATABILITYCRITICALRATING => "Special Critical Chance",
+            UnitStat.UNITSTATCRITICALDAMAGE => "Critical Damage",
+            UnitStat.UNITSTATACCURACY => "Potency",
+            UnitStat.UNITSTATRESISTANCE => "Tenacity",
+            UnitStat.UNITSTATDODGEPERCENTADDITIVE => "Dodge",
+            UnitStat.UNITSTATDEFLECTIONPERCENTADDITIVE => "Deflection",
+            UnitStat.UNITSTATATTACKCRITICALPERCENTADDITIVE => "Physical Critical Chance",
+            UnitStat.UNITSTATABILITYCRITICALPERCENTADDITIVE => "Special Critical Chance",
+            UnitStat.UNITSTATARMORPERCENTADDITIVE => "Armor",
+            UnitStat.UNITSTATSUPPRESSIONPERCENTADDITIVE => "Resistance",
+            UnitStat.UNITSTATARMORPENETRATIONPERCENTADDITIVE => "Armor Penetration",
+            UnitStat.UNITSTATSUPPRESSIONPENETRATIONPERCENTADDITIVE => "Resistance Penetration",
+            UnitStat.UNITSTATHEALTHSTEAL => "Health Steal",
+            UnitStat.UNITSTATMAXSHIELD => "Protection",
+            UnitStat.UNITSTATSHIELDPENETRATION => "Protection Ignore",
+            UnitStat.UNITSTATHEALTHREGEN => "Health Regeneration",
+            UnitStat.UNITSTATATTACKDAMAGEPERCENTADDITIVE => "Physical Damage",
+            UnitStat.UNITSTATABILITYPOWERPERCENTADDITIVE => "Special Damage",
+            UnitStat.UNITSTATDODGENEGATEPERCENTADDITIVE => "Physical Accuracy",
+            UnitStat.UNITSTATDEFLECTIONNEGATEPERCENTADDITIVE => "Special Accuracy",
+            UnitStat.UNITSTATATTACKCRITICALNEGATEPERCENTADDITIVE => "Physical Critical Avoidance",
+            UnitStat.UNITSTATABILITYCRITICALNEGATEPERCENTADDITIVE => "Special Critical Avoidance",
+            UnitStat.UNITSTATDODGENEGATERATING => "Physical Accuracy",
+            UnitStat.UNITSTATDEFLECTIONNEGATERATING => "Special Accuracy",
+            UnitStat.UNITSTATATTACKCRITICALNEGATERATING => "Physical Critical Avoidance",
+            UnitStat.UNITSTATABILITYCRITICALNEGATERATING => "Special Critical Avoidance",
+            UnitStat.UNITSTATOFFENSE => "Offense",
+            UnitStat.UNITSTATDEFENSE => "Defense",
+            UnitStat.UNITSTATDEFENSEPENETRATION => "Defense Penetration",
+            UnitStat.UNITSTATEVASIONRATING => "Evasion",
+            UnitStat.UNITSTATCRITICALRATING => "Critical Chance",
+            UnitStat.UNITSTATEVASIONNEGATERATING => "Accuracy",
+            UnitStat.UNITSTATCRITICALNEGATERATING => "Critical Avoidance",
+            UnitStat.UNITSTATOFFENSEPERCENTADDITIVE => "Offense",
+            UnitStat.UNITSTATDEFENSEPERCENTADDITIVE => "Defense",
+            UnitStat.UNITSTATDEFENSEPENETRATIONPERCENTADDITIVE => "Defense Penetration",
+            UnitStat.UNITSTATEVASIONPERCENTADDITIVE => "Evasion",
+            UnitStat.UNITSTATEVASIONNEGATEPERCENTADDITIVE => "Accuracy",
+            UnitStat.UNITSTATCRITICALCHANCEPERCENTADDITIVE => "Critical Chance",
+            UnitStat.UNITSTATCRITICALNEGATECHANCEPERCENTADDITIVE => "Critical Avoidance",
+            UnitStat.UNITSTATMAXHEALTHPERCENTADDITIVE => "Health",
+            UnitStat.UNITSTATMAXSHIELDPERCENTADDITIVE => "Protection",
+            UnitStat.UNITSTATSPEEDPERCENTADDITIVE => "Speed",
+            UnitStat.UNITSTATCOUNTERATTACKRATING => "Counter Attack",
+            UnitStat.UNITSTATTAUNT => "UnitStat_Taunt",
+            UnitStat.UNITSTATDEFENSEPENETRATIONTARGETPERCENTADDITIVE => "UnitStat_Defense_Penetration_Target_Percentage_Additive",
+            UnitStat.UNITSTATMASTERY => "Mastery",
+            _ => "None"
+        };
     public override IEnumerable<object> GetAtomicValues()
     {
         yield return UnitStat;
@@ -103,5 +165,6 @@ public sealed class StatTier : ValueObject
         yield return RequiredRelicTier;
         yield return Name;
         yield return Value;
+        yield return IsPercentage;
     }
 }

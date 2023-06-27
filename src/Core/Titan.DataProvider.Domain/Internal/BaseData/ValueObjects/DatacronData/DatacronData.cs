@@ -3,15 +3,10 @@ using System;
 using System.Collections.Generic;
 using Titan.DataProvider.Domain.Primitives;
 using Titan.DataProvider.Domain.Shared;
-using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using MappedAbility = Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData.MappedAbility;
-using Ability = Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData.Ability;
-using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects;
-using Stat = Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.Stat;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common;
 
-namespace Titan.DataProvider.Domain.Internal.BaseData.Entities;
+namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 
 public sealed partial class DatacronData : ValueObject
 {

@@ -1,4 +1,4 @@
-namespace Titan.DataProvider.Domain.Internal.BaseData.Enums;
+namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.CrTable;
 
 enum RarityEnum
 {

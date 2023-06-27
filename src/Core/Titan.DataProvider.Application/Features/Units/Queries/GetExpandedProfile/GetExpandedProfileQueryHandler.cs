@@ -23,8 +23,8 @@ public sealed class GetExpandedProfileQueryHandler : IQueryHandler<GetExpandedPr
         if (baseData is null) return Result.Failure<GetExpandedProfileQueryResponse>(DomainErrors.ExpandedUnit.GameDataFileNotFound);
 
         var units = request.DefinitionId is null ?
-            ExpandedUnit.Create(request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutMods, request.WithoutSkills, baseData) :
-            ExpandedUnit.Create(request.DefinitionId, request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutMods, request.WithoutSkills, baseData);
+            ExpandedUnit.Create(request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData) :
+            ExpandedUnit.Create(request.DefinitionId, request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData);
 
         var datacrons = Enumerable.Empty<ExpandedDatacron>();
         if (!request.WithoutDatacrons) datacrons = ExpandedDatacron.Create(request.PlayerProfile.Datacron, baseData);
