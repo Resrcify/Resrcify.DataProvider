@@ -17,12 +17,14 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit;
 
 public sealed class ExpandedUnit
 {
-    public ExpandedUnit(string definitionId, string name, string image, CombatType combatType, List<Stat> stats, double gp, List<Skill> skills, List<Mod> mods)
+    public ExpandedUnit(string definitionId, string name, string image, CombatType combatType, ForceAlignment alignment, bool isGalacticLegend, List<Stat> stats, double gp, List<Skill> skills, List<Mod> mods)
     {
         DefinitionId = definitionId;
         Name = name;
         Image = image;
         CombatType = combatType;
+        Alignment = alignment;
+        IsGalacticLegend = isGalacticLegend;
         _stats = stats;
         Gp = gp;
         _skills = skills;
@@ -32,6 +34,8 @@ public sealed class ExpandedUnit
     public string Name { get; private set; }
     public string Image { get; private set; }
     public CombatType CombatType { get; private set; }
+    public ForceAlignment Alignment { get; private set; }
+    public bool IsGalacticLegend { get; private set; }
     public double Gp { get; private set; }
     public IReadOnlyList<Stat> Stats => _stats;
     public IReadOnlyList<Mod> Mods => _mods;
@@ -46,13 +50,16 @@ public sealed class ExpandedUnit
             return Result.Failure<ExpandedUnit>(stats.Errors);
         var formattedStats = GetFormattedStats(stats.Value);
 
+        var gameDataUnit = gameData.Units[definitionId];
+        var alignment = gameDataUnit.ForceAlignment;
+        var isGalacticLegend = gameDataUnit.IsGalacticLegend;
         var skills = new List<Skill>();
-        if (!withoutSkills) skills = Skill.Create(unit, gameData.Units[definitionId]).Value;
+        if (!withoutSkills) skills = Skill.Create(unit, gameDataUnit).Value;
 
         var mods = new List<Mod>();
         if (!withoutMods) mods = Mod.Create(unit.EquippedStatMod).Value;
 
-        return new ExpandedUnit(definitionId, gameData.Units[definitionId].Name, gameData.Units[definitionId].Image, combatType, formattedStats.ToList(), stats.Value.Gp, skills, mods);
+        return new ExpandedUnit(definitionId, gameDataUnit.Name, gameDataUnit.Image, combatType, (ForceAlignment)(int)alignment, isGalacticLegend, formattedStats.ToList(), stats.Value.Gp, skills, mods);
     }
 
     private static IEnumerable<Stat> GetFormattedStats(IStatCalc stats)

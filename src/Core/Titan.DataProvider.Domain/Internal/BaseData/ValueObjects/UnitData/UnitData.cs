@@ -18,6 +18,7 @@ public sealed partial class UnitData : ValueObject
     public IReadOnlyList<string> CategoryIdList => _categoryIdList;
     private readonly List<string> _categoryIdList = new();
     public long UnitClass { get; private set; }
+    public bool IsGalacticLegend { get; private set; }
     public string Image { get; private set; }
     public long PrimaryStat { get; private set; }
     public IReadOnlyDictionary<string, GearLevel> GearLevels => _gearLevels;
@@ -46,6 +47,7 @@ public sealed partial class UnitData : ValueObject
         long forceAlignment,
         List<string> categoryIdList,
         long unitClass,
+        bool isGalacticLegend,
         string image,
         long primaryStat,
         Dictionary<string, GearLevel> gearLevels,
@@ -65,6 +67,7 @@ public sealed partial class UnitData : ValueObject
         ForceAlignment = forceAlignment;
         _categoryIdList = categoryIdList;
         UnitClass = unitClass;
+        IsGalacticLegend = isGalacticLegend;
         Image = image;
         PrimaryStat = primaryStat;
         _gearLevels = gearLevels;
@@ -85,6 +88,7 @@ public sealed partial class UnitData : ValueObject
         long forceAlignment,
         List<string> categoryIdList,
         long unitClass,
+        bool isGalacticLegend,
         string image,
         long primaryStat,
         Dictionary<string, GearLevel> gearLevels,
@@ -105,6 +109,7 @@ public sealed partial class UnitData : ValueObject
             forceAlignment,
             categoryIdList,
             unitClass,
+            isGalacticLegend,
             image,
             primaryStat,
             gearLevels,
@@ -127,6 +132,7 @@ public sealed partial class UnitData : ValueObject
         long forceAlignment,
         List<string> categoryIdList,
         long unitClass,
+        bool isGalacticLegend,
         string image,
         long primaryStat,
         Dictionary<string, Dictionary<string, long>> growthModifiers,
@@ -147,6 +153,7 @@ public sealed partial class UnitData : ValueObject
             forceAlignment,
             categoryIdList,
             unitClass,
+            isGalacticLegend,
             image,
             primaryStat,
             gearLevels,
@@ -182,6 +189,7 @@ public sealed partial class UnitData : ValueObject
             var baseStat = unit.BaseStat;
             var unitClass = (int)unit.UnitClass;
             var relicDefinition = unit.RelicDefinition;
+            var isGalacticLegend = unit.LimitBreakRef.Any(x => x.PowerAdditiveTag == "ultimate");
 
             var skillRef = skillReferenceList.Select(skill => skills[skill!.SkillId!]).ToList();
 
@@ -220,6 +228,7 @@ public sealed partial class UnitData : ValueObject
                         forceAlignment,
                         categoryIdList,
                         unitClass,
+                        isGalacticLegend,
                         thumbnailName!,
                         primaryUnitStat,
                         tierData,
@@ -256,6 +265,7 @@ public sealed partial class UnitData : ValueObject
                         forceAlignment,
                         categoryIdList,
                         unitClass,
+                        isGalacticLegend,
                         thumbnailName!,
                         primaryUnitStat,
                         growthModifiers[baseId!],
@@ -296,6 +306,7 @@ public sealed partial class UnitData : ValueObject
         yield return ForceAlignment;
         yield return CategoryIdList;
         yield return UnitClass;
+        yield return IsGalacticLegend;
         yield return Image;
         yield return PrimaryStat;
         yield return GearLevels!;

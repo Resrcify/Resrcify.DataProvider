@@ -10,31 +10,31 @@ public sealed class Stat : ValueObject
 {
     public string Name { get; private set; }
     public UnitStat UnitStat { get; private set; }
-    public double BaseValue { get; private set; }
-    public double ModValue { get; private set; }
-    public double GearValue { get; private set; }
-    public double CrewValue { get; private set; }
-    public double TotalValue { get; private set; }
+    public double Base { get; private set; }
+    public double Mod { get; private set; }
+    public double Gear { get; private set; }
+    public double Crew { get; private set; }
+    public double Total { get; private set; }
     public bool IsPercentage { get; private set; }
 
     private Stat(string name, UnitStat unitStat, double baseValue, double gearValue, double modValue, double crewValue, bool isPercentage)
     {
         Name = name;
         UnitStat = unitStat;
-        BaseValue = baseValue;
-        GearValue = gearValue;
-        ModValue = modValue;
-        CrewValue = crewValue;
-        TotalValue = baseValue + gearValue + modValue + crewValue;
+        Base = baseValue;
+        Gear = gearValue;
+        Mod = modValue;
+        Crew = crewValue;
+        Total = baseValue + gearValue + modValue + crewValue;
         IsPercentage = isPercentage;
     }
     public override IEnumerable<object> GetAtomicValues()
     {
         yield return Name;
         yield return UnitStat;
-        yield return BaseValue;
-        yield return ModValue;
-        yield return TotalValue;
+        yield return Base;
+        yield return Mod;
+        yield return Total;
         yield return IsPercentage;
 
     }

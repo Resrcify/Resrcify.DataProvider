@@ -21,10 +21,11 @@ public sealed class Mod : ValueObject
     public int Level { get; private set; }
     public ModStat PrimaryStat { get; private set; }
     public IReadOnlyList<ModStat> SecondaryStats => _secondaryStats;
-    public List<ModStat> _secondaryStats = new();
+    private readonly List<ModStat> _secondaryStats = new();
     public bool IsMaxLevel { get; private set; }
+    public int RerolledCount { get; private set; }
 
-    private Mod(ModSlot modSlot, ModType modType, ModRarity modRarity, ModTier modTier, string modSlotName, string modTypeName, string modTierName, int level, ModStat primaryStat, List<ModStat> secondaryStats, bool isMaxLevel)
+    private Mod(ModSlot modSlot, ModType modType, ModRarity modRarity, ModTier modTier, string modSlotName, string modTypeName, string modTierName, int level, ModStat primaryStat, List<ModStat> secondaryStats, bool isMaxLevel, int rerolledCount)
     {
         Slot = modSlot;
         Type = modType;
@@ -37,6 +38,7 @@ public sealed class Mod : ValueObject
         PrimaryStat = primaryStat;
         _secondaryStats = secondaryStats;
         IsMaxLevel = isMaxLevel;
+        RerolledCount = rerolledCount;
     }
 
     public static Result<Mod> Create(StatMod statMod)
@@ -62,7 +64,7 @@ public sealed class Mod : ValueObject
         var setName = GetModTypeName((int)setId);
         var slotName = GetModSlotName((int)slot);
         var modTier = (ModTier)statMod.Tier;
-        return new Mod(slot, setId, rarity, modTier, slotName, setName, modTier.ToString(), statMod.Level, primaryStat.Value, secondaryStats, isMaxLevel);
+        return new Mod(slot, setId, rarity, modTier, slotName, setName, modTier.ToString(), statMod.Level, primaryStat.Value, secondaryStats, isMaxLevel, statMod.RerolledCount);
     }
 
     public static Result<List<Mod>> Create(List<StatMod> statMods)
@@ -115,5 +117,6 @@ public sealed class Mod : ValueObject
         yield return PrimaryStat;
         yield return SecondaryStats;
         yield return IsMaxLevel;
+        yield return RerolledCount;
     }
 }

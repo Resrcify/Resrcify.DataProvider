@@ -18,8 +18,9 @@ public sealed class ExpandedDatacron
     public IReadOnlyList<AbilityTier> Abilities => _abilities;
     private readonly List<StatTier> _stats = new();
     public IReadOnlyList<StatTier> Stats => _stats;
+    public int RerollCount { get; private set; }
 
-    private ExpandedDatacron(int setId, string setName, string iconKey, int maxTiers, int activatedTiers, List<AbilityTier> abilites, List<StatTier> stats)
+    private ExpandedDatacron(int setId, string setName, string iconKey, int maxTiers, int activatedTiers, List<AbilityTier> abilites, List<StatTier> stats, int rerollCount)
     {
         SetId = setId;
         SetName = setName;
@@ -28,11 +29,12 @@ public sealed class ExpandedDatacron
         ActivatedTiers = activatedTiers;
         _abilities = abilites;
         _stats = stats;
+        RerollCount = rerollCount;
     }
 
-    public static Result<ExpandedDatacron> Create(int setId, string setName, string iconKey, int maxTiers, int activatedTiers, List<AbilityTier> abilites, List<StatTier> stats)
+    public static Result<ExpandedDatacron> Create(int setId, string setName, string iconKey, int maxTiers, int activatedTiers, List<AbilityTier> abilites, List<StatTier> stats, int rerollCount)
     {
-        return new ExpandedDatacron(setId, setName, iconKey, maxTiers, activatedTiers, abilites, stats);
+        return new ExpandedDatacron(setId, setName, iconKey, maxTiers, activatedTiers, abilites, stats, rerollCount);
     }
     public static IEnumerable<ExpandedDatacron> Create(List<Datacron> playerDatacrons, GameData gameData)
     {
@@ -62,7 +64,7 @@ public sealed class ExpandedDatacron
                 tier++;
             }
             var activatedTiers = stats.Count + abilites.Count;
-            var expandedDatacron = Create(setId, setName, gameDataDatacron.IconKey, maxTiers, activatedTiers, abilites, stats);
+            var expandedDatacron = Create(setId, setName, gameDataDatacron.IconKey, maxTiers, activatedTiers, abilites, stats, playerDatacron.RerollCount);
             yield return expandedDatacron.Value;
         }
     }

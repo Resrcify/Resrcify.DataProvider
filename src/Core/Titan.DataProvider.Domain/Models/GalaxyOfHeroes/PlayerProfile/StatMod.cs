@@ -10,4 +10,5 @@ public class StatMod
     public StatModStat? PrimaryStat { get; set; }
     public int Xp { get; set; }
     public List<StatModStat> SecondaryStat { get; set; } = new();
+    public int RerolledCount { get; set; }
 }
