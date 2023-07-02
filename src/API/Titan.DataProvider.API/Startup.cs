@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Titan.DataProvider.API.Converters;
 using Titan.DataProvider.Application;
 using Titan.DataProvider.Application.JsonContexts;
 using Titan.DataProvider.Infrastructure;
@@ -45,6 +46,7 @@ public class Startup
         {
             options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
             options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowReadingFromString;
+            options.JsonSerializerOptions.Converters.Add(new EnumConverterUsingEnumParseFactory());
             options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
             options.JsonSerializerOptions.AllowTrailingCommas = true;
             options.JsonSerializerOptions.AddContext<DomainJsonContext>();

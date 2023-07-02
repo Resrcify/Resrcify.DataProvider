@@ -17,13 +17,17 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit;
 
 public sealed class ExpandedUnit
 {
-    public ExpandedUnit(string definitionId, string name, string image, CombatType combatType, ForceAlignment alignment, bool isGalacticLegend, List<Stat> stats, double gp, List<Skill> skills, List<Mod> mods)
+    public ExpandedUnit(string definitionId, string name, string image, CombatType combatType, ForceAlignment alignment, Rarity rarity, int level, UnitTier gearTier, RelicTier relicTier, bool isGalacticLegend, List<Stat> stats, double gp, List<Skill> skills, List<Mod> mods)
     {
         DefinitionId = definitionId;
         Name = name;
         Image = image;
         CombatType = combatType;
         Alignment = alignment;
+        Rarity = rarity;
+        Level = level;
+        GearTier = gearTier;
+        RelicTier = relicTier;
         IsGalacticLegend = isGalacticLegend;
         _stats = stats;
         Gp = gp;
@@ -35,6 +39,10 @@ public sealed class ExpandedUnit
     public string Image { get; private set; }
     public CombatType CombatType { get; private set; }
     public ForceAlignment Alignment { get; private set; }
+    public Rarity Rarity { get; private set; }
+    public int Level { get; private set; }
+    public UnitTier GearTier { get; private set; }
+    public RelicTier RelicTier { get; private set; }
     public bool IsGalacticLegend { get; private set; }
     public double Gp { get; private set; }
     public IReadOnlyList<Stat> Stats => _stats;
@@ -59,7 +67,12 @@ public sealed class ExpandedUnit
         var mods = new List<Mod>();
         if (!withoutMods) mods = Mod.Create(unit.EquippedStatMod).Value;
 
-        return new ExpandedUnit(definitionId, gameDataUnit.Name, gameDataUnit.Image, combatType, (ForceAlignment)(int)alignment, isGalacticLegend, formattedStats.ToList(), stats.Value.Gp, skills, mods);
+        var relic = unit.Relic?.CurrentTier ?? RelicTier.RELICLOCKED;
+        var rarity = unit.CurrentRarity;
+        var level = unit.CurrentLevel;
+        var gear = unit.CurrentTier;
+
+        return new ExpandedUnit(definitionId, gameDataUnit.Name, gameDataUnit.Image, combatType, (ForceAlignment)(int)alignment, rarity, level, gear, relic, isGalacticLegend, formattedStats.ToList(), stats.Value.Gp, skills, mods);
     }
 
     private static IEnumerable<Stat> GetFormattedStats(IStatCalc stats)

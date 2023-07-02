@@ -19,11 +19,13 @@ public sealed class Skill : ValueObject
     public int Tier { get; private set; }
     public int MaxTier { get; private set; }
     public bool HasActivatedZeta { get; private set; }
+    public int ZetaTier { get; private set; }
     public bool HasActivatedOmicron { get; private set; }
+    public int OmicronTier { get; private set; }
     public OmicronMode OmicronRestriction { get; private set; }
     public string OmicronRestrictionName { get; private set; }
 
-    private Skill(string id, string name, string nameKey, string image, int tier, int maxTier, bool hasActivatedZeta, bool hasActivatedOmicron, OmicronMode omicronMode, string omicronModeName)
+    private Skill(string id, string name, string nameKey, string image, int tier, int maxTier, bool hasActivatedZeta, int zetaTier, bool hasActivatedOmicron, int omicronTier, OmicronMode omicronMode, string omicronModeName)
     {
         Id = id;
         Name = name;
@@ -32,7 +34,9 @@ public sealed class Skill : ValueObject
         Tier = tier;
         MaxTier = maxTier;
         HasActivatedOmicron = hasActivatedOmicron;
+        OmicronTier = omicronTier;
         HasActivatedZeta = hasActivatedZeta;
+        ZetaTier = zetaTier;
         OmicronRestriction = omicronMode;
         OmicronRestrictionName = omicronModeName;
     }
@@ -45,15 +49,12 @@ public sealed class Skill : ValueObject
         bool hasActivatedOmicron = false;
         var skillTier = skill.Tier + 2;
 
-        foreach (var tag in skillData.PowerOverrideTags)
-        {
-            if (skillData.IsZeta && tag.Value.Contains("zeta") && skillTier >= int.Parse(tag.Key))
-                hasActivatedZeta = true;
+        if (skillData.IsZeta && skillTier >= skillData.ZetaTier)
+            hasActivatedZeta = true;
+        if (skillData.IsOmicron && skillTier >= skillData.OmicronTier)
+            hasActivatedOmicron = true;
 
-            if (skillData.IsOmicron && tag.Value.Contains("omicron") && skillTier >= int.Parse(tag.Key))
-                hasActivatedOmicron = true;
-        }
-        return new Skill(skillData.Id, skillData.Name, skillData.NameKey, skillData.Image, skillTier, (int)skillData.MaxTier, hasActivatedZeta, hasActivatedOmicron, skillData.OmicronMode, skillData.OmicronModeName);
+        return new Skill(skillData.Id, skillData.Name, skillData.NameKey, skillData.Image, skillTier, (int)skillData.MaxTier, hasActivatedZeta, skillData.ZetaTier, hasActivatedOmicron, skillData.OmicronTier, skillData.OmicronMode, skillData.OmicronModeName);
     }
     public static Result<List<Skill>> Create(Unit unit, UnitData data)
     {
@@ -75,7 +76,9 @@ public sealed class Skill : ValueObject
         yield return Tier;
         yield return MaxTier;
         yield return HasActivatedZeta;
+        yield return ZetaTier;
         yield return HasActivatedOmicron;
+        yield return OmicronTier;
         yield return OmicronRestriction;
         yield return OmicronRestrictionName;
     }

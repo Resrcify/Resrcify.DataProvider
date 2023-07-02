@@ -1,12 +1,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0-jammy AS base
 WORKDIR /app
-EXPOSE 16000
+EXPOSE 18000
 
-ENV ASPNETCORE_URLS=http://+:16000
-ENV ASPNETCORE_ENVIRONMENT ASPNETCORE_ENVIRONMENT
-ENV PORT PORT
-ENV CLIENT_URL CLIENT_URL
-ENV IS_TITAN IS_TITAN
+ENV ASPNETCORE_URLS=http://+:18000
+ENV ASPNETCORE_ENVIRONMENT Development
+ENV PORT 3200
+ENV CLIENT_URL http://localhost
+ENV IS_TITAN false
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-dotnet-configure-containers

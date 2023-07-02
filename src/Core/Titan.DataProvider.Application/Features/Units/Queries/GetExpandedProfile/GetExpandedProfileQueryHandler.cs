@@ -12,6 +12,7 @@ using Titan.DataProvider.Domain.Internal.ExpandedUnit.Enums;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common;
 using System.Collections.Generic;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
+using System;
 
 namespace Titan.DataProvider.Application.Features.Units.Queries.GetExpandedProfile;
 
@@ -38,33 +39,52 @@ public sealed class GetExpandedProfileQueryHandler : IQueryHandler<GetExpandedPr
 
         return new GetExpandedProfileQueryResponse(summary, units.ToDictionary(x => x.Key, x => x.Value), datacrons);
     }
-    private static Datacrons ParseDatacronSummary(IEnumerable<ExpandedDatacron> expandedDatacrons)
+    private static DatacronSummary ParseDatacronSummary(IEnumerable<ExpandedDatacron> expandedDatacrons)
     {
-        var level3to5 = 0;
-        var level6to8s = 0;
-        var level9s = 0;
+        var level0 = 0;
+        var level1 = 0;
+        var level2 = 0;
+        var level3 = 0;
+        var level4 = 0;
+        var level5 = 0;
+        var level6 = 0;
+        var level7 = 0;
+        var level8 = 0;
+        var level9 = 0;
         var rerolls = 0;
         foreach (var datacron in expandedDatacrons)
         {
-            if (datacron.ActivatedTiers <= 5) level3to5++;
-            if (datacron.ActivatedTiers > 6 && datacron.ActivatedTiers <= 8) level6to8s++;
-            if (datacron.ActivatedTiers == 9) level9s++;
+            if (datacron.ActivatedTiers == 0) level0++;
+            if (datacron.ActivatedTiers == 1) level1++;
+            if (datacron.ActivatedTiers == 2) level2++;
+            if (datacron.ActivatedTiers == 3) level3++;
+            if (datacron.ActivatedTiers == 4) level4++;
+            if (datacron.ActivatedTiers == 5) level5++;
+            if (datacron.ActivatedTiers == 6) level6++;
+            if (datacron.ActivatedTiers == 7) level7++;
+            if (datacron.ActivatedTiers == 8) level8++;
+            if (datacron.ActivatedTiers == 9) level9++;
             rerolls += datacron.RerollCount;
         }
-
-        return new Datacrons(level3to5, level6to8s, level9s, rerolls);
+        return new DatacronSummary(level0, level1, level2, level3, level4, level5, level6, level7, level8, level9, rerolls);
     }
-    private static ProfileSummary ParseSummaryData(IEnumerable<KeyValuePair<string, ExpandedUnit>> expandedUnits, Datacrons datacronSummary)
+    private static ProfileSummary ParseSummaryData(IEnumerable<KeyValuePair<string, ExpandedUnit>> expandedUnits, DatacronSummary datacronSummary)
     {
         var glCount = 0;
+        var characters = 0;
+        var characterGp = 0.0;
+        var ships = 0;
+        var shipGp = 0.0;
+
         var sixDotModsCount = 0;
         var speedUnder10 = 0;
         var speedBetween10And14 = 0;
         var speedBetween15And19 = 0;
         var speedBetween20And24 = 0;
         var speed25Plus = 0;
-        var offenceBetween4And5Percent = 0;
+        var offenceBetween4And6Percent = 0;
         var offenceOver6Percent = 0;
+
         var zetaCount = 0;
         var omicronCount = 0;
         var tbOmicronCount = 0;
@@ -73,59 +93,92 @@ public sealed class GetExpandedProfileQueryHandler : IQueryHandler<GetExpandedPr
         var cqOmicronCount = 0;
         var raidOmicronCount = 0;
 
+        var relic0 = 0;
+        var relic1 = 0;
+        var relic2 = 0;
+        var relic3 = 0;
+        var relic4 = 0;
+        var relic5 = 0;
+        var relic6 = 0;
+        var relic7 = 0;
+        var relic8 = 0;
+        var relic9 = 0;
+        var relicCount = 0;
+
+        var gear1 = 0;
+        var gear2 = 0;
+        var gear3 = 0;
+        var gear4 = 0;
+        var gear5 = 0;
+        var gear6 = 0;
+        var gear7 = 0;
+        var gear8 = 0;
+        var gear9 = 0;
+        var gear10 = 0;
+        var gear11 = 0;
+        var gear12 = 0;
+        var gear13 = 0;
+
         foreach (var unit in expandedUnits)
         {
+            if (unit.Value.CombatType == CombatType.CHARACTER)
+            {
+                characters++;
+                characterGp += unit.Value.Gp;
+            }
+            if (unit.Value.CombatType == CombatType.SHIP)
+            {
+                ships++;
+                shipGp += unit.Value.Gp;
+            }
             if (unit.Value.IsGalacticLegend) glCount++;
-            foreach (var mod in unit.Value.Mods)
-            {
-                if (mod.Rarity == ModRarity.MODRARITY6) sixDotModsCount++;
-                foreach (var secondaryStat in mod.SecondaryStats)
-                {
-                    if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value < 10) speedUnder10++;
-                    if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 10 && secondaryStat.Value <= 14) speedBetween10And14++;
-                    if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 15 && secondaryStat.Value <= 19) speedBetween15And19++;
-                    if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 20 && secondaryStat.Value <= 24) speedBetween20And24++;
-                    if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 25) speed25Plus++;
-                    if (secondaryStat.UnitStat == UnitStat.UNITSTATOFFENSEPERCENTADDITIVE && secondaryStat.Value >= 6) offenceOver6Percent++;
-                    if (secondaryStat.UnitStat == UnitStat.UNITSTATOFFENSEPERCENTADDITIVE && secondaryStat.Value >= 4 && secondaryStat.Value < 6) offenceBetween4And5Percent++;
-                }
-            }
 
-            foreach (var skill in unit.Value.Skills)
-            {
-                if (skill.HasActivatedZeta) zetaCount++;
-                if (!skill.HasActivatedOmicron) continue;
+            ExtractModData(ref sixDotModsCount, ref speedUnder10, ref speedBetween10And14, ref speedBetween15And19, ref speedBetween20And24, ref speed25Plus, ref offenceBetween4And6Percent, ref offenceOver6Percent, unit);
+            ExtractSkillData(ref zetaCount, ref omicronCount, ref tbOmicronCount, ref twOmicronCount, ref gaOmicronCount, ref cqOmicronCount, ref raidOmicronCount, unit);
 
-                omicronCount++;
+            if (unit.Value.GearTier == UnitTier.TIER01) gear1++;
+            if (unit.Value.GearTier == UnitTier.TIER02) gear2++;
+            if (unit.Value.GearTier == UnitTier.TIER03) gear3++;
+            if (unit.Value.GearTier == UnitTier.TIER04) gear4++;
+            if (unit.Value.GearTier == UnitTier.TIER05) gear5++;
+            if (unit.Value.GearTier == UnitTier.TIER06) gear6++;
+            if (unit.Value.GearTier == UnitTier.TIER07) gear7++;
+            if (unit.Value.GearTier == UnitTier.TIER08) gear8++;
+            if (unit.Value.GearTier == UnitTier.TIER09) gear9++;
+            if (unit.Value.GearTier == UnitTier.TIER10) gear10++;
+            if (unit.Value.GearTier == UnitTier.TIER11) gear11++;
+            if (unit.Value.GearTier == UnitTier.TIER12) gear12++;
+            if (unit.Value.GearTier == UnitTier.TIER13) gear13++;
 
-                if (skill.OmicronRestriction == OmicronMode.TERRITORYBATTLEBOTHOMICRON ||
-                    skill.OmicronRestriction == OmicronMode.TERRITORYCOVERTOMICRON ||
-                    skill.OmicronRestriction == OmicronMode.TERRITORYSTRIKEOMICRON)
-                    tbOmicronCount++;
-                if (skill.OmicronRestriction == OmicronMode.TERRITORYTOURNAMENTOMICRON ||
-                    skill.OmicronRestriction == OmicronMode.TERRITORYTOURNAMENT3OMICRON ||
-                    skill.OmicronRestriction == OmicronMode.TERRITORYTOURNAMENT5OMICRON)
-                    gaOmicronCount++;
-                if (skill.OmicronRestriction == OmicronMode.TERRITORYWAROMICRON)
-                    twOmicronCount++;
-                if (skill.OmicronRestriction == OmicronMode.CONQUESTOMICRON)
-                    cqOmicronCount++;
-                if (skill.OmicronRestriction == OmicronMode.GUILDRAIDOMICRON)
-                    raidOmicronCount++;
-            }
+            if (unit.Value.RelicTier < RelicTier.RELICUNLOCKED) continue;
+            relicCount++;
+            if (unit.Value.RelicTier == RelicTier.RELICUNLOCKED) relic0++;
+            if (unit.Value.RelicTier == RelicTier.RELICTIER01) relic1++;
+            if (unit.Value.RelicTier == RelicTier.RELICTIER02) relic2++;
+            if (unit.Value.RelicTier == RelicTier.RELICTIER03) relic3++;
+            if (unit.Value.RelicTier == RelicTier.RELICTIER04) relic4++;
+            if (unit.Value.RelicTier == RelicTier.RELICTIER05) relic5++;
+            if (unit.Value.RelicTier == RelicTier.RELICTIER06) relic6++;
+            if (unit.Value.RelicTier == RelicTier.RELICTIER07) relic7++;
+            if (unit.Value.RelicTier == RelicTier.RELICTIER08) relic8++;
+            if (unit.Value.RelicTier == RelicTier.RELICTIER09) relic9++;
+
         }
 
-        var mods = new Mods(
+        var gear = new GearSummary(gear1 - ships, gear2, gear3, gear4, gear5, gear6, gear7, gear8, gear9, gear10, gear11, gear12, gear13); // Ships are all GearTier1
+        var relic = new RelicSummary(relic0, relic1, relic2, relic3, relic4, relic5, relic6, relic7, relic8, relic9, relicCount);
+
+        var mods = new ModSummary(
             sixDotModsCount,
             speedUnder10,
             speedBetween10And14,
             speedBetween15And19,
             speedBetween20And24,
             speed25Plus,
-            offenceBetween4And5Percent,
+            offenceBetween4And6Percent,
             offenceOver6Percent);
 
-        var omicrons = new Omicrons(
+        var omicrons = new OmicronSummary(
             tbOmicronCount,
             twOmicronCount,
             gaOmicronCount,
@@ -133,12 +186,51 @@ public sealed class GetExpandedProfileQueryHandler : IQueryHandler<GetExpandedPr
             raidOmicronCount,
             omicronCount);
 
-        return new ProfileSummary(
-            glCount,
-            zetaCount,
-            omicrons,
-            mods,
-            datacronSummary
+        return new ProfileSummary(glCount, characters, ships, characterGp, shipGp, characterGp + shipGp, gear, relic, zetaCount, omicrons, mods, datacronSummary
         );
+    }
+
+    private static void ExtractModData(ref int sixDotModsCount, ref int speedUnder10, ref int speedBetween10And14, ref int speedBetween15And19, ref int speedBetween20And24, ref int speed25Plus, ref int offenceBetween4And6Percent, ref int offenceOver6Percent, KeyValuePair<string, ExpandedUnit> unit)
+    {
+        foreach (var mod in unit.Value.Mods)
+        {
+            if (mod.Rarity == ModRarity.MODRARITY6) sixDotModsCount++;
+            foreach (var secondaryStat in mod.SecondaryStats)
+            {
+                if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value < 10) speedUnder10++;
+                if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 10 && secondaryStat.Value <= 14) speedBetween10And14++;
+                if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 15 && secondaryStat.Value <= 19) speedBetween15And19++;
+                if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 20 && secondaryStat.Value <= 24) speedBetween20And24++;
+                if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 25) speed25Plus++;
+                if (secondaryStat.UnitStat == UnitStat.UNITSTATOFFENSEPERCENTADDITIVE && secondaryStat.Value >= 6) offenceOver6Percent++;
+                if (secondaryStat.UnitStat == UnitStat.UNITSTATOFFENSEPERCENTADDITIVE && secondaryStat.Value >= 4 && secondaryStat.Value < 6) offenceBetween4And6Percent++;
+            }
+        }
+    }
+
+    private static void ExtractSkillData(ref int zetaCount, ref int omicronCount, ref int tbOmicronCount, ref int twOmicronCount, ref int gaOmicronCount, ref int cqOmicronCount, ref int raidOmicronCount, KeyValuePair<string, ExpandedUnit> unit)
+    {
+        foreach (var skill in unit.Value.Skills)
+        {
+            if (skill.HasActivatedZeta) zetaCount++;
+            if (!skill.HasActivatedOmicron) continue;
+
+            omicronCount++;
+
+            if (skill.OmicronRestriction == OmicronMode.TERRITORYBATTLEBOTHOMICRON ||
+                skill.OmicronRestriction == OmicronMode.TERRITORYCOVERTOMICRON ||
+                skill.OmicronRestriction == OmicronMode.TERRITORYSTRIKEOMICRON)
+                tbOmicronCount++;
+            if (skill.OmicronRestriction == OmicronMode.TERRITORYTOURNAMENTOMICRON ||
+                skill.OmicronRestriction == OmicronMode.TERRITORYTOURNAMENT3OMICRON ||
+                skill.OmicronRestriction == OmicronMode.TERRITORYTOURNAMENT5OMICRON)
+                gaOmicronCount++;
+            if (skill.OmicronRestriction == OmicronMode.TERRITORYWAROMICRON)
+                twOmicronCount++;
+            if (skill.OmicronRestriction == OmicronMode.CONQUESTOMICRON)
+                cqOmicronCount++;
+            if (skill.OmicronRestriction == OmicronMode.GUILDRAIDOMICRON)
+                raidOmicronCount++;
+        }
     }
 }

@@ -16,10 +16,12 @@ public sealed class Skill : ValueObject
     public string Image { get; private set; }
     public Dictionary<string, string> PowerOverrideTags { get; private set; }
     public bool IsZeta { get; private set; }
+    public int ZetaTier { get; private set; }
     public bool IsOmicron { get; private set; }
+    public int OmicronTier { get; private set; }
     public OmicronMode OmicronMode { get; private set; }
     public string OmicronModeName { get; private set; }
-    private Skill(string id, string name, string nameKey, int maxTier, long type, string image, Dictionary<string, string> powerOverrideTags, bool isZeta, bool isOmicron, OmicronMode omicronMode, string omicronModeName)
+    private Skill(string id, string name, string nameKey, int maxTier, long type, string image, Dictionary<string, string> powerOverrideTags, bool isZeta, int zetaTier, bool isOmicron, int omicronTier, OmicronMode omicronMode, string omicronModeName)
     {
         Id = id;
         Name = name;
@@ -29,13 +31,15 @@ public sealed class Skill : ValueObject
         Image = image;
         PowerOverrideTags = powerOverrideTags;
         IsZeta = isZeta;
+        ZetaTier = zetaTier;
         IsOmicron = isOmicron;
+        OmicronTier = omicronTier;
         OmicronMode = omicronMode;
         OmicronModeName = omicronModeName;
     }
-    public static Result<Skill> Create(string id, string name, string nameKey, int maxTier, long type, string image, Dictionary<string, string> powerOverrideTags, bool isZeta, bool isOmicron, OmicronMode omicronMode, string omicronModeName)
+    public static Result<Skill> Create(string id, string name, string nameKey, int maxTier, long type, string image, Dictionary<string, string> powerOverrideTags, bool isZeta, int zetaTier, bool isOmicron, int omicronTier, OmicronMode omicronMode, string omicronModeName)
     {
-        return new Skill(id, name, nameKey, maxTier, type, image, powerOverrideTags, isZeta, isOmicron, omicronMode, omicronModeName);
+        return new Skill(id, name, nameKey, maxTier, type, image, powerOverrideTags, isZeta, zetaTier, isOmicron, omicronTier, omicronMode, omicronModeName);
     }
 
     public static Result<Dictionary<string, Skill>> Create(GameDataResponse data, Dictionary<string, string> local)
@@ -50,6 +54,31 @@ public sealed class Skill : ValueObject
                 if (!string.IsNullOrEmpty(tier.Value.PowerOverrideTag))
                     powerOverrideTags[(tier.i + 2).ToString()] = tier.Value.PowerOverrideTag;
             }
+
+            int omicronTier = 1;
+            int zetaTier = 1;
+            bool isZeta = false;
+            bool isOmicron = false;
+
+            foreach (var tier in skill.Tier)
+            {
+                omicronTier++;
+                if (tier.IsOmicronTier)
+                {
+                    isOmicron = true;
+                    break;
+                }
+            }
+            foreach (var tier in skill.Tier)
+            {
+                zetaTier++;
+                if (tier.IsZetaTier)
+                {
+                    isZeta = true;
+                    break;
+                }
+            }
+
             var omicronMode = skill.OmicronMode;
             var omicronModeName = GetInGameName(omicronMode);
             skills[skill.Id!] = Create(
@@ -60,8 +89,10 @@ public sealed class Skill : ValueObject
                 (long)skill.SkillType,
                 ability.Icon!,
                 powerOverrideTags,
-                powerOverrideTags.ContainsValue("zeta"),
-                skill.Tier.Any(t => t.RecipeId!.Contains("OMICRON")),
+                isZeta,
+                isZeta ? zetaTier : 0,
+                isOmicron,
+                isOmicron ? omicronTier : 0,
                 omicronMode,
                 omicronModeName
             ).Value;
@@ -102,6 +133,9 @@ public sealed class Skill : ValueObject
         yield return Image;
         yield return PowerOverrideTags;
         yield return IsZeta;
+        yield return ZetaTier;
         yield return IsOmicron;
+        yield return OmicronTier;
+        yield return OmicronMode;
     }
 }
