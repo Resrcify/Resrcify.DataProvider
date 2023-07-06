@@ -132,11 +132,16 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
     {
         var defId = _unit.DefinitionId?.Split(":")[0];
         if (defId is null) return 0;
-        var gp = _crewUnits.Sum(x => Floor(CalculateCharacterGp(x)));
-        gp = Floor(gp * _gameData.GpTable.CrewSizeFactor[_crewUnits.Count.ToString()]);
-        if (_gameData.GpTable.ShipRarityFactor.TryGetValue(((int)_unit.CurrentRarity).ToString(), out var value))
-            gp = Floor(gp * value);
-        return gp;
+        var totalCrewGp = 0.0;
+        foreach (var crew in _crewUnits)
+        {
+            var crewGp = CalculateCharacterGp(crew);
+            crewGp *= _gameData.GpTable.CrewSizeFactor[_crewUnits.Count.ToString()];
+            if (_gameData.GpTable.ShipRarityFactor.TryGetValue(((int)_unit.CurrentRarity).ToString(), out var value))
+                crewGp *= value;
+            totalCrewGp += Floor(crewGp);
+        }
+        return totalCrewGp;
     }
 
     public double CalculateCrewShipGp()
