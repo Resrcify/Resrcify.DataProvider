@@ -64,6 +64,7 @@ docker run --name=dataprovider \
   - git clone git@github.com:Resrcify/Titan.DataProvider.git
   - git clone https://github.com/Resrcify/Titan.DataProvider.git
 - Navigate to src/API/Titan.DataProvider.API
+- Edit the file appsettings.json to make it match your url (ClientUrl) and port (ClientPort) of Comlink.
 - Run ``dotnet run``
 
 ## Endpoints

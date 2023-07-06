@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using Polly.Extensions.Http;
@@ -14,10 +15,11 @@ namespace Titan.DataProvider.Infrastructure
 {
     public static class InfrastructureServiceRegistration
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var clientUrl = Environment.GetEnvironmentVariable("CLIENT_URL") ?? "http://localhost";
-            var port = Environment.GetEnvironmentVariable("PORT") ?? "3200";
+            var clientUrl = Environment.GetEnvironmentVariable("CLIENT_URL") ?? configuration.GetValue<string>("ClientUrl");
+            var port = Environment.GetEnvironmentVariable("PORT") ?? configuration.GetValue<string>("ClientPort");
+
             if (bool.TryParse(Environment.GetEnvironmentVariable("IS_TITAN"), out var isTitan) && isTitan)
                 services.AddHttpClient<IGalaxyOfHeroesService, GalaxyOfHeroesService>(c =>
                 {
