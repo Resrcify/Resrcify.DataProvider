@@ -17,6 +17,7 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
     public IReadOnlyDictionary<int, double> Mods => _mods;
     public IReadOnlyDictionary<int, double> Crew => _crew;
     public double Gp => BaseGp;
+    public double CrewGp => ShipCrewGp;
     private CharacterStatCalc(
         Unit unit,
         GameData gameData,

@@ -17,7 +17,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit;
 
 public sealed class ExpandedUnit
 {
-    public ExpandedUnit(string definitionId, string name, string image, CombatType combatType, ForceAlignment alignment, Rarity rarity, int level, UnitTier gearTier, RelicTier relicTier, bool isGalacticLegend, List<Stat> stats, double gp, List<Skill> skills, List<Mod> mods)
+    public ExpandedUnit(string definitionId, string name, string image, CombatType combatType, ForceAlignment alignment, Rarity rarity, int level, UnitTier gearTier, RelicTier relicTier, bool isGalacticLegend, List<Stat> stats, double gp, double crewGp, List<Skill> skills, List<Mod> mods)
     {
         DefinitionId = definitionId;
         Name = name;
@@ -31,6 +31,7 @@ public sealed class ExpandedUnit
         IsGalacticLegend = isGalacticLegend;
         _stats = stats;
         Gp = gp;
+        CrewGp = crewGp;
         _skills = skills;
         _mods = mods;
     }
@@ -45,6 +46,7 @@ public sealed class ExpandedUnit
     public RelicTier RelicTier { get; private set; }
     public bool IsGalacticLegend { get; private set; }
     public double Gp { get; private set; }
+    public double CrewGp { get; private set; }
     public IReadOnlyList<Stat> Stats => _stats;
     public IReadOnlyList<Mod> Mods => _mods;
     public IReadOnlyList<Skill> Skills => _skills;
@@ -72,7 +74,7 @@ public sealed class ExpandedUnit
         var level = unit.CurrentLevel;
         var gear = unit.CurrentTier;
 
-        return new ExpandedUnit(definitionId, gameDataUnit.Name, gameDataUnit.Image, combatType, (ForceAlignment)(int)alignment, rarity, level, gear, relic, isGalacticLegend, formattedStats.ToList(), stats.Value.Gp, skills, mods);
+        return new ExpandedUnit(definitionId, gameDataUnit.Name, gameDataUnit.Image, combatType, (ForceAlignment)(int)alignment, rarity, level, gear, relic, isGalacticLegend, formattedStats.ToList(), stats.Value.Gp, stats.Value.CrewGp, skills, mods);
     }
 
     private static IEnumerable<Stat> GetFormattedStats(IStatCalc stats)

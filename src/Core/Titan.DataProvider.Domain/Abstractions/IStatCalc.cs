@@ -9,4 +9,5 @@ public interface IStatCalc
     IReadOnlyDictionary<int, double> Mods { get; }
     IReadOnlyDictionary<int, double> Crew { get; }
     double Gp { get; }
+    double CrewGp { get; }
 }

@@ -17,6 +17,7 @@ public abstract class StatCalcBase
     public readonly Dictionary<int, double> _mods = new();
     public readonly Dictionary<int, double> _crew = new();
     public double BaseGp { get; set; }
+    public double ShipCrewGp { get; set; }
     public readonly GameData _gameData;
     public readonly Unit _unit;
     public StatCalcBase(Unit unit, GameData gameData)
