@@ -28,6 +28,8 @@ public sealed partial class DatacronData : ValueObject
     private readonly List<DatacronSetTier> _setTier = new();
     public IReadOnlyList<DatacronTemplateTier> Tier => _tier;
     private readonly List<DatacronTemplateTier> _tier = new();
+    public IReadOnlyList<DatacronAffixTemplateSet> AffixSet => _affixSet;
+    private readonly List<DatacronAffixTemplateSet> _affixSet = new();
     public IReadOnlyDictionary<string, Ability> Abilities => _abilities;
     private readonly Dictionary<string, Ability> _abilities = new();
     public IReadOnlyDictionary<string, Stat> Stats => _stats;
@@ -48,6 +50,7 @@ public sealed partial class DatacronData : ValueObject
         List<string> fixedTag,
         List<DatacronSetTier> setTier,
         List<DatacronTemplateTier> tier,
+        List<DatacronAffixTemplateSet> affixSet,
         Dictionary<string, Ability> abilities,
         Dictionary<string, Stat> stats)
     {
@@ -65,6 +68,7 @@ public sealed partial class DatacronData : ValueObject
         _fixedTag = fixedTag;
         _setTier = setTier;
         _tier = tier;
+        _affixSet = affixSet;
         _abilities = abilities;
         _stats = stats;
     }
@@ -84,10 +88,11 @@ public sealed partial class DatacronData : ValueObject
         List<string> fixedTag,
         List<DatacronSetTier> setTier,
         List<DatacronTemplateTier> tier,
+        List<DatacronAffixTemplateSet> affixSet,
         Dictionary<string, Ability> abilities,
         Dictionary<string, Stat> stats)
     {
-        return new DatacronData(id, setId, nameKey, iconKey, detailPrefab, expirationTimeMs, allowReroll, initialTiers, maxRerolls, referenceTemplateId, setMaterial, fixedTag, setTier, tier, abilities, stats);
+        return new DatacronData(id, setId, nameKey, iconKey, detailPrefab, expirationTimeMs, allowReroll, initialTiers, maxRerolls, referenceTemplateId, setMaterial, fixedTag, setTier, tier, affixSet, abilities, stats);
     }
     public static Result<Dictionary<int, DatacronData>> Create(GameDataResponse data, Dictionary<string, string> local)
     {
@@ -96,6 +101,7 @@ public sealed partial class DatacronData : ValueObject
         var units = MapUnits(data, local, factions);
         var stats = MapStatEnums(local);
         var datacronDataDict = new Dictionary<int, DatacronData>();
+        var affixSetList = new List<DatacronAffixTemplateSet>();
         foreach (var cron in data.DatacronTemplate)
         {
             Dictionary<string, Ability> datacronAbilities = new();
@@ -112,6 +118,7 @@ public sealed partial class DatacronData : ValueObject
                 {
                     var affixSet = data.DatacronAffixTemplateSet.FirstOrDefault(x => x.Id == affixTemplatSetIdValue);
                     if (affixSet?.Affix is null) continue;
+                    affixSetList.Add(affixSet);
                     foreach (var affixValue in affixSet.Affix)
                     {
                         AddStats(stats, datacronStats, affixValue);
@@ -150,6 +157,7 @@ public sealed partial class DatacronData : ValueObject
                 cron.FixedTag,
                 cronSet.Tier,
                 cron.Tier,
+                affixSetList,
                 datacronAbilities,
                 datacronStats.OrderBy(x => x.Value.Id).ToDictionary(x => x.Key, x => x.Value));
             datacronDataDict.Add(cronSet!.Id, datacron.Value);
