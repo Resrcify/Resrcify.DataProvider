@@ -5,6 +5,7 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 
 public class Unit
 {
+    public string? Id { get; set; }
     public string? DefinitionId { get; set; }
     public Rarity CurrentRarity { get; set; }
     public int CurrentLevel { get; set; }

@@ -17,8 +17,9 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit;
 
 public sealed class ExpandedUnit
 {
-    public ExpandedUnit(string definitionId, string name, string image, CombatType combatType, ForceAlignment alignment, Rarity rarity, int level, UnitTier gearTier, RelicTier relicTier, bool isGalacticLegend, List<Stat> stats, double gp, double crewGp, List<Skill> skills, List<Mod> mods)
+    public ExpandedUnit(string id, string definitionId, string name, string image, CombatType combatType, ForceAlignment alignment, Rarity rarity, int level, UnitTier gearTier, RelicTier relicTier, bool isGalacticLegend, List<Stat> stats, double gp, double crewGp, List<Skill> skills, List<Mod> mods)
     {
+        Id = id;
         DefinitionId = definitionId;
         Name = name;
         Image = image;
@@ -35,6 +36,7 @@ public sealed class ExpandedUnit
         _skills = skills;
         _mods = mods;
     }
+    public string Id { get; private set; }
     public string DefinitionId { get; private set; }
     public string Name { get; private set; }
     public string Image { get; private set; }
@@ -53,7 +55,7 @@ public sealed class ExpandedUnit
     private readonly List<Stat> _stats = new();
     private readonly List<Mod> _mods = new();
     private readonly List<Skill> _skills = new();
-    public static Result<ExpandedUnit> Create(string definitionId, CombatType combatType, Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp, bool withoutModStats, bool withoutMods, bool withoutSkills)
+    public static Result<ExpandedUnit> Create(string id, string definitionId, CombatType combatType, Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp, bool withoutModStats, bool withoutMods, bool withoutSkills)
     {
         var stats = GetStats(combatType, unit, gameData, crew, withStats, withoutGp, withoutModStats);
         if (stats.IsFailure)
@@ -74,7 +76,7 @@ public sealed class ExpandedUnit
         var level = unit.CurrentLevel;
         var gear = unit.CurrentTier;
 
-        return new ExpandedUnit(definitionId, gameDataUnit.Name, gameDataUnit.Image, combatType, (ForceAlignment)(int)alignment, rarity, level, gear, relic, isGalacticLegend, formattedStats.ToList(), stats.Value.Gp, stats.Value.CrewGp, skills, mods);
+        return new ExpandedUnit(id, definitionId, gameDataUnit.Name, gameDataUnit.Image, combatType, (ForceAlignment)(int)alignment, rarity, level, gear, relic, isGalacticLegend, formattedStats.ToList(), stats.Value.Gp, stats.Value.CrewGp, skills, mods);
     }
 
     private static IEnumerable<Stat> GetFormattedStats(IStatCalc stats)
@@ -97,21 +99,21 @@ public sealed class ExpandedUnit
         foreach (var unit in playerProfile.RosterUnit
             .OrderBy(unit => GetCombatType(gameData, unit)))
         {
+            if (unit.Id is null) continue;
             var definitionId = unit.DefinitionId!.Split(":")[0];
             if (IsCombatType(gameData, unit, CombatType.CHARACTER)) characterUnits.Add(definitionId, unit);
 
             var crew = Enumerable.Empty<Unit>();
             if (IsCombatType(gameData, unit, CombatType.SHIP)) crew = GetCrewUnits(gameData, characterUnits, definitionId);
 
-            var expandedUnit = Create(definitionId, GetCombatType(gameData, unit), unit, gameData, crew.ToList(), withStats, withoutGp, withoutModStats, withoutMods, withoutSkills);
+            var expandedUnit = Create(unit.Id, definitionId, GetCombatType(gameData, unit), unit, gameData, crew.ToList(), withStats, withoutGp, withoutModStats, withoutMods, withoutSkills);
             yield return new(definitionId, expandedUnit.Value);
         }
     }
     public static IEnumerable<KeyValuePair<string, ExpandedUnit>> Create(string definitionId, PlayerProfileResponse playerProfile, bool withStats, bool withoutGp, bool withoutModStats, bool withoutMods, bool withoutSkills, GameData gameData)
     {
-
         var unit = playerProfile.RosterUnit.FirstOrDefault(x => x.DefinitionId!.Split(":")[0] == definitionId);
-        if (unit is null) yield break;
+        if (unit is null || unit.Id is null) yield break;
 
         var crew = Enumerable.Empty<Unit>();
         if (IsCombatType(gameData, unit, CombatType.SHIP))
@@ -126,7 +128,7 @@ public sealed class ExpandedUnit
             crew = GetCrewUnits(gameData, characterUnits, definitionId);
         }
 
-        var expandedUnit = Create(definitionId, GetCombatType(gameData, unit), unit, gameData, crew.ToList(), withStats, withoutGp, withoutModStats, withoutMods, withoutSkills);
+        var expandedUnit = Create(unit.Id, definitionId, GetCombatType(gameData, unit), unit, gameData, crew.ToList(), withStats, withoutGp, withoutModStats, withoutMods, withoutSkills);
         yield return new(definitionId, expandedUnit.Value);
     }
 

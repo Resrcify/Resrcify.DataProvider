@@ -4,7 +4,7 @@ using Titan.DataProvider.Domain.Internal.ExpandedUnit;
 
 namespace Titan.DataProvider.Application.Features.Units.Queries.GetExpandedProfile;
 
-public sealed record GetExpandedProfileQueryResponse(ProfileSummary ProfileSummary, Dictionary<string, ExpandedUnit> Units, IEnumerable<ExpandedDatacron> Datacrons)
+public sealed record GetExpandedProfileQueryResponse(string PlayerId, long AllyCode, string Name, ProfileSummary ProfileSummary, Dictionary<string, ExpandedUnit> Units, IEnumerable<ExpandedDatacron> Datacrons)
 {
 }
 

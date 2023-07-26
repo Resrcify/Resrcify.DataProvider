@@ -4,6 +4,7 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 
 public class StatMod
 {
+    public string? Id { get; set; }
     public string? DefinitionId { get; set; }
     public int Level { get; set; }
     public StatModTier Tier { get; set; }

@@ -37,6 +37,9 @@ public static class DomainErrors
         public static readonly Error PrimaryStatNotFound = new(
             "Mod.PrimaryStatNotFound",
             $"Specified primary stat was not found.");
+        public static readonly Error IdIsNull = new(
+            "Mod.IdIsNull",
+            $"A mods Id cannot be null.");
     }
     public static class ModStat
     {

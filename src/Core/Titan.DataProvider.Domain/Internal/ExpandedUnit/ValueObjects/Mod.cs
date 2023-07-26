@@ -11,6 +11,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 public sealed class Mod : ValueObject
 {
     private const int MAX_LEVEL = 15;
+    public string Id { get; private set; }
     public ModSlot Slot { get; private set; }
     public string SlotName { get; private set; }
     public ModType Type { get; private set; }
@@ -25,8 +26,9 @@ public sealed class Mod : ValueObject
     public bool IsMaxLevel { get; private set; }
     public int RerolledCount { get; private set; }
 
-    private Mod(ModSlot modSlot, ModType modType, ModRarity modRarity, ModTier modTier, string modSlotName, string modTypeName, string modTierName, int level, ModStat primaryStat, List<ModStat> secondaryStats, bool isMaxLevel, int rerolledCount)
+    private Mod(string id, ModSlot modSlot, ModType modType, ModRarity modRarity, ModTier modTier, string modSlotName, string modTypeName, string modTierName, int level, ModStat primaryStat, List<ModStat> secondaryStats, bool isMaxLevel, int rerolledCount)
     {
+        Id = id;
         Slot = modSlot;
         Type = modType;
         Rarity = modRarity;
@@ -43,6 +45,9 @@ public sealed class Mod : ValueObject
 
     public static Result<Mod> Create(StatMod statMod)
     {
+        var id = statMod.Id;
+        if (id is null)
+            return Result.Failure<Mod>(DomainErrors.Mod.IdIsNull);
         if (statMod.PrimaryStat?.Stat is null)
             return Result.Failure<Mod>(DomainErrors.Mod.PrimaryStatNotFound);
         var primaryStat = ModStat.Create(statMod.PrimaryStat.Stat.UnitStatId, statMod.PrimaryStat.Stat.UnscaledDecimalValue, 0);
@@ -64,7 +69,7 @@ public sealed class Mod : ValueObject
         var setName = GetModTypeName((int)setId);
         var slotName = GetModSlotName((int)slot);
         var modTier = (ModTier)statMod.Tier;
-        return new Mod(slot, setId, rarity, modTier, slotName, setName, modTier.ToString(), statMod.Level, primaryStat.Value, secondaryStats, isMaxLevel, statMod.RerolledCount);
+        return new Mod(id, slot, setId, rarity, modTier, slotName, setName, modTier.ToString(), statMod.Level, primaryStat.Value, secondaryStats, isMaxLevel, statMod.RerolledCount);
     }
 
     public static Result<List<Mod>> Create(List<StatMod> statMods)

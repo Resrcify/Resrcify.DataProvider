@@ -37,7 +37,7 @@ public sealed class GetExpandedProfileQueryHandler : IQueryHandler<GetExpandedPr
         var datacronSummary = ParseDatacronSummary(datacrons);
         var summary = ParseSummaryData(units, datacronSummary);
 
-        return new GetExpandedProfileQueryResponse(summary, units.ToDictionary(x => x.Key, x => x.Value), datacrons);
+        return new GetExpandedProfileQueryResponse(request.PlayerProfile.PlayerId ?? "Unknown", request.PlayerProfile.AllyCode, request.PlayerProfile.Name ?? "Unknown", summary, units.ToDictionary(x => x.Key, x => x.Value), datacrons);
     }
     private static DatacronSummary ParseDatacronSummary(IEnumerable<ExpandedDatacron> expandedDatacrons)
     {
