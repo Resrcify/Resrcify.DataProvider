@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Titan.DataProvider.Domain.Internal.ExpandedDatacron.ValueObjects;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 using Titan.DataProvider.Domain.Shared;
@@ -10,6 +9,7 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedDatacron;
 public sealed class ExpandedDatacron
 {
     public string Id { get; private set; }
+    public string TemplateId { get; private set; }
     public int SetId { get; private set; }
     public string SetName { get; private set; }
     public string Image { get; private set; }
@@ -21,9 +21,10 @@ public sealed class ExpandedDatacron
     public IReadOnlyList<StatTier> Stats => _stats;
     public int RerollCount { get; private set; }
 
-    private ExpandedDatacron(string id, int setId, string setName, string iconKey, int maxTiers, int activatedTiers, List<AbilityTier> abilites, List<StatTier> stats, int rerollCount)
+    private ExpandedDatacron(string id, string templateId, int setId, string setName, string iconKey, int maxTiers, int activatedTiers, List<AbilityTier> abilites, List<StatTier> stats, int rerollCount)
     {
         Id = id;
+        TemplateId = templateId;
         SetId = setId;
         SetName = setName;
         Image = iconKey;
@@ -34,20 +35,20 @@ public sealed class ExpandedDatacron
         RerollCount = rerollCount;
     }
 
-    public static Result<ExpandedDatacron> Create(string id, int setId, string setName, string iconKey, int maxTiers, int activatedTiers, List<AbilityTier> abilites, List<StatTier> stats, int rerollCount)
+    public static Result<ExpandedDatacron> Create(string id, string templateId, int setId, string setName, string iconKey, int maxTiers, int activatedTiers, List<AbilityTier> abilites, List<StatTier> stats, int rerollCount)
     {
-        return new ExpandedDatacron(id, setId, setName, iconKey, maxTiers, activatedTiers, abilites, stats, rerollCount);
+        return new ExpandedDatacron(id, templateId, setId, setName, iconKey, maxTiers, activatedTiers, abilites, stats, rerollCount);
     }
     public static IEnumerable<ExpandedDatacron> Create(List<Datacron> playerDatacrons, GameData gameData)
     {
         foreach (var playerDatacron in playerDatacrons)
         {
             var id = playerDatacron.Id;
-            if (id is null)
+            if (id is null || playerDatacron.TemplateId is null)
                 continue;
 
             var setId = playerDatacron.SetId;
-            var gameDataDatacron = gameData.Datacrons[setId];
+            var gameDataDatacron = gameData.Datacrons[playerDatacron.TemplateId];
             var setName = gameDataDatacron.NameKey;
             var maxTiers = gameDataDatacron.Tier.Count;
             var abilites = new List<AbilityTier>();
@@ -70,7 +71,7 @@ public sealed class ExpandedDatacron
                 tier++;
             }
             var activatedTiers = stats.Count + abilites.Count;
-            var expandedDatacron = Create(id, setId, setName, gameDataDatacron.IconKey, maxTiers, activatedTiers, abilites, stats, playerDatacron.RerollCount);
+            var expandedDatacron = Create(id, playerDatacron.TemplateId, setId, setName, gameDataDatacron.IconKey, maxTiers, activatedTiers, abilites, stats, playerDatacron.RerollCount);
             yield return expandedDatacron.Value;
         }
     }

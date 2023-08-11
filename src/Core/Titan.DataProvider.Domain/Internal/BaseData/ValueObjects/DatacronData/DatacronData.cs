@@ -94,21 +94,23 @@ public sealed partial class DatacronData : ValueObject
     {
         return new DatacronData(id, setId, nameKey, iconKey, detailPrefab, expirationTimeMs, allowReroll, initialTiers, maxRerolls, referenceTemplateId, setMaterial, fixedTag, setTier, tier, affixSet, abilities, stats);
     }
-    public static Result<Dictionary<int, DatacronData>> Create(GameDataResponse data, Dictionary<string, string> local)
+    public static Result<Dictionary<string, DatacronData>> Create(GameDataResponse data, Dictionary<string, string> local)
     {
         var abilities = MapAbilites(data, local);
         var factions = MapFactions(data, local);
         var units = MapUnits(data, local, factions);
         var stats = MapStatEnums(local);
-        var datacronDataDict = new Dictionary<int, DatacronData>();
+        var datacronDataDict = new Dictionary<string, DatacronData>();
         var affixSetList = new List<DatacronAffixTemplateSet>();
         foreach (var cron in data.DatacronTemplate)
         {
             Dictionary<string, Ability> datacronAbilities = new();
             Dictionary<string, Stat> datacronStats = new();
             var cronSet = data.DatacronSet.FirstOrDefault(x => x.Id == cron.SetId);
-            var unixEpochNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            if (cronSet?.ExpirationTimeMs is null || cronSet.ExpirationTimeMs < unixEpochNow)
+            // var unixEpochNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            if (cronSet?.ExpirationTimeMs is null
+            // || cronSet.ExpirationTimeMs < unixEpochNow
+            )
                 continue;
 
             foreach (var (tierValue, i) in cron.Tier.Select((value, i) => (value, i)))
@@ -160,7 +162,7 @@ public sealed partial class DatacronData : ValueObject
                 affixSetList,
                 datacronAbilities,
                 datacronStats.OrderBy(x => x.Value.Id).ToDictionary(x => x.Key, x => x.Value));
-            datacronDataDict.Add(cronSet!.Id, datacron.Value);
+            datacronDataDict.Add(cron.Id!, datacron.Value);
         }
         return datacronDataDict;
     }

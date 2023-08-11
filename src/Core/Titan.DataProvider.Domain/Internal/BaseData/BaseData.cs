@@ -26,8 +26,8 @@ public sealed class BaseData : AggregateRoot
     public IReadOnlyDictionary<string, RelicData> Relics => _relics;
     private readonly Dictionary<string, UnitData> _units = new();
     public IReadOnlyDictionary<string, UnitData> Units => _units;
-    public IReadOnlyDictionary<int, DatacronData> Datacrons => _datacrons;
-    private readonly Dictionary<int, DatacronData> _datacrons = new();
+    public IReadOnlyDictionary<string, DatacronData> Datacrons => _datacrons;
+    private readonly Dictionary<string, DatacronData> _datacrons = new();
 
     private BaseData(
         Guid id,
@@ -37,7 +37,7 @@ public sealed class BaseData : AggregateRoot
         GpTable gpTable,
         Dictionary<string, RelicData> relics,
         Dictionary<string, UnitData> units,
-        Dictionary<int, DatacronData> datacrons
+        Dictionary<string, DatacronData> datacrons
     ) : base(id)
     {
         _gear = gear;
