@@ -71,8 +71,8 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
 
     private void CalculateEquipmentStats()
     {
-        if (_unit.Equipment is null) return;
-        foreach (var gearPiece in CollectionsMarshal.AsSpan(_unit.Equipment))
+        if (_unit.Equipments is null) return;
+        foreach (var gearPiece in CollectionsMarshal.AsSpan(_unit.Equipments))
         {
             var gearId = gearPiece.EquipmentId;
             if (gearId is null || !_gameData.Gear.ContainsKey(gearId)) continue;
@@ -163,12 +163,12 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
     private Dictionary<long, double> GetRawModStats()
     {
         var rawModStats = new Dictionary<long, double>();
-        foreach (var mod in CollectionsMarshal.AsSpan(_unit.EquippedStatMod))
+        foreach (var mod in CollectionsMarshal.AsSpan(_unit.EquippedStatMods))
         {
             if (mod?.PrimaryStat?.Stat is null) continue;
             if (!rawModStats.TryAdd((int)mod.PrimaryStat.Stat.UnitStatId, mod.PrimaryStat.Stat.UnscaledDecimalValue))
                 rawModStats[(int)mod.PrimaryStat.Stat.UnitStatId] = rawModStats[(int)mod.PrimaryStat.Stat.UnitStatId] + mod.PrimaryStat.Stat.UnscaledDecimalValue;
-            foreach (var secondaryStat in mod.SecondaryStat)
+            foreach (var secondaryStat in mod.SecondaryStats)
             {
                 if (secondaryStat?.Stat?.UnitStatId is null) continue;
                 if (!rawModStats.TryAdd((int)secondaryStat.Stat.UnitStatId, secondaryStat.Stat.UnscaledDecimalValue))
@@ -181,7 +181,7 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
     private Dictionary<ModType, ModSet> CreateModSets()
     {
         var modSetBonuses = new Dictionary<ModType, ModSet>();
-        foreach (var mod in CollectionsMarshal.AsSpan(_unit.EquippedStatMod))
+        foreach (var mod in CollectionsMarshal.AsSpan(_unit.EquippedStatMods))
         {
             var modType = int.Parse(mod.DefinitionId![..1]);
             if (!modSetBonuses.TryAdd((ModType)modType, ModSet.Create((ModType)modType, mod.Level).Value))

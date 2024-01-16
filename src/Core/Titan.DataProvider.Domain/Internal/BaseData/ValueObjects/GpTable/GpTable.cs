@@ -86,20 +86,20 @@ public sealed class GpTable : ValueObject
         var shipRarityFactorFromCr = shipRarityFactor.ToDictionary(x => x.Key, x => x.Value);
         var unitLevelGpFromCr = unitLevelGp.ToDictionary(x => x.Key, x => x.Value);
         var abilityLevelGpFromCr = abilityLevelGp.ToDictionary(x => x.Key, x => x.Value);
-        var galacticPowerModifierPerShipCrewSizeTable = data.Table.First(x => x.Id == "galactic_power_modifier_per_ship_crew_size_table");
-        var galacticPowerPerTierSlotTable = data.Table.First(x => x.Id == "galactic_power_per_tier_slot_table");
-        var galacticPowerPerTaggedAbilityLevelTable = data.Table.First(x => x.Id == "galactic_power_per_tagged_ability_level_table"); ;
-        var crewRatingPerModRarityLevelTier = data.Table.First(x => x.Id == "crew_rating_per_mod_rarity_level_tier"); ;
-        var galacticPowerModifierPerRelicTier = data.Table.First(x => x.Id == "galactic_power_modifier_per_relic_tier"); ;
-        var galacticPowerPerRelicTier = data.Table.First(x => x.Id == "galactic_power_per_relic_tier"); ;
-        var galacticPowerModifierPerAbilityCrewlessShips = data.Table.First(x => x.Id == "galactic_power_modifier_per_ability_crewless_ships"); ;
-        var galacticPowerPerShipLevelTable = data.XpTable.First(x => x.Id == "galactic_power_per_ship_level_table");
-        var galacticPowerPerShipAbilityLevelTable = data.XpTable.First(x => x.Id == "galactic_power_per_ship_ability_level_table");
-        var crewSizeFactor = CreateDictionary<double>(galacticPowerModifierPerShipCrewSizeTable.Row);
-        var abilitySpecialGp = CreateDictionary<long>(galacticPowerPerTaggedAbilityLevelTable.Row);
-        var relicTierLevelFactor = CreateDictionaryFromRelics<double>(galacticPowerModifierPerRelicTier.Row);
-        var relicTierGp = CreateDictionaryFromRelics<long>(galacticPowerPerRelicTier.Row);
-        var crewlessAbilityFactor = CreateDictionary<double>(galacticPowerModifierPerAbilityCrewlessShips.Row);
+        var galacticPowerModifierPerShipCrewSizeTable = data.Tables.First(x => x.Id == "galactic_power_modifier_per_ship_crew_size_table");
+        var galacticPowerPerTierSlotTable = data.Tables.First(x => x.Id == "galactic_power_per_tier_slot_table");
+        var galacticPowerPerTaggedAbilityLevelTable = data.Tables.First(x => x.Id == "galactic_power_per_tagged_ability_level_table"); ;
+        var crewRatingPerModRarityLevelTier = data.Tables.First(x => x.Id == "crew_rating_per_mod_rarity_level_tier"); ;
+        var galacticPowerModifierPerRelicTier = data.Tables.First(x => x.Id == "galactic_power_modifier_per_relic_tier"); ;
+        var galacticPowerPerRelicTier = data.Tables.First(x => x.Id == "galactic_power_per_relic_tier"); ;
+        var galacticPowerModifierPerAbilityCrewlessShips = data.Tables.First(x => x.Id == "galactic_power_modifier_per_ability_crewless_ships"); ;
+        var galacticPowerPerShipLevelTable = data.XpTables.First(x => x.Id == "galactic_power_per_ship_level_table");
+        var galacticPowerPerShipAbilityLevelTable = data.XpTables.First(x => x.Id == "galactic_power_per_ship_ability_level_table");
+        var crewSizeFactor = CreateDictionary<double>(galacticPowerModifierPerShipCrewSizeTable.Rows);
+        var abilitySpecialGp = CreateDictionary<long>(galacticPowerPerTaggedAbilityLevelTable.Rows);
+        var relicTierLevelFactor = CreateDictionaryFromRelics<double>(galacticPowerModifierPerRelicTier.Rows);
+        var relicTierGp = CreateDictionaryFromRelics<long>(galacticPowerPerRelicTier.Rows);
+        var crewlessAbilityFactor = CreateDictionary<double>(galacticPowerModifierPerAbilityCrewlessShips.Rows);
 
         var shipLevelGp = GetXpTable(galacticPowerPerShipLevelTable);
         var shipAbilityLevelGp = GetXpTable(galacticPowerPerShipAbilityLevelTable);
@@ -126,7 +126,7 @@ public sealed class GpTable : ValueObject
     private static Dictionary<string, Dictionary<string, long>> GetGearPieceGp(Table galacticPowerPerTierSlotTable)
     {
         var g = new Dictionary<string, Dictionary<string, long>>();
-        foreach (var row in galacticPowerPerTierSlotTable.Row.OrderBy(s => int.Parse(s.Key!.Split(':', 2)[1])).ThenBy(s => int.Parse(s.Key!.Split(':', 2)[0])))
+        foreach (var row in galacticPowerPerTierSlotTable.Rows.OrderBy(s => int.Parse(s.Key!.Split(':', 2)[1])).ThenBy(s => int.Parse(s.Key!.Split(':', 2)[0])))
         {
             var split = row.Key!.Split(':', 2);
             var tier = split[0];
@@ -144,7 +144,7 @@ public sealed class GpTable : ValueObject
     private static Dictionary<string, Dictionary<string, Dictionary<string, long>>> GetModRating(Table crewRatingPerModRarityLevelTier)
     {
         var g = new Dictionary<string, Dictionary<string, Dictionary<string, long>>>();
-        foreach (var row in crewRatingPerModRarityLevelTier.Row.OrderBy(l => int.Parse(l.Key!.Split(':', 4)[1])).ThenBy(p => int.Parse(p.Key!.Split(':', 4)[0])))
+        foreach (var row in crewRatingPerModRarityLevelTier.Rows.OrderBy(l => int.Parse(l.Key!.Split(':', 4)[1])).ThenBy(p => int.Parse(p.Key!.Split(':', 4)[0])))
         {
             if (row.Key!.Last().ToString() == "0") // only 'select' set 0, as set doesn't affect CR or GP
             {
@@ -184,7 +184,7 @@ public sealed class GpTable : ValueObject
     private static Dictionary<string, long> GetXpTable(XpTable table)
     {
         var tempTable = new Dictionary<string, long>();
-        foreach (var row in table.Row)
+        foreach (var row in table.Rows)
         {
             int key = row.Index + 1;
             tempTable[key.ToString()] = row.Xp;

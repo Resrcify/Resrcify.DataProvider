@@ -23,9 +23,9 @@ public sealed class GearData : ValueObject
     private static Dictionary<long, long> ConvertToGearData(EquipmentDef data)
     {
         var stat = new Dictionary<long, long>();
-        if (data?.EquipmentStat?.Stat is not null && data?.EquipmentStat?.Stat.Count > 0)
+        if (data?.EquipmentStat?.Stats is not null && data?.EquipmentStat?.Stats.Count > 0)
         {
-            foreach (var subItem in data.EquipmentStat.Stat.OrderBy(s => s.UnitStatId))
+            foreach (var subItem in data.EquipmentStat.Stats.OrderBy(s => s.UnitStatId))
             {
                 long key = (int)subItem.UnitStatId;
                 stat.Add(key, subItem.UnscaledDecimalValue);
@@ -37,12 +37,12 @@ public sealed class GearData : ValueObject
     public static Result<Dictionary<string, GearData>> Create(GameDataResponse data)
     {
         var gearData = new Dictionary<string, GearData>();
-        foreach (var item in data.Equipment.OrderBy(s => s.Id!.Length).ThenBy(s => s.Id))
+        foreach (var item in data.Equipments.OrderBy(s => s.Id!.Length).ThenBy(s => s.Id))
         {
             var stat = new Dictionary<long, long>();
-            if (item?.EquipmentStat?.Stat is not null && item?.EquipmentStat?.Stat.Count > 0)
+            if (item?.EquipmentStat?.Stats is not null && item?.EquipmentStat?.Stats.Count > 0)
             {
-                foreach (var subItem in item.EquipmentStat.Stat.OrderBy(s => s.UnitStatId))
+                foreach (var subItem in item.EquipmentStat.Stats.OrderBy(s => s.UnitStatId))
                 {
                     long key = (int)subItem.UnitStatId;
                     stat.Add(key, subItem.UnscaledDecimalValue);

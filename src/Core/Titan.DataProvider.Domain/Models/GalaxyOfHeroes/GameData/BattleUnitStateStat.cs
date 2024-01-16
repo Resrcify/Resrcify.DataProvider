@@ -2,10 +2,11 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 public enum BattleUnitStateStat
 {
-    BATTLEUNITSTATUNDEFINED = 1,
-    BATTLEUNITSTATHEALTH = 2,
-    BATTLEUNITSTATHEALTHPERCENT = 3,
-    BATTLEUNITSTATSPEEDFILL = 4,
-    BATTLEUNITSTATSPEEDFILLPERCENT = 5,
-    BATTLEUNITSTATSHIELDPERCENT = 6,
+    BattleUnitStateStatDEFAULT = 0,
+    Battleunitstatundefined = 1,
+    Battleunitstathealth = 2,
+    Battleunitstathealthpercent = 3,
+    Battleunitstatspeedfill = 4,
+    Battleunitstatspeedfillpercent = 5,
+    Battleunitstatshieldpercent = 6,
 }

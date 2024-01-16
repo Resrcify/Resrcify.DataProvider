@@ -45,11 +45,11 @@ public sealed class Skill : ValueObject
     public static Result<Dictionary<string, Skill>> Create(GameDataResponse data, Dictionary<string, string> local)
     {
         var skills = new Dictionary<string, Skill>();
-        foreach (var skill in data.Skill)
+        foreach (var skill in data.Skills)
         {
-            var ability = data.Ability.Find(a => a.Id == skill.AbilityReference);
+            var ability = data.Abilities.Find(a => a.Id == skill.AbilityReference);
             var powerOverrideTags = new Dictionary<string, string>();
-            foreach (var tier in skill.Tier.Select((Value, i) => new { i, Value }))
+            foreach (var tier in skill.Tiers.Select((Value, i) => new { i, Value }))
             {
                 if (!string.IsNullOrEmpty(tier.Value.PowerOverrideTag))
                     powerOverrideTags[(tier.i + 2).ToString()] = tier.Value.PowerOverrideTag;
@@ -60,7 +60,7 @@ public sealed class Skill : ValueObject
             bool isZeta = false;
             bool isOmicron = false;
 
-            foreach (var tier in skill.Tier)
+            foreach (var tier in skill.Tiers)
             {
                 omicronTier++;
                 if (tier.IsOmicronTier)
@@ -69,7 +69,7 @@ public sealed class Skill : ValueObject
                     break;
                 }
             }
-            foreach (var tier in skill.Tier)
+            foreach (var tier in skill.Tiers)
             {
                 zetaTier++;
                 if (tier.IsZetaTier)
@@ -85,7 +85,7 @@ public sealed class Skill : ValueObject
                 skill.Id!,
                 local[ability!.NameKey!],
                 ability.NameKey!,
-                skill.Tier.Count + 1,
+                skill.Tiers.Count + 1,
                 (long)skill.SkillType,
                 ability.Icon!,
                 powerOverrideTags,
@@ -106,20 +106,20 @@ public sealed class Skill : ValueObject
       => mode switch
       {
           //OmicronMode.ALLOMICRON => "Everywhere",
-          OmicronMode.PVEOMICRON => "PvE Content",
-          OmicronMode.PVPOMICRON => "PvP Content",
-          OmicronMode.GUILDRAIDOMICRON => "Raids",
-          OmicronMode.TERRITORYSTRIKEOMICRON => "Territory Battles (Combat Missions)",
-          OmicronMode.TERRITORYCOVERTOMICRON => "Territory Battles (Special Missions)",
-          OmicronMode.TERRITORYBATTLEBOTHOMICRON => "Territory Battles",
-          OmicronMode.TERRITORYWAROMICRON => "Territory Wars",
-          OmicronMode.TERRITORYTOURNAMENTOMICRON => "Grand Arena",
-          OmicronMode.WAROMICRON => "Galactic War",
-          OmicronMode.CONQUESTOMICRON => "Conquest",
-          OmicronMode.GALACTICCHALLENGEOMICRON => "Galactic Challenges",
-          OmicronMode.PVEEVENTOMICRON => "Events",
-          OmicronMode.TERRITORYTOURNAMENT3OMICRON => "Grand Arena (3v3)",
-          OmicronMode.TERRITORYTOURNAMENT5OMICRON => "Grand Arena (5v5)",
+          OmicronMode.Pveomicron => "PvE Content",
+          OmicronMode.Pvpomicron => "PvP Content",
+          OmicronMode.Guildraidomicron => "Raids",
+          OmicronMode.Territorystrikeomicron => "Territory Battles (Combat Missions)",
+          OmicronMode.Territorycovertomicron => "Territory Battles (Special Missions)",
+          OmicronMode.Territorybattlebothomicron => "Territory Battles",
+          OmicronMode.Territorywaromicron => "Territory Wars",
+          OmicronMode.Territorytournamentomicron => "Grand Arena",
+          OmicronMode.Waromicron => "Galactic War",
+          OmicronMode.Conquestomicron => "Conquest",
+          OmicronMode.Galacticchallengeomicron => "Galactic Challenges",
+          OmicronMode.Pveeventomicron => "Events",
+          OmicronMode.Territorytournament3omicron => "Grand Arena (3v3)",
+          OmicronMode.Territorytournament5omicron => "Grand Arena (5v5)",
           _ => "None"
       };
 

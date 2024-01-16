@@ -106,48 +106,48 @@ public sealed class CrTable : ValueObject
 
     public static Result<CrTable> Create(GameDataResponse data)
     {
-        var crewContributionMultiplierPerRarityTable = data.Table.First(x => x.Id == "crew_contribution_multiplier_per_rarity");
-        var crewRatingPerModRarityLevelTierTable = data.Table.First(x => x.Id == "crew_rating_per_mod_rarity_level_tier");
-        var crewRatingModifierPerRelicTierTable = data.Table.First(x => x.Id == "crew_rating_modifier_per_relic_tier");
-        var crewRatingPerRelicTierTable = data.Table.First(x => x.Id == "crew_rating_per_relic_tier");
-        var crewRatingModifierPerAbilityCrewlessShipsTable = data.Table.First(x => x.Id == "crew_rating_modifier_per_ability_crewless_ships");
-        var agilityRoleSupportMasteryTable = data.Table.First(x => x.Id == "agility_role_support_mastery");
-        var agilityRoleTankMasteryTable = data.Table.First(x => x.Id == "agility_role_tank_mastery");
-        var agilityRoleHealerMasteryTable = data.Table.First(x => x.Id == "agility_role_healer_mastery");
-        var agilityRoleAttackerMasteryTable = data.Table.First(x => x.Id == "agility_role_attacker_mastery");
-        var intelligenceRoleTankMasteryTable = data.Table.First(x => x.Id == "intelligence_role_tank_mastery");
-        var intelligenceRoleHealerMasteryTable = data.Table.First(x => x.Id == "intelligence_role_healer_mastery");
-        var intelligenceRoleSupportMasteryTable = data.Table.First(x => x.Id == "intelligence_role_support_mastery");
-        var intelligenceRoleAttackerMasteryTable = data.Table.First(x => x.Id == "intelligence_role_attacker_mastery");
-        var strengthRoleHealerMasteryTable = data.Table.First(x => x.Id == "strength_role_healer_mastery");
-        var strengthRoleTankMasteryTable = data.Table.First(x => x.Id == "strength_role_tank_mastery");
-        var strengthRoleAttackerMasteryTable = data.Table.First(x => x.Id == "strength_role_attacker_mastery");
-        var strengthRoleSupportMasteryTable = data.Table.First(x => x.Id == "strength_role_support_mastery");
-        var crewRatingPerUnitRarityTable = data.Table.First(x => x.Id == "crew_rating_per_unit_rarity");
-        var galacticPowerPerCompleteGearTierTable = data.Table.First(x => x.Id == "galactic_power_per_complete_gear_tier_table");
-        var crewRatingPerGearPieceAtTierTable = data.Table.First(x => x.Id == "crew_rating_per_gear_piece_at_tier");
-        var crewRatingPerUnitLevel = data.XpTable.First(x => x.Id == "crew_rating_per_unit_level");
-        var crewRatingPerAbilityLevel = data.XpTable.First(x => x.Id == "crew_rating_per_ability_level");
+        var crewContributionMultiplierPerRarityTable = data.Tables.First(x => x.Id == "crew_contribution_multiplier_per_rarity");
+        var crewRatingPerModRarityLevelTierTable = data.Tables.First(x => x.Id == "crew_rating_per_mod_rarity_level_tier");
+        var crewRatingModifierPerRelicTierTable = data.Tables.First(x => x.Id == "crew_rating_modifier_per_relic_tier");
+        var crewRatingPerRelicTierTable = data.Tables.First(x => x.Id == "crew_rating_per_relic_tier");
+        var crewRatingModifierPerAbilityCrewlessShipsTable = data.Tables.First(x => x.Id == "crew_rating_modifier_per_ability_crewless_ships");
+        var agilityRoleSupportMasteryTable = data.Tables.First(x => x.Id == "agility_role_support_mastery");
+        var agilityRoleTankMasteryTable = data.Tables.First(x => x.Id == "agility_role_tank_mastery");
+        var agilityRoleHealerMasteryTable = data.Tables.First(x => x.Id == "agility_role_healer_mastery");
+        var agilityRoleAttackerMasteryTable = data.Tables.First(x => x.Id == "agility_role_attacker_mastery");
+        var intelligenceRoleTankMasteryTable = data.Tables.First(x => x.Id == "intelligence_role_tank_mastery");
+        var intelligenceRoleHealerMasteryTable = data.Tables.First(x => x.Id == "intelligence_role_healer_mastery");
+        var intelligenceRoleSupportMasteryTable = data.Tables.First(x => x.Id == "intelligence_role_support_mastery");
+        var intelligenceRoleAttackerMasteryTable = data.Tables.First(x => x.Id == "intelligence_role_attacker_mastery");
+        var strengthRoleHealerMasteryTable = data.Tables.First(x => x.Id == "strength_role_healer_mastery");
+        var strengthRoleTankMasteryTable = data.Tables.First(x => x.Id == "strength_role_tank_mastery");
+        var strengthRoleAttackerMasteryTable = data.Tables.First(x => x.Id == "strength_role_attacker_mastery");
+        var strengthRoleSupportMasteryTable = data.Tables.First(x => x.Id == "strength_role_support_mastery");
+        var crewRatingPerUnitRarityTable = data.Tables.First(x => x.Id == "crew_rating_per_unit_rarity");
+        var galacticPowerPerCompleteGearTierTable = data.Tables.First(x => x.Id == "galactic_power_per_complete_gear_tier_table");
+        var crewRatingPerGearPieceAtTierTable = data.Tables.First(x => x.Id == "crew_rating_per_gear_piece_at_tier");
+        var crewRatingPerUnitLevel = data.XpTables.First(x => x.Id == "crew_rating_per_unit_level");
+        var crewRatingPerAbilityLevel = data.XpTables.First(x => x.Id == "crew_rating_per_ability_level");
 
         var gearPieceCr = GetCrewRating(crewRatingPerGearPieceAtTierTable);
         var gearLevelCr = GetGearRating(galacticPowerPerCompleteGearTierTable);
-        var crewRarityCr = CreateDictionaryFromEnum<RarityEnum, long>(crewRatingPerUnitRarityTable.Row);
-        var agilityRoleAttackerMastery = CreateDictionaryFromEnum<StatEnum, double>(agilityRoleAttackerMasteryTable.Row);
-        var agilityRoleTankMastery = CreateDictionaryFromEnum<StatEnum, double>(agilityRoleTankMasteryTable.Row);
-        var agilityRoleSupportMastery = CreateDictionaryFromEnum<StatEnum, double>(agilityRoleSupportMasteryTable.Row);
-        var agilityRoleHealerMastery = CreateDictionaryFromEnum<StatEnum, double>(agilityRoleHealerMasteryTable.Row);
-        var strengthRoleAttackerMastery = CreateDictionaryFromEnum<StatEnum, double>(strengthRoleAttackerMasteryTable.Row);
-        var strengthRoleTankMastery = CreateDictionaryFromEnum<StatEnum, double>(strengthRoleTankMasteryTable.Row);
-        var strengthRoleSupportMastery = CreateDictionaryFromEnum<StatEnum, double>(strengthRoleSupportMasteryTable.Row);
-        var strengthRoleHealerMastery = CreateDictionaryFromEnum<StatEnum, double>(strengthRoleHealerMasteryTable.Row);
-        var intelligenceRoleAttackerMastery = CreateDictionaryFromEnum<StatEnum, double>(intelligenceRoleAttackerMasteryTable.Row);
-        var intelligenceRoleTankMastery = CreateDictionaryFromEnum<StatEnum, double>(intelligenceRoleTankMasteryTable.Row);
-        var intelligenceRoleSupportMastery = CreateDictionaryFromEnum<StatEnum, double>(intelligenceRoleSupportMasteryTable.Row);
-        var intelligenceRoleHealerMastery = CreateDictionaryFromEnum<StatEnum, double>(intelligenceRoleHealerMasteryTable.Row);
-        var relicTierLevelFactor = CreateDictionaryFromRelics<double>(crewRatingModifierPerRelicTierTable.Row);
-        var relicTierCr = CreateDictionaryFromRelics<long>(crewRatingPerRelicTierTable.Row);
-        var crewlessAbilityFactor = CreateDictionary<double>(crewRatingModifierPerAbilityCrewlessShipsTable.Row);
-        var shipRarityFactor = CreateDictionaryFromEnum<RarityEnum, double>(crewContributionMultiplierPerRarityTable.Row);
+        var crewRarityCr = CreateDictionaryFromEnum<RarityEnum, long>(crewRatingPerUnitRarityTable.Rows);
+        var agilityRoleAttackerMastery = CreateDictionaryFromEnum<StatEnum, double>(agilityRoleAttackerMasteryTable.Rows);
+        var agilityRoleTankMastery = CreateDictionaryFromEnum<StatEnum, double>(agilityRoleTankMasteryTable.Rows);
+        var agilityRoleSupportMastery = CreateDictionaryFromEnum<StatEnum, double>(agilityRoleSupportMasteryTable.Rows);
+        var agilityRoleHealerMastery = CreateDictionaryFromEnum<StatEnum, double>(agilityRoleHealerMasteryTable.Rows);
+        var strengthRoleAttackerMastery = CreateDictionaryFromEnum<StatEnum, double>(strengthRoleAttackerMasteryTable.Rows);
+        var strengthRoleTankMastery = CreateDictionaryFromEnum<StatEnum, double>(strengthRoleTankMasteryTable.Rows);
+        var strengthRoleSupportMastery = CreateDictionaryFromEnum<StatEnum, double>(strengthRoleSupportMasteryTable.Rows);
+        var strengthRoleHealerMastery = CreateDictionaryFromEnum<StatEnum, double>(strengthRoleHealerMasteryTable.Rows);
+        var intelligenceRoleAttackerMastery = CreateDictionaryFromEnum<StatEnum, double>(intelligenceRoleAttackerMasteryTable.Rows);
+        var intelligenceRoleTankMastery = CreateDictionaryFromEnum<StatEnum, double>(intelligenceRoleTankMasteryTable.Rows);
+        var intelligenceRoleSupportMastery = CreateDictionaryFromEnum<StatEnum, double>(intelligenceRoleSupportMasteryTable.Rows);
+        var intelligenceRoleHealerMastery = CreateDictionaryFromEnum<StatEnum, double>(intelligenceRoleHealerMasteryTable.Rows);
+        var relicTierLevelFactor = CreateDictionaryFromRelics<double>(crewRatingModifierPerRelicTierTable.Rows);
+        var relicTierCr = CreateDictionaryFromRelics<long>(crewRatingPerRelicTierTable.Rows);
+        var crewlessAbilityFactor = CreateDictionary<double>(crewRatingModifierPerAbilityCrewlessShipsTable.Rows);
+        var shipRarityFactor = CreateDictionaryFromEnum<RarityEnum, double>(crewContributionMultiplierPerRarityTable.Rows);
         var modRarityLevelCr = GetModRating(crewRatingPerModRarityLevelTierTable);
         var abilityLevelCr = GetXpTable(crewRatingPerAbilityLevel);
         var unitLevelCr = GetXpTable(crewRatingPerUnitLevel);
@@ -181,7 +181,7 @@ public sealed class CrTable : ValueObject
     private static Dictionary<string, long> GetXpTable(XpTable table)
     {
         var tempTable = new Dictionary<string, long>();
-        foreach (var row in table.Row)
+        foreach (var row in table.Rows)
         {
             int key = row.Index + 1;
             tempTable[key.ToString()] = row.Xp;
@@ -193,7 +193,7 @@ public sealed class CrTable : ValueObject
     private static Dictionary<string, Dictionary<string, long>> GetModRating(Table crewRatingPerModRarityLevelTierTable)
     {
         Dictionary<string, Dictionary<string, long>> c = new();
-        foreach (var row in crewRatingPerModRarityLevelTierTable.Row.OrderBy(l => int.Parse(l.Key!.Split(':', 4)[1])).ThenBy(p => int.Parse(p.Key!.Split(':', 4)[0])))
+        foreach (var row in crewRatingPerModRarityLevelTierTable.Rows.OrderBy(l => int.Parse(l.Key!.Split(':', 4)[1])).ThenBy(p => int.Parse(p.Key!.Split(':', 4)[0])))
         {
             if (row.Key!.Last().ToString() == "0") // only 'select' set 0, as set doesn't affect CR or GP
             {
@@ -221,7 +221,7 @@ public sealed class CrTable : ValueObject
         {
             { "1", 0 } // initialize with value of 0 for unit's at gear 1 (which have none 'complete')
         };
-        foreach (var row in galacticPowerPerCompleteGearTierTable.Row.OrderBy(s => s.Key))
+        foreach (var row in galacticPowerPerCompleteGearTierTable.Rows.OrderBy(s => s.Key))
         {
             var pattern = @"TIER_0?(\d+)";
             Regex rgx = new(pattern, RegexOptions.IgnoreCase);
@@ -239,7 +239,7 @@ public sealed class CrTable : ValueObject
     private static Dictionary<string, long> GetCrewRating(Table crewRatingPerGearPieceAtTier)
     {
         var gearPieceCr = new Dictionary<string, long>();
-        foreach (var row in crewRatingPerGearPieceAtTier.Row.OrderBy(s => s.Key))
+        foreach (var row in crewRatingPerGearPieceAtTier.Rows.OrderBy(s => s.Key))
         {
             var pattern = @"TIER_0?(\d+)";
             Regex rgx = new(pattern, RegexOptions.IgnoreCase);

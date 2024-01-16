@@ -102,34 +102,34 @@ public sealed partial class DatacronData : ValueObject
         var stats = MapStatEnums(local);
         var datacronDataDict = new Dictionary<string, DatacronData>();
         var affixSetList = new List<DatacronAffixTemplateSet>();
-        foreach (var cron in data.DatacronTemplate)
+        foreach (var cron in data.DatacronTemplates)
         {
             Dictionary<string, Ability> datacronAbilities = new();
             Dictionary<string, Stat> datacronStats = new();
-            var cronSet = data.DatacronSet.FirstOrDefault(x => x.Id == cron.SetId);
+            var cronSet = data.DatacronSets.FirstOrDefault(x => x.Id == cron.SetId);
             // var unixEpochNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             if (cronSet?.ExpirationTimeMs is null
             // || cronSet.ExpirationTimeMs < unixEpochNow
             )
                 continue;
 
-            foreach (var (tierValue, i) in cron.Tier.Select((value, i) => (value, i)))
+            foreach (var (tierValue, i) in cron.Tiers.Select((value, i) => (value, i)))
             {
                 var type = GetTierType(i);
-                foreach (var affixTemplatSetIdValue in tierValue.AffixTemplateSetId)
+                foreach (var affixTemplatSetIdValue in tierValue.AffixTemplateSetIds)
                 {
-                    var affixSet = data.DatacronAffixTemplateSet.FirstOrDefault(x => x.Id == affixTemplatSetIdValue);
-                    if (affixSet?.Affix is null) continue;
+                    var affixSet = data.DatacronAffixTemplateSets.FirstOrDefault(x => x.Id == affixTemplatSetIdValue);
+                    if (affixSet?.Affixs is null) continue;
                     affixSetList.Add(affixSet);
-                    foreach (var affixValue in affixSet.Affix)
+                    foreach (var affixValue in affixSet.Affixs)
                     {
                         AddStats(stats, datacronStats, affixValue);
 
                         if (type == TierType.STAT || string.IsNullOrEmpty(affixValue.AbilityId) || string.IsNullOrEmpty(affixValue.TargetRule)
                             || !abilities.TryGetValue(affixValue.AbilityId, out var mappedAbility)) continue;
 
-                        var target = data.BattleTargetingRule.FirstOrDefault(x => x.Id == affixValue.TargetRule);
-                        if (target?.Category?.Category?.Count == 0) continue;
+                        var target = data.BattleTargetingRules.FirstOrDefault(x => x.Id == affixValue.TargetRule);
+                        if (target?.Category?.Categories?.Count == 0) continue;
                         Dictionary<string, Target> targets = GetTargets(factions, type, affixValue, mappedAbility, target);
 
                         if (datacronAbilities.TryGetValue(affixValue.AbilityId, out var foundAbility))
@@ -155,10 +155,10 @@ public sealed partial class DatacronData : ValueObject
                 cron.InitialTiers,
                 cron.MaxRerolls,
                 cron.ReferenceTemplateId!,
-                cronSet.SetMaterial,
-                cron.FixedTag,
-                cronSet.Tier,
-                cron.Tier,
+                cronSet.SetMaterials,
+                cron.FixedTags,
+                cronSet.Tiers,
+                cron.Tiers,
                 affixSetList,
                 datacronAbilities,
                 datacronStats.OrderBy(x => x.Value.Id).ToDictionary(x => x.Key, x => x.Value));
@@ -188,7 +188,7 @@ public sealed partial class DatacronData : ValueObject
     private static Dictionary<string, Target> GetTargets(Dictionary<string, Faction> factions, TierType type, DatacronAffixTemplate affixValue, MappedAbility mappedAbility, EffectTarget? target)
     {
         var targets = new Dictionary<string, Target>();
-        foreach (var categoryValue in target!.Category!.Category)
+        foreach (var categoryValue in target!.Category!.Categories)
         {
             if (categoryValue.Exclude || !factions.TryGetValue(categoryValue.CategoryId!, out var faction))
                 continue;
@@ -218,7 +218,7 @@ public sealed partial class DatacronData : ValueObject
     private static Dictionary<string, MappedAbility> MapAbilites(GameDataResponse data, Dictionary<string, string> local)
     {
         Dictionary<string, MappedAbility> abilities = new();
-        foreach (var ability in data.Ability.Where(x => x.NameKey!.Contains("DATACRON")))
+        foreach (var ability in data.Abilities.Where(x => x.NameKey!.Contains("DATACRON")))
         {
             if (ability is null) continue;
             var newAbility = MappedAbility.Create(
@@ -232,7 +232,7 @@ public sealed partial class DatacronData : ValueObject
     private static Dictionary<string, Faction> MapFactions(GameDataResponse data, Dictionary<string, string> local)
     {
         Dictionary<string, Faction> factions = new();
-        foreach (var faction in data.Category)
+        foreach (var faction in data.Categories)
         {
             if (faction?.DescKey is null || faction.DescKey == "PLACEHOLDER" || !local.TryGetValue(faction.DescKey, out var name))
                 continue;
@@ -253,7 +253,7 @@ public sealed partial class DatacronData : ValueObject
             if (unit?.BaseId is null || unit?.NameKey is null || !local.TryGetValue(unit.NameKey, out var name)) continue;
             var newUnit = Unit.Create(unit.BaseId, name, (int)unit.CombatType);
             units.Add(unit.BaseId, newUnit.Value);
-            foreach (var (factionValue, f) in unit.CategoryId.Select((value, f) => (value, f)))
+            foreach (var (factionValue, f) in unit.CategoryIds.Select((value, f) => (value, f)))
             {
                 if (!factions.TryGetValue(factionValue, out var faction)) continue;
                 faction.AddUnit(newUnit.Value);

@@ -11,5 +11,5 @@ public class RecommendedSquad
     public Requirement? HideRequirement { get; set; }
     public ActionLink? ActionLink { get; set; }
     public string? Id { get; set; }
-    public List<string> UnitDefId { get; set; } = new();
+    public List<string> UnitDefIds { get; set; } = new();
 }

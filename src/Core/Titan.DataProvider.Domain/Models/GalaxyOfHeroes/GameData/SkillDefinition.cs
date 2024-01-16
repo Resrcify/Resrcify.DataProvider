@@ -11,5 +11,5 @@ public class SkillDefinition
     public SkillType SkillType { get; set; }
     public bool IsZeta { get; set; }
     public OmicronMode OmicronMode { get; set; }
-    public List<SkillTierDefinition> Tier { get; set; } = new();
+    public List<SkillTierDefinition> Tiers { get; set; } = new();
 }

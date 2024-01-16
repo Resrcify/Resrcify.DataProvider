@@ -12,5 +12,5 @@ public class DatacronAffix
     public UnitTier RequiredUnitTier { get; set; }
     public RelicTier RequiredRelicTier { get; set; }
     public string? ScopeIcon { get; set; }
-    public List<string> Tag { get; set; } = new();
+    public List<string> Tags { get; set; } = new();
 }

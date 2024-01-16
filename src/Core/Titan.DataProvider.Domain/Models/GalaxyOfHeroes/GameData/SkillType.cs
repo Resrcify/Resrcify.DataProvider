@@ -2,6 +2,7 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 public enum SkillType
 {
-    UNITSKILL = 1,
-    CREWSKILL = 2,
+    SkillTypeDEFAULT = 0,
+    Unitskill = 1,
+    Crewskill = 2,
 }

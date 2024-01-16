@@ -54,7 +54,7 @@ public sealed class Mod : ValueObject
         if (primaryStat.IsFailure)
             return Result.Failure<Mod>(DomainErrors.ModStat.UnableToCreate);
         var secondaryStats = new List<ModStat>();
-        foreach (var secondaryStat in statMod.SecondaryStat)
+        foreach (var secondaryStat in statMod.SecondaryStats)
         {
             if (secondaryStat.Stat is null) continue;
             var modStat = ModStat.Create(secondaryStat.Stat.UnitStatId, secondaryStat.Stat.UnscaledDecimalValue, secondaryStat.StatRolls);

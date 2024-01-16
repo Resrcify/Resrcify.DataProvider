@@ -30,10 +30,10 @@ public class Ability
     public int GrantedPriority { get; set; }
     public AbilitySynergy? Synergy { get; set; }
     public EffectTarget? VisualTarget { get; set; }
-    public List<BattleCondition>? TriggerCondition { get; set; }
-    public List<AbilityTier> Tier { get; set; } = new();
-    public List<EffectTag> DescriptiveTag { get; set; } = new();
-    public List<EffectReference> EffectReference { get; set; } = new();
-    public List<EffectTag> InteractsWithTag { get; set; } = new();
-    public List<int> UltimateChargeRequired { get; set; } = new();
+    public List<BattleCondition>? TriggerConditions { get; set; }
+    public List<AbilityTier> Tiers { get; set; } = new();
+    public List<EffectTag> DescriptiveTags { get; set; } = new();
+    public List<EffectReference> EffectReferences { get; set; } = new();
+    public List<EffectTag> InteractsWithTags { get; set; } = new();
+    public List<int> UltimateChargeRequireds { get; set; } = new();
 }

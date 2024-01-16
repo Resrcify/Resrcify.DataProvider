@@ -12,8 +12,8 @@ public class EffectTarget
     public string? Id { get; set; }
     public bool ExcludeSelf { get; set; }
     public bool ExcludeSelectedTarget { get; set; }
-    public List<UnitClass> UnitClass { get; set; } = new();
-    public List<ForceAlignment> ForceAlignment { get; set; } = new();
-    public List<StatValueRange> StatValue { get; set; } = new();
-    public List<EffectTagCriteria> ActiveEffectTagCriteria { get; set; } = new();
+    public List<UnitClass> UnitClasses { get; set; } = new();
+    public List<ForceAlignment> ForceAlignments { get; set; } = new();
+    public List<StatValueRange> StatValues { get; set; } = new();
+    public List<EffectTagCriteria> ActiveEffectTagCriterias { get; set; } = new();
 }

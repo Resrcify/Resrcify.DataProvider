@@ -2,6 +2,7 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 public enum EvaluationType
 {
-    AND = 1,
-    OR = 2,
+    EvaluationTypeDEFAULT = 0,
+    And = 1,
+    Or = 2,
 }

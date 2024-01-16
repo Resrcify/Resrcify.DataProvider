@@ -13,8 +13,8 @@ public class Unit
     public StatDef? UnitStat { get; set; }
     public UnitTier CurrentTier { get; set; }
     public Relic? Relic { get; set; }
-    public List<Skill> Skill { get; set; } = new();
-    public List<EquipmentSlot> Equipment { get; set; } = new();
-    public List<StatMod> EquippedStatMod { get; set; } = new();
-    public List<string> PurchasedAbilityId { get; set; } = new();
+    public List<Skill> Skills { get; set; } = new();
+    public List<EquipmentSlot> Equipments { get; set; } = new();
+    public List<StatMod> EquippedStatMods { get; set; } = new();
+    public List<string> PurchasedAbilityIds { get; set; } = new();
 }

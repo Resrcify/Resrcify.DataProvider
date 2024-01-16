@@ -59,7 +59,7 @@ public sealed class Skill : ValueObject
     public static Result<List<Skill>> Create(Unit unit, UnitData data)
     {
         var skillDict = new List<Skill>();
-        foreach (var skill in unit.Skill)
+        foreach (var skill in unit.Skills)
         {
             var newSkill = Create(skill, data);
             if (newSkill.IsSuccess)

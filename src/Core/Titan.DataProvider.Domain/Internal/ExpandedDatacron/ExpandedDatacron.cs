@@ -54,7 +54,7 @@ public sealed class ExpandedDatacron
             var abilites = new List<AbilityTier>();
             var stats = new List<StatTier>();
             int tier = 1;
-            foreach (var playerAffix in playerDatacron.Affix)
+            foreach (var playerAffix in playerDatacron.Affixs)
             {
                 if (tier is 1 or 2 or 4 or 5 or 7 or 8)
                 {

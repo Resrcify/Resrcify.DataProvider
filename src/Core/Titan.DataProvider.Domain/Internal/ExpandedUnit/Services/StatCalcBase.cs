@@ -148,18 +148,18 @@ public abstract class StatCalcBase
         // Game tables for current gear include the possibility of differect GP per slot.
         // Currently, all values are identical across each gear level, so a simpler method is possible.
         // But that could change at any time.
-        if (unit.Equipment?.Count > 0)
-            foreach (var piece in CollectionsMarshal.AsSpan(unit.Equipment))
+        if (unit.Equipments?.Count > 0)
+            foreach (var piece in CollectionsMarshal.AsSpan(unit.Equipments))
                 gp += _gameData.GpTable.GearPieceGp[tierEnumValue.ToString()][piece.Slot.ToString()];
 
-        foreach (var skill in CollectionsMarshal.AsSpan(unit.Skill))
+        foreach (var skill in CollectionsMarshal.AsSpan(unit.Skills))
             gp += GetSkillGp(definitionId, skill);
 
-        if (unit.PurchasedAbilityId?.Count > 0)
-            gp += unit.PurchasedAbilityId.Count * _gameData.GpTable.AbilitySpecialGp["ultimate"];
+        if (unit.PurchasedAbilityIds?.Count > 0)
+            gp += unit.PurchasedAbilityIds.Count * _gameData.GpTable.AbilitySpecialGp["ultimate"];
 
-        if (unit.EquippedStatMod?.Count > 0)
-            gp += unit.EquippedStatMod.Sum(x => _gameData.GpTable.ModRarityLevelTierGp[x.DefinitionId![1].ToString()][x.Level.ToString()][((int)x.Tier).ToString()]);
+        if (unit.EquippedStatMods?.Count > 0)
+            gp += unit.EquippedStatMods.Sum(x => _gameData.GpTable.ModRarityLevelTierGp[x.DefinitionId![1].ToString()][x.Level.ToString()][((int)x.Tier).ToString()]);
 
         var relicEnumValue = unit.Relic?.CurrentTier ?? 0;
         if ((int)relicEnumValue > 2)
@@ -188,7 +188,7 @@ public abstract class StatCalcBase
     public double GetCrewlessReinforcementGp()
     {
         var gp = 0.0;
-        foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skill))
+        foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skills))
         {
             var defId = _unit.DefinitionId?.Split(":")[0];
             if (defId is null) continue;
@@ -204,7 +204,7 @@ public abstract class StatCalcBase
     public double GetCrewlessAbilityGp()
     {
         var gp = 0.0;
-        foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skill))
+        foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skills))
         {
             var defId = _unit.DefinitionId?.Split(":")[0];
             if (defId is null) continue;

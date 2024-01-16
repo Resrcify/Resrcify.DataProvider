@@ -31,7 +31,7 @@ public sealed class ModSetData : ValueObject
     public static Result<Dictionary<string, ModSetData>> Create(GameDataResponse data)
     {
         var modSet = new Dictionary<string, ModSetData>();
-        foreach (var item in data.StatModSet.OrderBy(s => s.Id!.Length).ThenBy(s => s.Id))
+        foreach (var item in data.StatModSets.OrderBy(s => s.Id!.Length).ThenBy(s => s.Id))
         {
             var mod = Create(item);
             modSet.Add(item.Id!, mod.Value);

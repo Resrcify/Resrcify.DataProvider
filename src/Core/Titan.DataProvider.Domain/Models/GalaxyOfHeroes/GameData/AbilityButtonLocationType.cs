@@ -2,8 +2,9 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 public enum AbilityButtonLocationType
 {
-    ABILITYSTANDARD = 1,
-    ABILITYADDITIONAL = 2,
-    ABILITYHIDDEN = 3,
-    ABILITYSECONDSTANDARD = 4,
+    AbilityButtonLocationTypeDEFAULT = 0,
+    Abilitystandard = 1,
+    Abilityadditional = 2,
+    Abilityhidden = 3,
+    Abilitysecondstandard = 4,
 }

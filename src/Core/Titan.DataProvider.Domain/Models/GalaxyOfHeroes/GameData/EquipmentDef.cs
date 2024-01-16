@@ -18,8 +18,8 @@ public class EquipmentDef
     public EquipmentType Type { get; set; }
     public Rarity RequiredRarity { get; set; }
     public bool FindFlowDisabled { get; set; }
-    public List<LookupMission>? LookupMission { get; set; }
-    public List<LookupMission>? RaidLookup { get; set; }
-    public List<LookupActionLink>? ActionLinkLookup { get; set; }
+    public List<LookupMission>? LookupMissions { get; set; }
+    public List<LookupMission>? RaidLookups { get; set; }
+    public List<LookupActionLink>? ActionLinkLookups { get; set; }
 
 }

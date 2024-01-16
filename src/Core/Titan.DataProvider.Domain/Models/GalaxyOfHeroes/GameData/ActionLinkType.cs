@@ -2,6 +2,7 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 public enum ActionLinkType
 {
-    INTERNAL = 1,
-    EXTERNAL = 2,
+    ActionLinkTypeDEFAULT = 0,
+    Internal = 1,
+    External = 2,
 }

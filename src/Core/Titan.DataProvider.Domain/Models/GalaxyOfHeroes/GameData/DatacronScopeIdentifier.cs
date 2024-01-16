@@ -2,8 +2,9 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 public enum DatacronScopeIdentifier
 {
-    STATSCOPE = 1,
-    ALIGNMENTSCOPE = 2,
-    FACTIONSCOPE = 3,
-    CHARACTERSCOPE = 4,
+    DatacronScopeIdentifierDEFAULT = 0,
+    Statscope = 1,
+    Alignmentscope = 2,
+    Factionscope = 3,
+    Characterscope = 4,
 }

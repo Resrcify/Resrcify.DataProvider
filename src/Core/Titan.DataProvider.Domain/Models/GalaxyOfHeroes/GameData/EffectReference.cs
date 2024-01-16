@@ -6,5 +6,5 @@ public class EffectReference
 {
     public string? Id { get; set; }
     public int MaxBonusMove { get; set; }
-    public List<int> ContextIndex { get; set; } = new();
+    public List<int> ContextIndexs { get; set; } = new();
 }

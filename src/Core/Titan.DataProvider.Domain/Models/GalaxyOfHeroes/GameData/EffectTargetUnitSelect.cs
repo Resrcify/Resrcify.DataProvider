@@ -2,15 +2,16 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 public enum EffectTargetUnitSelect
 {
-    SELECTALL = 1,
-    SELECTEDTARGET = 2,
-    SELECTRANDOM = 3,
-    SELECTSELF = 4,
-    SELECTPREVIOUS = 5,
-    SELECTLASTREINFORCEMENT = 6,
-    SELECTLOWESTSURVIVABILITY = 7,
-    SELECTHIGHESTSURVIVABILITY = 8,
-    SELECTLEADER = 9,
-    SELECTSUPPORT = 10,
-    SELECTLASTSUMMON = 11,
+    EffectTargetUnitSelectDEFAULT = 0,
+    Selectall = 1,
+    Selectedtarget = 2,
+    Selectrandom = 3,
+    Selectself = 4,
+    Selectprevious = 5,
+    Selectlastreinforcement = 6,
+    Selectlowestsurvivability = 7,
+    Selecthighestsurvivability = 8,
+    Selectleader = 9,
+    Selectsupport = 10,
+    Selectlastsummon = 11,
 }

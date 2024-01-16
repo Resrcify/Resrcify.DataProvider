@@ -2,6 +2,7 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 public enum AbilityCooldownType
 {
-    ABILITYCOOLDOWNTURNBASED = 1,
-    ABILITYCOOLDOWNSPEEDBASED = 2,
+    AbilityCooldownTypeDEFAULT = 0,
+    Abilitycooldownturnbased = 1,
+    Abilitycooldownspeedbased = 2,
 }

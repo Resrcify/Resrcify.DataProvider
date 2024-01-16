@@ -184,20 +184,20 @@ public sealed partial class UnitData : ValueObject
             var thumbnailName = unit.ThumbnailName;
             var nameKey = unit.NameKey;
             var baseId = unit.BaseId;
-            var categoryIdList = unit.CategoryId;
-            var skillReferenceList = unit.SkillReference;
+            var categoryIdList = unit.CategoryIds;
+            var skillReferenceList = unit.SkillReferences;
             var baseStat = unit.BaseStat;
             var unitClass = (int)unit.UnitClass;
             var relicDefinition = unit.RelicDefinition;
-            var isGalacticLegend = unit.LimitBreakRef.Any(x => x.PowerAdditiveTag == "ultimate");
+            var isGalacticLegend = unit.LimitBreakRefs.Any(x => x.PowerAdditiveTag == "ultimate");
 
             var skillRef = skillReferenceList.Select(skill => skills[skill!.SkillId!]).ToList();
 
             if (combatType == 1) // character
             {
-                var unitTierList = unit.UnitTier;
+                var unitTierList = unit.UnitTiers;
                 var modRecommendationList = new List<ModRecommendation>();
-                foreach (var rec in unit.ModRecommendation)
+                foreach (var rec in unit.ModRecommendations)
                 {
                     modRecommendationList.Add(ModRecommendation.Create(rec.RecommendationSetId!, (long)rec.UnitTier).Value);
                 }
@@ -208,13 +208,13 @@ public sealed partial class UnitData : ValueObject
                 {
                     var stats = new Dictionary<long, long>();
                     var tier = (int)gearTier.Tier;
-                    foreach (var stat in gearTier.BaseStat!.Stat.OrderBy(s => (int)s.UnitStatId))
+                    foreach (var stat in gearTier.BaseStat!.Stats.OrderBy(s => (int)s.UnitStatId))
                         stats[(int)stat.UnitStatId] = stat.UnscaledDecimalValue;
-                    tierData[tier.ToString()] = GearLevel.Create(gearTier.EquipmentSet, stats).Value;
+                    tierData[tier.ToString()] = GearLevel.Create(gearTier.EquipmentSets, stats).Value;
                 }
 
                 var relicData = new Dictionary<string, string>();
-                foreach (var relic in relicDefinition!.RelicTierDefinitionId.OrderBy(s => s[^1..] + 2))
+                foreach (var relic in relicDefinition!.RelicTierDefinitionIds.OrderBy(s => s[^1..] + 2))
                 {
                     var id = int.Parse(relic[^1..]) + 2;
                     relicData[id.ToString()] = relic;
@@ -243,14 +243,14 @@ public sealed partial class UnitData : ValueObject
             else //ships
             {
                 var crewContributionTableId = unit.CrewContributionTableId;
-                var crewList = unit?.Crew ?? Enumerable.Empty<CrewMember>();
+                var crewList = unit?.Crews ?? Enumerable.Empty<CrewMember>();
                 var stats = new Dictionary<long, long>();
-                foreach (var stat in baseStat?.Stat ?? Enumerable.Empty<GameDataStat>())
+                foreach (var stat in baseStat?.Stats ?? Enumerable.Empty<GameDataStat>())
                     stats[(long)stat.UnitStatId] = stat.UnscaledDecimalValue;
 
 
                 foreach (var cm in crewList)
-                    foreach (var s in cm.SkillReference)
+                    foreach (var s in cm.SkillReferences)
                         skillRef.Add(skills[s.SkillId!]);
 
 

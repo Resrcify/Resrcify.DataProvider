@@ -32,7 +32,7 @@ public sealed class GetExpandedProfileQueryHandler : IQueryHandler<GetExpandedPr
             ExpandedUnit.Create(request.DefinitionId, request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData);
 
         var datacrons = Enumerable.Empty<ExpandedDatacron>();
-        if (!request.WithoutDatacrons) datacrons = ExpandedDatacron.Create(request.PlayerProfile.Datacron, baseData);
+        if (!request.WithoutDatacrons) datacrons = ExpandedDatacron.Create(request.PlayerProfile.Datacrons, baseData);
 
         var datacronSummary = ParseDatacronSummary(datacrons);
         var summary = ParseSummaryData(units, datacronSummary);
@@ -121,12 +121,12 @@ public sealed class GetExpandedProfileQueryHandler : IQueryHandler<GetExpandedPr
 
         foreach (var unit in expandedUnits)
         {
-            if (unit.Value.CombatType == CombatType.CHARACTER)
+            if (unit.Value.CombatType == CombatType.Character)
             {
                 characters++;
                 characterGp += unit.Value.Gp;
             }
-            if (unit.Value.CombatType == CombatType.SHIP)
+            if (unit.Value.CombatType == CombatType.Ship)
             {
                 ships++;
                 shipGp += unit.Value.Gp;
@@ -136,32 +136,32 @@ public sealed class GetExpandedProfileQueryHandler : IQueryHandler<GetExpandedPr
             ExtractModData(ref sixDotModsCount, ref speedUnder10, ref speedBetween10And14, ref speedBetween15And19, ref speedBetween20And24, ref speed25Plus, ref offenceBetween4And6Percent, ref offenceOver6Percent, unit);
             ExtractSkillData(ref zetaCount, ref omicronCount, ref tbOmicronCount, ref twOmicronCount, ref gaOmicronCount, ref cqOmicronCount, ref raidOmicronCount, unit);
 
-            if (unit.Value.GearTier == UnitTier.TIER01) gear1++;
-            if (unit.Value.GearTier == UnitTier.TIER02) gear2++;
-            if (unit.Value.GearTier == UnitTier.TIER03) gear3++;
-            if (unit.Value.GearTier == UnitTier.TIER04) gear4++;
-            if (unit.Value.GearTier == UnitTier.TIER05) gear5++;
-            if (unit.Value.GearTier == UnitTier.TIER06) gear6++;
-            if (unit.Value.GearTier == UnitTier.TIER07) gear7++;
-            if (unit.Value.GearTier == UnitTier.TIER08) gear8++;
-            if (unit.Value.GearTier == UnitTier.TIER09) gear9++;
-            if (unit.Value.GearTier == UnitTier.TIER10) gear10++;
-            if (unit.Value.GearTier == UnitTier.TIER11) gear11++;
-            if (unit.Value.GearTier == UnitTier.TIER12) gear12++;
-            if (unit.Value.GearTier == UnitTier.TIER13) gear13++;
+            if (unit.Value.GearTier == UnitTier.Tier01) gear1++;
+            if (unit.Value.GearTier == UnitTier.Tier02) gear2++;
+            if (unit.Value.GearTier == UnitTier.Tier03) gear3++;
+            if (unit.Value.GearTier == UnitTier.Tier04) gear4++;
+            if (unit.Value.GearTier == UnitTier.Tier05) gear5++;
+            if (unit.Value.GearTier == UnitTier.Tier06) gear6++;
+            if (unit.Value.GearTier == UnitTier.Tier07) gear7++;
+            if (unit.Value.GearTier == UnitTier.Tier08) gear8++;
+            if (unit.Value.GearTier == UnitTier.Tier09) gear9++;
+            if (unit.Value.GearTier == UnitTier.Tier10) gear10++;
+            if (unit.Value.GearTier == UnitTier.Tier11) gear11++;
+            if (unit.Value.GearTier == UnitTier.Tier12) gear12++;
+            if (unit.Value.GearTier == UnitTier.Tier13) gear13++;
 
-            if (unit.Value.RelicTier < RelicTier.RELICUNLOCKED) continue;
+            if (unit.Value.RelicTier < RelicTier.Reliclocked) continue;
             relicCount++;
-            if (unit.Value.RelicTier == RelicTier.RELICUNLOCKED) relic0++;
-            if (unit.Value.RelicTier == RelicTier.RELICTIER01) relic1++;
-            if (unit.Value.RelicTier == RelicTier.RELICTIER02) relic2++;
-            if (unit.Value.RelicTier == RelicTier.RELICTIER03) relic3++;
-            if (unit.Value.RelicTier == RelicTier.RELICTIER04) relic4++;
-            if (unit.Value.RelicTier == RelicTier.RELICTIER05) relic5++;
-            if (unit.Value.RelicTier == RelicTier.RELICTIER06) relic6++;
-            if (unit.Value.RelicTier == RelicTier.RELICTIER07) relic7++;
-            if (unit.Value.RelicTier == RelicTier.RELICTIER08) relic8++;
-            if (unit.Value.RelicTier == RelicTier.RELICTIER09) relic9++;
+            if (unit.Value.RelicTier == RelicTier.Relicunlocked) relic0++;
+            if (unit.Value.RelicTier == RelicTier.Relictier01) relic1++;
+            if (unit.Value.RelicTier == RelicTier.Relictier02) relic2++;
+            if (unit.Value.RelicTier == RelicTier.Relictier03) relic3++;
+            if (unit.Value.RelicTier == RelicTier.Relictier04) relic4++;
+            if (unit.Value.RelicTier == RelicTier.Relictier05) relic5++;
+            if (unit.Value.RelicTier == RelicTier.Relictier06) relic6++;
+            if (unit.Value.RelicTier == RelicTier.Relictier07) relic7++;
+            if (unit.Value.RelicTier == RelicTier.Relictier08) relic8++;
+            if (unit.Value.RelicTier == RelicTier.Relictier09) relic9++;
 
         }
 
@@ -197,13 +197,13 @@ public sealed class GetExpandedProfileQueryHandler : IQueryHandler<GetExpandedPr
             if (mod.Rarity == ModRarity.MODRARITY6) sixDotModsCount++;
             foreach (var secondaryStat in mod.SecondaryStats)
             {
-                if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value < 10) speedUnder10++;
-                if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 10 && secondaryStat.Value <= 14) speedBetween10And14++;
-                if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 15 && secondaryStat.Value <= 19) speedBetween15And19++;
-                if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 20 && secondaryStat.Value <= 24) speedBetween20And24++;
-                if (secondaryStat.UnitStat == UnitStat.UNITSTATSPEED && secondaryStat.Value >= 25) speed25Plus++;
-                if (secondaryStat.UnitStat == UnitStat.UNITSTATOFFENSEPERCENTADDITIVE && secondaryStat.Value >= 6) offenceOver6Percent++;
-                if (secondaryStat.UnitStat == UnitStat.UNITSTATOFFENSEPERCENTADDITIVE && secondaryStat.Value >= 4 && secondaryStat.Value < 6) offenceBetween4And6Percent++;
+                if (secondaryStat.UnitStat == UnitStat.Unitstatspeed && secondaryStat.Value < 10) speedUnder10++;
+                if (secondaryStat.UnitStat == UnitStat.Unitstatspeed && secondaryStat.Value >= 10 && secondaryStat.Value <= 14) speedBetween10And14++;
+                if (secondaryStat.UnitStat == UnitStat.Unitstatspeed && secondaryStat.Value >= 15 && secondaryStat.Value <= 19) speedBetween15And19++;
+                if (secondaryStat.UnitStat == UnitStat.Unitstatspeed && secondaryStat.Value >= 20 && secondaryStat.Value <= 24) speedBetween20And24++;
+                if (secondaryStat.UnitStat == UnitStat.Unitstatspeed && secondaryStat.Value >= 25) speed25Plus++;
+                if (secondaryStat.UnitStat == UnitStat.Unitstatoffensepercentadditive && secondaryStat.Value >= 6) offenceOver6Percent++;
+                if (secondaryStat.UnitStat == UnitStat.Unitstatoffensepercentadditive && secondaryStat.Value >= 4 && secondaryStat.Value < 6) offenceBetween4And6Percent++;
             }
         }
     }
@@ -217,19 +217,19 @@ public sealed class GetExpandedProfileQueryHandler : IQueryHandler<GetExpandedPr
 
             omicronCount++;
 
-            if (skill.OmicronRestriction == OmicronMode.TERRITORYBATTLEBOTHOMICRON ||
-                skill.OmicronRestriction == OmicronMode.TERRITORYCOVERTOMICRON ||
-                skill.OmicronRestriction == OmicronMode.TERRITORYSTRIKEOMICRON)
+            if (skill.OmicronRestriction == OmicronMode.Territorybattlebothomicron ||
+                skill.OmicronRestriction == OmicronMode.Territorycovertomicron ||
+                skill.OmicronRestriction == OmicronMode.Territorystrikeomicron)
                 tbOmicronCount++;
-            if (skill.OmicronRestriction == OmicronMode.TERRITORYTOURNAMENTOMICRON ||
-                skill.OmicronRestriction == OmicronMode.TERRITORYTOURNAMENT3OMICRON ||
-                skill.OmicronRestriction == OmicronMode.TERRITORYTOURNAMENT5OMICRON)
+            if (skill.OmicronRestriction == OmicronMode.Territorytournamentomicron ||
+                skill.OmicronRestriction == OmicronMode.Territorytournament3omicron ||
+                skill.OmicronRestriction == OmicronMode.Territorytournament5omicron)
                 gaOmicronCount++;
-            if (skill.OmicronRestriction == OmicronMode.TERRITORYWAROMICRON)
+            if (skill.OmicronRestriction == OmicronMode.Territorywaromicron)
                 twOmicronCount++;
-            if (skill.OmicronRestriction == OmicronMode.CONQUESTOMICRON)
+            if (skill.OmicronRestriction == OmicronMode.Conquestomicron)
                 cqOmicronCount++;
-            if (skill.OmicronRestriction == OmicronMode.GUILDRAIDOMICRON)
+            if (skill.OmicronRestriction == OmicronMode.Guildraidomicron)
                 raidOmicronCount++;
         }
     }

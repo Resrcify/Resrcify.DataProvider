@@ -30,10 +30,10 @@ public sealed class RelicData : ValueObject
     public static Result<Dictionary<string, RelicData>> Create(GameDataResponse data, Dictionary<string, Dictionary<string, long>> statsTable)
     {
         var relicData = new Dictionary<string, RelicData>();
-        foreach (var relic in data.RelicTierDefinition.OrderBy(s => s.Id!.Length).ThenBy(s => s.Id))
+        foreach (var relic in data.RelicTierDefinitions.OrderBy(s => s.Id!.Length).ThenBy(s => s.Id))
         {
             var stats = new Dictionary<long, long>();
-            foreach (var stat in relic.Stat!.Stat.OrderBy(s => (int)s.UnitStatId))
+            foreach (var stat in relic.Stat!.Stats.OrderBy(s => (int)s.UnitStatId))
             {
                 stats[(int)stat.UnitStatId] = stat.UnscaledDecimalValue;
             }

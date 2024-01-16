@@ -10,6 +10,6 @@ public class StatMod
     public StatModTier Tier { get; set; }
     public StatModStat? PrimaryStat { get; set; }
     public int Xp { get; set; }
-    public List<StatModStat> SecondaryStat { get; set; } = new();
+    public List<StatModStat> SecondaryStats { get; set; } = new();
     public int RerolledCount { get; set; }
 }

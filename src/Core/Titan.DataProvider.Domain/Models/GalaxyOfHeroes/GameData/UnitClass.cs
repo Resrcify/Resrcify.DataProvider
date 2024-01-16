@@ -2,6 +2,7 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 public enum UnitClass
 {
-    UNITCLASSSTANDARD = 6,
-    UNITCLASSCOMMANDER = 7,
+    UnitClassDEFAULT = 0,
+    Unitclassstandard = 6,
+    Unitclasscommander = 7,
 }

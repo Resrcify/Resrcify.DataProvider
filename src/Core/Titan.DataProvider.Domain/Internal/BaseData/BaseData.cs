@@ -87,12 +87,12 @@ public sealed class BaseData : AggregateRoot
     private static Dictionary<string, Dictionary<string, long>> FetchStatsTable(GameDataResponse data)
     {
         var statsTable = new Dictionary<string, Dictionary<string, long>>();
-        foreach (var table in data.StatProgression)
+        foreach (var table in data.StatProgressions)
         {
             if (table.Id!.StartsWith("stattable_"))
             {
                 var statsLine = new Dictionary<string, long>();
-                foreach (var stat in table.Stat!.Stat.OrderBy(s => (int)s.UnitStatId))
+                foreach (var stat in table.Stat!.Stats.OrderBy(s => (int)s.UnitStatId))
                 {
                     var id = (int)stat.UnitStatId;
                     statsLine[id.ToString()] = stat.UnscaledDecimalValue;

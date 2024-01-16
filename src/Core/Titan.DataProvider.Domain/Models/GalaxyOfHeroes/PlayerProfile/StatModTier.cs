@@ -2,9 +2,10 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 
 public enum StatModTier
 {
-    STATMODTIER01 = 1,
-    STATMODTIER02 = 2,
-    STATMODTIER03 = 3,
-    STATMODTIER04 = 4,
-    STATMODTIER05 = 5,
+    StatModTierDEFAULT = 0,
+    Statmodtier01 = 1,
+    Statmodtier02 = 2,
+    Statmodtier03 = 3,
+    Statmodtier04 = 4,
+    Statmodtier05 = 5,
 }

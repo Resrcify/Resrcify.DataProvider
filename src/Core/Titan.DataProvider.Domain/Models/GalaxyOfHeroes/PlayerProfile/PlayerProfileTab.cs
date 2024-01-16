@@ -2,7 +2,8 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 
 public enum PlayerProfileTab
 {
-    PROFILEPVPCHARACTER = 1,
-    PROFILEPVPSHIP = 2,
-    PROFILEPVPTOURNAMENT = 3,
+    PlayerProfileTabDEFAULT = 0,
+    Profilepvpcharacter = 1,
+    Profilepvpship = 2,
+    Profilepvptournament = 3,
 }

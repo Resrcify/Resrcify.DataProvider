@@ -6,8 +6,6 @@ using Titan.DataProvider.Domain.Shared;
 using Skill = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Skill;
 using System.Runtime.InteropServices;
 using Titan.DataProvider.Domain.Abstractions;
-using System;
-
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 
 public class ShipStatCalc : StatCalcBase, IStatCalc
@@ -80,7 +78,7 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
         );
 
     private double GetCrewlessSkillsCrewRating()
-        => _unit.Skill.Sum(x => (x.Id![..8] == "hardware" ? 0.696 : 2.46) * _gameData.CrTable.AbilityLevelCr[(x.Tier + 2).ToString()]);
+        => _unit.Skills.Sum(x => (x.Id![..8] == "hardware" ? 0.696 : 2.46) * _gameData.CrTable.AbilityLevelCr[(x.Tier + 2).ToString()]);
 
     private double GetCrewRating()
     {
@@ -96,12 +94,12 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
             crewRating += _gameData.CrTable.GearLevelCr[tierEnumValue.ToString()]; // add CR from complete gear levels
 
             if (_gameData.CrTable.GearPieceCr.TryGetValue(tierEnumValue.ToString(), out var gearPeiceCrValue))
-                crewRating += gearPeiceCrValue * member.Equipment?.Count ?? 0; // add CR from currently equipped gear
-            crewRating += member.Skill.Sum(GetSkillCrewRating); // add CR from ability levels
+                crewRating += gearPeiceCrValue * member.Equipments?.Count ?? 0; // add CR from currently equipped gear
+            crewRating += member.Skills.Sum(GetSkillCrewRating); // add CR from ability levels
 
             // add CR from mods
-            if (member?.EquippedStatMod?.Count > 0)
-                crewRating += member.EquippedStatMod.Sum(x => _gameData.CrTable.ModRarityLevelCr[x.DefinitionId![1].ToString()][x.Level.ToString()]);
+            if (member?.EquippedStatMods?.Count > 0)
+                crewRating += member.EquippedStatMods.Sum(x => _gameData.CrTable.ModRarityLevelCr[x.DefinitionId![1].ToString()][x.Level.ToString()]);
 
             //     // add CR from relics
             if (member?.Relic is not null && (int)member.Relic.CurrentTier > 2)
@@ -152,7 +150,7 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
         if (_gameData.GpTable.ShipRarityFactor.TryGetValue(((int)_unit.CurrentRarity).ToString(), out var value))
             gp *= value * _gameData.GpTable.CrewSizeFactor[_crewUnits.Count.ToString()];
         gp += _gameData.GpTable.UnitLevelGp[_unit.CurrentLevel.ToString()];
-        foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skill))
+        foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skills))
             gp += GetSkillGp(defId, skill);
         return Floor(gp * 1.5);
     }

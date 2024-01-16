@@ -2,9 +2,10 @@ namespace Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 public enum ThreatLevel
 {
-    NORMAL = 1,
-    ELITE = 2,
-    BOSS = 3,
-    ANY = 4,
-    SUMMON = 5,
+    ThreatLevelDEFAULT = 0,
+    Normal = 1,
+    Elite = 2,
+    Boss = 3,
+    Any = 4,
+    Summon = 5,
 }

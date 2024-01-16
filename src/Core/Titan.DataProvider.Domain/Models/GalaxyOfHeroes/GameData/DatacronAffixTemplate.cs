@@ -13,5 +13,5 @@ public class DatacronAffixTemplate
     public int MinTier { get; set; }
     public int MaxTier { get; set; }
     public string? ScopeIcon { get; set; }
-    public List<string>? Tag { get; set; }
+    public List<string>? Tags { get; set; }
 }
