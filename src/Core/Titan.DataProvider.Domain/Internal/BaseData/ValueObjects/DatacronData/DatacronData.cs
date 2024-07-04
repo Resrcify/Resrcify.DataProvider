@@ -94,7 +94,7 @@ public sealed partial class DatacronData : ValueObject
     {
         return new DatacronData(id, setId, nameKey, iconKey, detailPrefab, expirationTimeMs, allowReroll, initialTiers, maxRerolls, referenceTemplateId, setMaterial, fixedTag, setTier, tier, affixSet, abilities, stats);
     }
-    public static Result<Dictionary<string, DatacronData>> Create(GameDataResponse data, Dictionary<string, string> local)
+    public static Result<Dictionary<string, DatacronData>> Create(GameDataResponse data, Dictionary<string, string> local, bool onlyActive = false)
     {
         var abilities = MapAbilites(data, local);
         var factions = MapFactions(data, local);
@@ -107,10 +107,9 @@ public sealed partial class DatacronData : ValueObject
             Dictionary<string, Ability> datacronAbilities = new();
             Dictionary<string, Stat> datacronStats = new();
             var cronSet = data.DatacronSets.FirstOrDefault(x => x.Id == cron.SetId);
-            // var unixEpochNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-            if (cronSet?.ExpirationTimeMs is null
-            // || cronSet.ExpirationTimeMs < unixEpochNow
-            )
+
+            var unixEpochNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            if (cronSet?.ExpirationTimeMs is null || (onlyActive && cronSet.ExpirationTimeMs < unixEpochNow))
                 continue;
 
             foreach (var (tierValue, i) in cron.Tiers.Select((value, i) => (value, i)))
@@ -134,7 +133,7 @@ public sealed partial class DatacronData : ValueObject
 
                         if (datacronAbilities.TryGetValue(affixValue.AbilityId, out var foundAbility))
                             foreach (var oldTarget in foundAbility.Targets)
-                                targets.Add(oldTarget.Key, oldTarget.Value);
+                                targets.TryAdd(oldTarget.Key, oldTarget.Value);
 
                         var ability = Ability.Create(affixValue.AbilityId, targets);
                         if (!datacronAbilities.TryAdd(affixValue.AbilityId, ability.Value))
@@ -162,7 +161,7 @@ public sealed partial class DatacronData : ValueObject
                 affixSetList,
                 datacronAbilities,
                 datacronStats.OrderBy(x => x.Value.Id).ToDictionary(x => x.Key, x => x.Value));
-            datacronDataDict.Add(cron.Id!, datacron.Value);
+            datacronDataDict.TryAdd(cron.Id!, datacron.Value);
         }
         return datacronDataDict;
     }
@@ -208,8 +207,7 @@ public sealed partial class DatacronData : ValueObject
                 affixValue.ScopeIcon!,
                 unit
             );
-            targets.Add(affixValue.TargetRule!, newTarget.Value);
-
+            targets.TryAdd(affixValue.TargetRule!, newTarget.Value);
         }
 
         return targets;

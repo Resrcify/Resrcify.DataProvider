@@ -32,3 +32,6 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+
+docker-compose.yml
+docker-compose.override.yml
