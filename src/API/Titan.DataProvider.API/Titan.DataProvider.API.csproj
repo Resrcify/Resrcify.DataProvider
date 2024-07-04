@@ -3,6 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <Authors>Rickard Marjanovic (@rmarjanovic)</Authors>
+    <Title>Resrcify.DataProvider</Title>
+    <PackageId>Resrcify.DataProvider</PackageId>
+    <Company>Resrcify AB</Company>
   </PropertyGroup>
 
   <ItemGroup>
