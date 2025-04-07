@@ -3,15 +3,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Newtonsoft.Json;
-using Titan.DataProvider.Application.Abstractions.Application.Messaging;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
 using Titan.DataProvider.Application.Errors;
 using Titan.DataProvider.Application.Features.Data.Events.LocalizationDataUpdated;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Titan.DataProvider.Application.Models.GalaxyOfHeroes.Localization;
-using Titan.DataProvider.Domain.Shared;
 using Titan.DataProvider.Application.Features.Data.Events.GameDataUpdated;
 using Titan.DataProvider.Application.Models.GalaxyOfHeroes.Metadata;
+using Resrcify.SharedKernel.Messaging.Abstractions;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Application.Features.Data.Commands.UpdateRawData;
 

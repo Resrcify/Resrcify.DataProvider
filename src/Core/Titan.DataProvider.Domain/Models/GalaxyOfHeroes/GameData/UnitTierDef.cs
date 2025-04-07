@@ -7,5 +7,5 @@ public class UnitTierDef
 {
     public UnitTier Tier { get; set; }
     public StatDef? BaseStat { get; set; }
-    public List<string> EquipmentSets { get; set; } = new();
+    public List<string> EquipmentSets { get; set; } = [];
 }

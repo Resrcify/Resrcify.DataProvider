@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 
 public sealed class Ability : ValueObject
 {
     public string Id { get; private set; }
-    private readonly Dictionary<string, Target> _targets = new();
+    private readonly Dictionary<string, Target> _targets = [];
     public IReadOnlyDictionary<string, Target> Targets => _targets;
     private Ability(string id, Dictionary<string, Target> targets)
     {
@@ -18,7 +18,7 @@ public sealed class Ability : ValueObject
     public static Result<Ability> Create(string id, Dictionary<string, Target>? targets = null)
     {
         if (targets is null)
-            return new Ability(id, new Dictionary<string, Target>());
+            return new Ability(id, []);
         return new Ability(id, targets);
     }
 

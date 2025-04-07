@@ -11,76 +11,74 @@ using Titan.DataProvider.Infrastructure.BackgroundJobs;
 using Titan.DataProvider.Infrastructure.Caching;
 using Titan.DataProvider.Infrastructure.HttpClients;
 
-namespace Titan.DataProvider.Infrastructure
+namespace Titan.DataProvider.Infrastructure;
+
+public static class InfrastructureServiceRegistration
 {
-    public static class InfrastructureServiceRegistration
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            var clientUrl = Environment.GetEnvironmentVariable("CLIENT_URL") ?? configuration.GetValue<string>("ClientUrl");
-            var port = Environment.GetEnvironmentVariable("PORT") ?? configuration.GetValue<string>("ClientPort");
+        var clientUrl = Environment.GetEnvironmentVariable("CLIENT_URL") ?? configuration.GetValue<string>("ClientUrl");
+        var port = Environment.GetEnvironmentVariable("PORT") ?? configuration.GetValue<string>("ClientPort");
 
-            if (bool.TryParse(Environment.GetEnvironmentVariable("IS_TITAN"), out var isTitan) && isTitan)
-                services.AddHttpClient<IGalaxyOfHeroesService, GalaxyOfHeroesService>(c =>
-                {
-                    if (port == "3200") port = "10000";
-                    var uri = clientUrl + ":" + port;
-                    c.BaseAddress = new Uri(uri);
-                })
-                .AddPolicyHandler(GetRetryPolicy())
-                .ConfigurePrimaryHttpMessageHandler(messageHandler =>
-                {
-                    var handler = new HttpClientHandler();
-                    if (handler.SupportsAutomaticDecompression)
-                        handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
-                    return handler;
-                });
-            else
-                services.AddHttpClient<IGalaxyOfHeroesService, ComlinkService>(c =>
-                {
-                    var uri = clientUrl + ":" + port;
-                    c.BaseAddress = new Uri(uri);
-                })
-                .AddPolicyHandler(GetRetryPolicy())
-                .ConfigurePrimaryHttpMessageHandler(messageHandler =>
-                {
-                    var handler = new HttpClientHandler();
-                    if (handler.SupportsAutomaticDecompression)
-                        handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
-                    return handler;
-                });
-
-            services.AddDistributedMemoryCache();
-            services.AddSingleton<ICachingService, CachingService>();
-
-            services.AddQuartz(configure =>
+        if (bool.TryParse(Environment.GetEnvironmentVariable("IS_TITAN"), out var isTitan) && isTitan)
+            services.AddHttpClient<IGalaxyOfHeroesService, GalaxyOfHeroesService>(c =>
             {
-                var jobKey = new JobKey(nameof(CheckMetadataVersionJob));
-                configure
-                    .AddJob<CheckMetadataVersionJob>(jobKey)
-                    .AddTrigger(
-                        trigger =>
-                            trigger.ForJob(jobKey)
-                                .StartAt(DateTime.UtcNow.AddSeconds(30))
-                                .WithSimpleSchedule(
-                                    schedule =>
-                                        schedule.WithIntervalInMinutes(15)
-                                            .RepeatForever()));
-
-                configure.UseMicrosoftDependencyInjectionJobFactory();
+                if (port == "3200")
+                    port = "10000";
+                var uri = clientUrl + ":" + port;
+                c.BaseAddress = new Uri(uri);
+            })
+            .AddPolicyHandler(GetRetryPolicy())
+            .ConfigurePrimaryHttpMessageHandler(messageHandler =>
+            {
+                var handler = new HttpClientHandler();
+                if (handler.SupportsAutomaticDecompression)
+                    handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+                return handler;
+            });
+        else
+            services.AddHttpClient<IGalaxyOfHeroesService, ComlinkService>(c =>
+            {
+                var uri = clientUrl + ":" + port;
+                c.BaseAddress = new Uri(uri);
+            })
+            .AddPolicyHandler(GetRetryPolicy())
+            .ConfigurePrimaryHttpMessageHandler(messageHandler =>
+            {
+                var handler = new HttpClientHandler();
+                if (handler.SupportsAutomaticDecompression)
+                    handler.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+                return handler;
             });
 
-            services.AddQuartzHostedService();
-            return services;
-        }
+        services.AddDistributedMemoryCache();
+        services.AddSingleton<ICachingService, CachingService>();
 
-        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        services.AddQuartz(configure =>
         {
-            return HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .OrResult(msg => msg.StatusCode == HttpStatusCode.TooManyRequests)
-                .OrResult(msg => msg.StatusCode == HttpStatusCode.Unauthorized)
-                .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-        }
+            var jobKey = new JobKey(nameof(CheckMetadataVersionJob));
+            configure
+                .AddJob<CheckMetadataVersionJob>(jobKey)
+                .AddTrigger(
+                    trigger =>
+                        trigger.ForJob(jobKey)
+                            .StartAt(DateTime.UtcNow.AddSeconds(30))
+                            .WithSimpleSchedule(
+                                schedule =>
+                                    schedule.WithIntervalInMinutes(15)
+                                        .RepeatForever()));
+        });
+
+        services.AddQuartzHostedService();
+        return services;
+    }
+
+    private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+    {
+        return HttpPolicyExtensions
+            .HandleTransientHttpError()
+            .OrResult(msg => msg.StatusCode == HttpStatusCode.TooManyRequests)
+            .OrResult(msg => msg.StatusCode == HttpStatusCode.Unauthorized)
+            .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
     }
 }

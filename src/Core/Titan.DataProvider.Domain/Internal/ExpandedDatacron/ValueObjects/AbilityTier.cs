@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedDatacron.ValueObjects;
 public sealed class AbilityTier : ValueObject
@@ -17,7 +17,15 @@ public sealed class AbilityTier : ValueObject
     public string Description { get; private set; }
     public string Image { get; private set; }
 
-    private AbilityTier(string abilityId, string targetRule, int tier, UnitTier requiredUnitTier, RelicTier requiredRelicTier, string name, string description, string image)
+    private AbilityTier(
+        string abilityId,
+        string targetRule,
+        int tier,
+        UnitTier requiredUnitTier,
+        RelicTier requiredRelicTier,
+        string name,
+        string description,
+        string image)
     {
         AbilityId = abilityId;
         TargetRule = targetRule;
@@ -30,9 +38,15 @@ public sealed class AbilityTier : ValueObject
     }
 
     public static Result<AbilityTier> Create(int tier, DatacronAffix playerAffix, Target gameDataAbility)
-    {
-        return new AbilityTier(playerAffix.AbilityId!, playerAffix.TargetRule!, tier, playerAffix.RequiredUnitTier, playerAffix.RequiredRelicTier, gameDataAbility.NameKey, gameDataAbility.DescKey, gameDataAbility.IconKey);
-    }
+        => new AbilityTier(
+            playerAffix.AbilityId!,
+            playerAffix.TargetRule!,
+            tier,
+            playerAffix.RequiredUnitTier,
+            playerAffix.RequiredRelicTier,
+            gameDataAbility.NameKey,
+            gameDataAbility.DescKey,
+            gameDataAbility.IconKey);
     public override IEnumerable<object> GetAtomicValues()
     {
         yield return AbilityId;

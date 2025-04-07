@@ -9,6 +9,6 @@ public class DatacronSet
     public long ExpirationTimeMs { get; set; }
     public string? Icon { get; set; }
     public string? DetailPrefab { get; set; }
-    public List<DatacronSetTier> Tiers { get; set; } = new();
-    public List<DatacronSetMaterial> SetMaterials { get; set; } = new();
+    public List<DatacronSetTier> Tiers { get; set; } = [];
+    public List<DatacronSetMaterial> SetMaterials { get; set; } = [];
 }

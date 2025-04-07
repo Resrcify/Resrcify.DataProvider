@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Titan.DataProvider.Domain.Errors;
 using Titan.DataProvider.Domain.Internal.ExpandedUnit.Enums;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 
@@ -22,7 +22,7 @@ public sealed class Mod : ValueObject
     public int Level { get; private set; }
     public ModStat PrimaryStat { get; private set; }
     public IReadOnlyList<ModStat> SecondaryStats => _secondaryStats;
-    private readonly List<ModStat> _secondaryStats = new();
+    private readonly List<ModStat> _secondaryStats = [];
     public bool IsMaxLevel { get; private set; }
     public int RerolledCount { get; private set; }
 
@@ -56,9 +56,11 @@ public sealed class Mod : ValueObject
         var secondaryStats = new List<ModStat>();
         foreach (var secondaryStat in statMod.SecondaryStats)
         {
-            if (secondaryStat.Stat is null) continue;
+            if (secondaryStat.Stat is null)
+                continue;
             var modStat = ModStat.Create(secondaryStat.Stat.UnitStatId, secondaryStat.Stat.UnscaledDecimalValue, secondaryStat.StatRolls);
-            if (modStat.IsFailure) continue;
+            if (modStat.IsFailure)
+                continue;
             secondaryStats.Add(modStat.Value);
         }
         var isMaxLevel = statMod.Level == MAX_LEVEL;
@@ -78,7 +80,8 @@ public sealed class Mod : ValueObject
         foreach (var mod in statMods)
         {
             var modStat = Create(mod);
-            if (modStat.IsFailure) continue;
+            if (modStat.IsFailure)
+                continue;
             modList.Add(modStat.Value);
         }
         return modList;

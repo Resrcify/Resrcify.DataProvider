@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.GearData;
 
 public sealed class GearData : ValueObject
 {
     public IReadOnlyDictionary<long, long> Stats => _stats;
-    private readonly Dictionary<long, long> _stats = new();
+    private readonly Dictionary<long, long> _stats = [];
     private GearData(Dictionary<long, long> stats)
     {
         _stats = stats;

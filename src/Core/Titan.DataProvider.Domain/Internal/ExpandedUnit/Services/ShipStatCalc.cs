@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 using GameData = Titan.DataProvider.Domain.Internal.BaseData.BaseData;
 using System.Linq;
-using Titan.DataProvider.Domain.Shared;
 using Skill = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Skill;
 using System.Runtime.InteropServices;
 using Titan.DataProvider.Domain.Abstractions;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 
 public class ShipStatCalc : StatCalcBase, IStatCalc
@@ -38,9 +38,7 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
         }
     }
     public static Result<IStatCalc> Create(Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp)
-    {
-        return new ShipStatCalc(unit, gameData, crew, withStats, withoutGp);
-    }
+        => new ShipStatCalc(unit, gameData, crew, withStats, withoutGp);
     private void CalculateRawStats()
     {
         var rarityEnumValue = (int)_unit.CurrentRarity;
@@ -129,7 +127,8 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
     public double CalculateCrewGp()
     {
         var defId = _unit.DefinitionId?.Split(":")[0];
-        if (defId is null) return 0;
+        if (defId is null)
+            return 0;
         var totalCrewGp = 0.0;
         foreach (var crew in _crewUnits)
         {
@@ -145,7 +144,8 @@ public class ShipStatCalc : StatCalcBase, IStatCalc
     public double CalculateCrewShipGp()
     {
         var defId = _unit.DefinitionId?.Split(":")[0];
-        if (defId is null) return 0;
+        if (defId is null)
+            return 0;
         var gp = _crewUnits.Sum(CalculateCharacterGp);
         if (_gameData.GpTable.ShipRarityFactor.TryGetValue(((int)_unit.CurrentRarity).ToString(), out var value))
             gp *= value * _gameData.GpTable.CrewSizeFactor[_crewUnits.Count.ToString()];

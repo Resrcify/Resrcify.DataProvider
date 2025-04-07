@@ -8,7 +8,7 @@ public class AbilityAIParams
     public string? PreferredEnemyTargetingRuleId { get; set; }
     public bool RequireEnemyPreferredTargets { get; set; }
     public bool RequireAllyTargets { get; set; }
-    public List<string> PreferredAllyTargetingRuleIdLists { get; set; } = new();
-    public List<string> PreferredEnemyTargetingRuleIdLists { get; set; } = new();
+    public List<string> PreferredAllyTargetingRuleIdLists { get; set; } = [];
+    public List<string> PreferredEnemyTargetingRuleIdLists { get; set; } = [];
 
 }

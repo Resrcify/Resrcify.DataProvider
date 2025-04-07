@@ -7,6 +7,6 @@ public class DatacronBattleStat
     public string? Id { get; set; }
     public int SetId { get; set; }
     public string? TemplateId { get; set; }
-    public List<string> Tags { get; set; } = new();
-    public List<DatacronAffix> Affixs { get; set; } = new();
+    public List<string> Tags { get; set; } = [];
+    public List<DatacronAffix> Affixs { get; set; } = [];
 }

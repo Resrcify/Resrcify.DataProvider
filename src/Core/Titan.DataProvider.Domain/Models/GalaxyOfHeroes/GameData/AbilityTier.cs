@@ -9,6 +9,6 @@ public class AbilityTier
     public int CooldownMaxOverride { get; set; }
     public string? BlockingEffectId { get; set; }
     public string? BlockedLocKey { get; set; }
-    public List<EffectReference> EffectReferences { get; set; } = new();
-    public List<EffectTag> InteractsWithTags { get; set; } = new();
+    public List<EffectReference> EffectReferences { get; set; } = [];
+    public List<EffectTag> InteractsWithTags { get; set; } = [];
 }

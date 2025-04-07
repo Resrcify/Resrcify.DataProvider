@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.ModeSetData;
 
@@ -21,13 +21,11 @@ public sealed class ModSetData : ValueObject
     }
 
     public static Result<ModSetData> Create(StatModSetDefinition value)
-    {
-        return new ModSetData(
+        => new ModSetData(
             (int)value.CompleteBonus!.Stat!.UnitStatId,
             value.SetCount,
             value.CompleteBonus.Stat.UnscaledDecimalValue,
             value.MaxLevelBonus!.Stat!.UnscaledDecimalValue);
-    }
     public static Result<Dictionary<string, ModSetData>> Create(GameDataResponse data)
     {
         var modSet = new Dictionary<string, ModSetData>();

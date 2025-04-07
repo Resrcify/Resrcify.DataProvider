@@ -1,6 +1,6 @@
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.CrTable;
 
-enum RarityEnum
+internal enum RarityEnum
 {
     ONE_STAR = 1,
     TWO_STAR = 2,

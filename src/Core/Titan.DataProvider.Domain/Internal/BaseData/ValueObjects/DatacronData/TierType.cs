@@ -1,6 +1,6 @@
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 
-enum TierType
+internal enum TierType
 {
     STAT = 0,
     ALIGNMENT = 1,

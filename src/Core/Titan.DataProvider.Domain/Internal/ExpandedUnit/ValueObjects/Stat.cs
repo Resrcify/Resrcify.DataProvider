@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common;
 using Titan.DataProvider.Domain.Errors;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 

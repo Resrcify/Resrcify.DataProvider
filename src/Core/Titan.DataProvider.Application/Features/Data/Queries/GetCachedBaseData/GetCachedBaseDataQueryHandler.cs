@@ -1,10 +1,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
-using Titan.DataProvider.Application.Abstractions.Application.Messaging;
-using Titan.DataProvider.Domain.Shared;
 using Titan.DataProvider.Domain.Internal.BaseData;
 using Titan.DataProvider.Domain.Errors;
+using Resrcify.SharedKernel.Messaging.Abstractions;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Application.Features.Data.Queries.GetCachedBaseData;
 
@@ -18,7 +18,8 @@ public sealed class GetCachedBaseDataQueryHandler : IQueryHandler<GetCachedBaseD
     public async Task<Result<BaseData>> Handle(GetCachedBaseDataQuery request, CancellationToken cancellationToken)
     {
         var cached = await _caching.GetAsync<BaseData>($"BaseData-{request.Language}", cancellationToken);
-        if (cached is null) return Result.Failure<BaseData>(DomainErrors.BaseData.GameDataFileNotFound);
+        if (cached is null)
+            return Result.Failure<BaseData>(DomainErrors.BaseData.GameDataFileNotFound);
         return cached;
     }
 }

@@ -11,11 +11,11 @@ namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 
 public abstract class StatCalcBase
 {
-    public readonly Dictionary<int, double> _base = new();
-    public readonly Dictionary<string, double> _growthModifiers = new();
-    public readonly Dictionary<int, double> _gear = new();
-    public readonly Dictionary<int, double> _mods = new();
-    public readonly Dictionary<int, double> _crew = new();
+    public readonly Dictionary<int, double> _base = [];
+    public readonly Dictionary<string, double> _growthModifiers = [];
+    public readonly Dictionary<int, double> _gear = [];
+    public readonly Dictionary<int, double> _mods = [];
+    public readonly Dictionary<int, double> _crew = [];
     public double BaseGp { get; set; }
     public double ShipCrewGp { get; set; }
     public readonly GameData _gameData;
@@ -174,7 +174,8 @@ public abstract class StatCalcBase
     public double GetSkillGp(string defId, PlayerSkill skill)
     {
         var oSkill = _gameData.Units[defId].Skills.FirstOrDefault(x => x.Id == skill.Id);
-        if (oSkill is null) return 0.0;
+        if (oSkill is null)
+            return 0.0;
         if (oSkill.PowerOverrideTags.TryGetValue((skill.Tier + 2).ToString(), out var oTag))
             if (_gameData.GpTable.AbilitySpecialGp.TryGetValue(oTag.ToString(), out var spValue))
                 return spValue;
@@ -191,11 +192,13 @@ public abstract class StatCalcBase
         foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skills))
         {
             var defId = _unit.DefinitionId?.Split(":")[0];
-            if (defId is null) continue;
+            if (defId is null)
+                continue;
             var oSkill = _gameData.Units[defId].Skills.FirstOrDefault(x => x.Id == skill.Id);
             if (oSkill is not null && oSkill.PowerOverrideTags.TryGetValue((skill.Tier + 2).ToString(), out var oTag))
             {
-                if (oTag[..13] != "reinforcement") continue;
+                if (oTag[..13] != "reinforcement")
+                    continue;
                 gp += _gameData.GpTable.AbilitySpecialGp[oTag];
             }
         }
@@ -207,11 +210,13 @@ public abstract class StatCalcBase
         foreach (var skill in CollectionsMarshal.AsSpan(_unit.Skills))
         {
             var defId = _unit.DefinitionId?.Split(":")[0];
-            if (defId is null) continue;
+            if (defId is null)
+                continue;
             var oSkill = _gameData.Units[defId].Skills.FirstOrDefault(x => x.Id == skill.Id);
             if (oSkill is not null && oSkill.PowerOverrideTags.TryGetValue((skill.Tier + 2).ToString(), out var oTag))
             {
-                if (oTag[..13] == "reinforcement") continue;
+                if (oTag[..13] == "reinforcement")
+                    continue;
                 gp += _gameData.GpTable.AbilitySpecialGp[oTag];
                 continue;
             }

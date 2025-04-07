@@ -1,8 +1,7 @@
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common;
-using Titan.DataProvider.Domain.Shared;
-using Titan.DataProvider.Domain.Primitives;
 using System.Collections.Generic;
-using System;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 
@@ -27,7 +26,8 @@ public sealed class ModStat : ValueObject
     {
         var statValue = value * 1e-8;
         var isPercentage = EnumIsPercentage(unitStat);
-        if (isPercentage) statValue *= 100;
+        if (isPercentage)
+            statValue *= 100;
         return new ModStat(GetInGameName(unitStat), unitStat, statValue, statRolls, isPercentage);
     }
 

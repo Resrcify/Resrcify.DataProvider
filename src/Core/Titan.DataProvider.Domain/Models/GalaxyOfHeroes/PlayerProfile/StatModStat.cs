@@ -9,6 +9,6 @@ public class StatModStat
     public int StatRolls { get; set; }
     public long StatRollerBoundsMin { get; set; }
     public long StatRollerBoundsMax { get; set; }
-    public List<string> Rolls { get; set; } = new();
-    public List<long> UnscaledRollValues { get; set; } = new();
+    public List<string> Rolls { get; set; } = [];
+    public List<long> UnscaledRollValues { get; set; } = [];
 }

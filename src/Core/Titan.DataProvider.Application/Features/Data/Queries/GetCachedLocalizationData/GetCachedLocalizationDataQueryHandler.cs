@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
-using Titan.DataProvider.Application.Abstractions.Application.Messaging;
-using Titan.DataProvider.Domain.Shared;
 using System.Collections.Generic;
+using Resrcify.SharedKernel.Messaging.Abstractions;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Application.Features.Data.Queries.GetCachedLocalizationData;
 

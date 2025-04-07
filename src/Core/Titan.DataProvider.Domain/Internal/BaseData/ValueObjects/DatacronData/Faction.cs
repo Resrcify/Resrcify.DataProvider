@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 
@@ -10,7 +10,7 @@ public sealed class Faction : ValueObject
     public string NameKey { get; private set; }
     public bool Visible { get; private set; }
     public IReadOnlyList<Unit> Units => _units;
-    private readonly List<Unit> _units = new();
+    private readonly List<Unit> _units = [];
     private Faction(string id, string nameKey, bool visible)
     {
         Id = id;

@@ -1,6 +1,6 @@
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.CrTable;
 
-enum StatEnum
+internal enum StatEnum
 {
     MAX_HEALTH = 1,
     STRENGTH = 2,

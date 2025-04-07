@@ -31,9 +31,9 @@ public class Ability
     public AbilitySynergy? Synergy { get; set; }
     public EffectTarget? VisualTarget { get; set; }
     public List<BattleCondition>? TriggerConditions { get; set; }
-    public List<AbilityTier> Tiers { get; set; } = new();
-    public List<EffectTag> DescriptiveTags { get; set; } = new();
-    public List<EffectReference> EffectReferences { get; set; } = new();
-    public List<EffectTag> InteractsWithTags { get; set; } = new();
-    public List<int> UltimateChargeRequireds { get; set; } = new();
+    public List<AbilityTier> Tiers { get; set; } = [];
+    public List<EffectTag> DescriptiveTags { get; set; } = [];
+    public List<EffectReference> EffectReferences { get; set; } = [];
+    public List<EffectTag> InteractsWithTags { get; set; } = [];
+    public List<int> UltimateChargeRequireds { get; set; } = [];
 }

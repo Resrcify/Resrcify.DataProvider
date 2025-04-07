@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.UnitData;
 
@@ -16,9 +16,7 @@ public sealed class ModRecommendation : ValueObject
     }
 
     public static Result<ModRecommendation> Create(string recommendationSetId, long unitTier)
-    {
-        return new ModRecommendation(recommendationSetId, unitTier);
-    }
+        => new ModRecommendation(recommendationSetId, unitTier);
 
     public override IEnumerable<object> GetAtomicValues()
     {

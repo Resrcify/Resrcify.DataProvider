@@ -1,15 +1,15 @@
 using System.Collections.Generic;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.UnitData;
 
 public sealed class GearLevel : ValueObject
 {
     public IReadOnlyList<string> Gear => _gear;
-    private readonly List<string> _gear = new();
+    private readonly List<string> _gear = [];
     public IReadOnlyDictionary<long, long> Stats => _stats;
-    private readonly Dictionary<long, long> _stats = new();
+    private readonly Dictionary<long, long> _stats = [];
 
     private GearLevel(List<string> gear, Dictionary<long, long> stats)
     {

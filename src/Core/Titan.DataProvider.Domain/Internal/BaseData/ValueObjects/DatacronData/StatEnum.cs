@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 
@@ -19,9 +19,7 @@ public sealed class StatEnum : ValueObject
 
     }
     public static Result<StatEnum> Create(int id, string statId, string langId, string nameKey)
-    {
-        return new StatEnum(id, statId, langId, nameKey);
-    }
+        => new StatEnum(id, statId, langId, nameKey);
 
     public override IEnumerable<object> GetAtomicValues()
     {

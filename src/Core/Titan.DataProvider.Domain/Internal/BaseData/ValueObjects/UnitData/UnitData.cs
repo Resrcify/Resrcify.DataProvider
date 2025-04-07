@@ -3,8 +3,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using GameDataStat = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common.Stat;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.UnitData;
 
@@ -16,28 +16,28 @@ public sealed partial class UnitData : ValueObject
     public long CombatType { get; private set; }
     public long ForceAlignment { get; private set; }
     public IReadOnlyList<string> CategoryIdList => _categoryIdList;
-    private readonly List<string> _categoryIdList = new();
+    private readonly List<string> _categoryIdList = [];
     public long UnitClass { get; private set; }
     public bool IsGalacticLegend { get; private set; }
     public string Image { get; private set; }
     public long PrimaryStat { get; private set; }
     public IReadOnlyDictionary<string, GearLevel> GearLevels => _gearLevels;
-    private readonly Dictionary<string, GearLevel> _gearLevels = new();
+    private readonly Dictionary<string, GearLevel> _gearLevels = [];
     public IReadOnlyDictionary<string, Dictionary<string, long>> GrowthModifiers => _growthModifiers;
-    private readonly Dictionary<string, Dictionary<string, long>> _growthModifiers = new();
+    private readonly Dictionary<string, Dictionary<string, long>> _growthModifiers = [];
     public IReadOnlyList<Skill> Skills => _skills;
-    private readonly List<Skill> _skills = new();
+    private readonly List<Skill> _skills = [];
     public IReadOnlyDictionary<string, string> Relics => _relics;
-    private readonly Dictionary<string, string> _relics = new();
+    private readonly Dictionary<string, string> _relics = [];
     public string MasteryModifierId { get; private set; }
     public IReadOnlyList<ModRecommendation> ModRecommendations => _modRecommendations;
-    private readonly List<ModRecommendation> _modRecommendations = new();
+    private readonly List<ModRecommendation> _modRecommendations = [];
     public IReadOnlyDictionary<long, long> Stats => _stats;
-    private readonly Dictionary<long, long> _stats = new();
+    private readonly Dictionary<long, long> _stats = [];
     public IReadOnlyDictionary<string, long> CrewStats => _crewStats;
-    private readonly Dictionary<string, long> _crewStats = new();
+    private readonly Dictionary<string, long> _crewStats = [];
     public IReadOnlyList<string> Crew => _crew;
-    private readonly List<string> _crew = new();
+    private readonly List<string> _crew = [];
 
     private UnitData(
         string id,
@@ -98,9 +98,9 @@ public sealed partial class UnitData : ValueObject
         string masteryModifierId,
         List<ModRecommendation> modRecommendations)
     {
-        Dictionary<long, long> stats = new();
-        Dictionary<string, long> crewStats = new();
-        List<string> crew = new();
+        Dictionary<long, long> stats = [];
+        Dictionary<string, long> crewStats = [];
+        List<string> crew = [];
         return new UnitData(
             id,
             nameKey,
@@ -142,9 +142,9 @@ public sealed partial class UnitData : ValueObject
         Dictionary<string, long> crewStats,
         List<string> crew)
     {
-        Dictionary<string, GearLevel> gearLevels = new();
-        Dictionary<string, string> relics = new();
-        List<ModRecommendation> modRecommendations = new();
+        Dictionary<string, GearLevel> gearLevels = [];
+        Dictionary<string, string> relics = [];
+        List<ModRecommendation> modRecommendations = [];
         return new UnitData(
             id,
             nameKey,

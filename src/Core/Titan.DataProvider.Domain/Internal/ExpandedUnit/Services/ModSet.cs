@@ -1,13 +1,13 @@
 using System.Collections.Generic;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Titan.DataProvider.Domain.Internal.ExpandedUnit.Enums;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 
 public sealed class ModSet : ValueObject
 {
-    const int MODMAXLEVEL = 15;
+    private const int MODMAXLEVEL = 15;
     public ModType ModType { get; private set; }
     public int Count { get; private set; }
     public int MaxLevelCount { get; private set; }
@@ -30,7 +30,8 @@ public sealed class ModSet : ValueObject
     {
         Count++;
         var isMaxLevel = modLevel == MODMAXLEVEL;
-        if (isMaxLevel) MaxLevelCount++;
+        if (isMaxLevel)
+            MaxLevelCount++;
         return Result.Success();
     }
     public override IEnumerable<object> GetAtomicValues()

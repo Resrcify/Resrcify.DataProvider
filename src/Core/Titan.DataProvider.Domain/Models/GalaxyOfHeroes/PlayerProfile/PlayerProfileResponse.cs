@@ -7,7 +7,7 @@ public class PlayerProfileResponse
     public string? Name { get; set; }
     public long AllyCode { get; set; }
     public string? PlayerId { get; set; }
-    public List<Unit> RosterUnits { get; set; } = new();
-    public List<PlayerPvpProfile> PvpProfiles { get; set; } = new();
-    public List<Datacron> Datacrons { get; set; } = new();
+    public List<Unit> RosterUnits { get; set; } = [];
+    public List<PlayerPvpProfile> PvpProfiles { get; set; } = [];
+    public List<Datacron> Datacrons { get; set; } = [];
 }

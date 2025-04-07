@@ -10,7 +10,7 @@ public class DatacronTemplate
     public string? ReferenceTemplateId { get; set; }
     public int MaxRerolls { get; set; }
     public bool AllowReroll { get; set; }
-    public List<string> FixedTags { get; set; } = new();
-    public List<DatacronTemplateTier> Tiers { get; set; } = new();
+    public List<string> FixedTags { get; set; } = [];
+    public List<DatacronTemplateTier> Tiers { get; set; } = [];
 
 }

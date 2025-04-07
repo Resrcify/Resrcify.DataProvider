@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Titan.DataProvider.Domain.Internal.ExpandedDatacron.ValueObjects;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
-using Titan.DataProvider.Domain.Shared;
 using GameData = Titan.DataProvider.Domain.Internal.BaseData.BaseData;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedDatacron;
@@ -15,9 +15,9 @@ public sealed class ExpandedDatacron
     public string Image { get; private set; }
     public int MaxTiers { get; private set; }
     public int ActivatedTiers { get; private set; }
-    private readonly List<AbilityTier> _abilities = new();
+    private readonly List<AbilityTier> _abilities = [];
     public IReadOnlyList<AbilityTier> Abilities => _abilities;
-    private readonly List<StatTier> _stats = new();
+    private readonly List<StatTier> _stats = [];
     public IReadOnlyList<StatTier> Stats => _stats;
     public int RerollCount { get; private set; }
 

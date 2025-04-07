@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0-jammy AS base
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
 WORKDIR /app
 EXPOSE 18000
 
@@ -13,13 +13,12 @@ ENV IS_TITAN false
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0-jammy AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # copy all the layers' csproj files into respective folders
 COPY ["src/Core/Titan.DataProvider.Domain/Titan.DataProvider.Domain.csproj", "Core/Titan.DataProvider.Domain/"]
 COPY ["src/Core/Titan.DataProvider.Application/Titan.DataProvider.Application.csproj", "Core/Titan.DataProvider.Application/"]
 COPY ["src/Infrastructure/Titan.DataProvider.Infrastructure/Titan.DataProvider.Infrastructure.csproj", "Infrastructure/Titan.DataProvider.Infrastructure/"]
-# COPY ["src/Infrastructure/Titan.DataProvider.Persistence/Titan.DataProvider.Persistence.csproj", "Infrastructure/Titan.DataProvider.Persistence/"]
 COPY ["src/API/Titan.DataProvider.API/Titan.DataProvider.API.csproj", "API/Titan.DataProvider.API/"]
 
 RUN dotnet restore "API/Titan.DataProvider.API/Titan.DataProvider.API.csproj"

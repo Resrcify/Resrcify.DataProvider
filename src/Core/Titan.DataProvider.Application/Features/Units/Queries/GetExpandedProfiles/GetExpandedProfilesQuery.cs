@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using MediatR;
+using Resrcify.SharedKernel.Messaging.Abstractions;
 using Titan.DataProvider.Application.Features.Units.Queries.GetExpandedProfile;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 
@@ -13,6 +13,5 @@ public sealed record GetExpandedProfilesQuery(
     bool WithoutModStats,
     bool WithoutMods,
     bool WithoutSkills,
-    bool WithoutDatacrons) : IRequest<IEnumerable<GetExpandedProfilesQueryResponse>>
-{
-}
+    bool WithoutDatacrons)
+    : IQuery<IEnumerable<GetExpandedProfilesQueryResponse>>;

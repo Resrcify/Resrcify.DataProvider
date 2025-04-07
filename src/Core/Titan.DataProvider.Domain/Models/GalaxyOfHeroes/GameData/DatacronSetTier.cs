@@ -8,6 +8,6 @@ public class DatacronSetTier
     public string? UpgradeCostRecipeId { get; set; }
     public string? DustGrantRecipeId { get; set; }
     public DatacronScopeIdentifier ScopeIdentifier { get; set; }
-    public List<string> RerollCostRecipeIds { get; set; } = new();
+    public List<string> RerollCostRecipeIds { get; set; } = [];
 
 }

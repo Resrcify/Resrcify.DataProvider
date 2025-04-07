@@ -2,57 +2,57 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.CrTable;
 
 public sealed class CrTable : ValueObject
 {
-    private readonly Dictionary<string, double> _agilityRoleSupportMastery = new();
+    private readonly Dictionary<string, double> _agilityRoleSupportMastery = [];
     public IReadOnlyDictionary<string, double> AgilityRoleSupportMastery => _agilityRoleSupportMastery;
-    private readonly Dictionary<string, double> _strengthRoleTankMastery = new();
+    private readonly Dictionary<string, double> _strengthRoleTankMastery = [];
     public IReadOnlyDictionary<string, double> StrengthRoleTankMastery => _strengthRoleTankMastery;
-    private readonly Dictionary<string, long> _relicTierCr = new();
+    private readonly Dictionary<string, long> _relicTierCr = [];
     public IReadOnlyDictionary<string, long> RelicTierCr => _relicTierCr;
-    private readonly Dictionary<string, double> _intelligenceRoleTankMastery = new();
+    private readonly Dictionary<string, double> _intelligenceRoleTankMastery = [];
     public IReadOnlyDictionary<string, double> IntelligenceRoleTankMastery => _intelligenceRoleTankMastery;
-    private readonly Dictionary<string, double> _agilityRoleAttackerMastery = new();
+    private readonly Dictionary<string, double> _agilityRoleAttackerMastery = [];
     public IReadOnlyDictionary<string, double> AgilityRoleAttackerMastery => _agilityRoleAttackerMastery;
-    private readonly Dictionary<string, long> _gearLevelCr = new();
+    private readonly Dictionary<string, long> _gearLevelCr = [];
     public IReadOnlyDictionary<string, long> GearLevelCr => _gearLevelCr;
-    private readonly Dictionary<string, double> _strengthRoleHealerMastery = new();
+    private readonly Dictionary<string, double> _strengthRoleHealerMastery = [];
     public IReadOnlyDictionary<string, double> StrengthRoleHealerMastery => _strengthRoleHealerMastery;
-    private readonly Dictionary<string, long> _crewRarityCr = new();
+    private readonly Dictionary<string, long> _crewRarityCr = [];
     public IReadOnlyDictionary<string, long> CrewRarityCr => _crewRarityCr;
-    private readonly Dictionary<string, double> _relicTierLevelFactor = new();
+    private readonly Dictionary<string, double> _relicTierLevelFactor = [];
     public IReadOnlyDictionary<string, double> RelicTierLevelFactor => _relicTierLevelFactor;
-    private readonly Dictionary<string, double> _intelligenceRoleHealerMastery = new();
+    private readonly Dictionary<string, double> _intelligenceRoleHealerMastery = [];
     public IReadOnlyDictionary<string, double> IntelligenceRoleHealerMastery => _intelligenceRoleHealerMastery;
-    private readonly Dictionary<string, long> _gearPieceCr = new();
+    private readonly Dictionary<string, long> _gearPieceCr = [];
     public IReadOnlyDictionary<string, long> GearPieceCr => _gearPieceCr;
-    private readonly Dictionary<string, double> _strengthRoleAttackerMastery = new();
+    private readonly Dictionary<string, double> _strengthRoleAttackerMastery = [];
     public IReadOnlyDictionary<string, double> StrengthRoleAttackerMastery => _strengthRoleAttackerMastery;
-    private readonly Dictionary<string, double> _intelligenceRoleSupportMastery = new();
+    private readonly Dictionary<string, double> _intelligenceRoleSupportMastery = [];
     public IReadOnlyDictionary<string, double> IntelligenceRoleSupportMastery => _intelligenceRoleSupportMastery;
-    private readonly Dictionary<string, double> _crewlessAbilityFactor = new();
+    private readonly Dictionary<string, double> _crewlessAbilityFactor = [];
     public IReadOnlyDictionary<string, double> CrewlessAbilityFactor => _crewlessAbilityFactor;
-    private readonly Dictionary<string, double> _shipRarityFactor = new();
+    private readonly Dictionary<string, double> _shipRarityFactor = [];
     public IReadOnlyDictionary<string, double> ShipRarityFactor => _shipRarityFactor;
-    private readonly Dictionary<string, double> _intelligenceRoleAttackerMastery = new();
+    private readonly Dictionary<string, double> _intelligenceRoleAttackerMastery = [];
     public IReadOnlyDictionary<string, double> IntelligenceRoleAttackerMastery => _intelligenceRoleAttackerMastery;
-    private readonly Dictionary<string, Dictionary<string, long>> _modRarityLevelCr = new();
+    private readonly Dictionary<string, Dictionary<string, long>> _modRarityLevelCr = [];
     public IReadOnlyDictionary<string, Dictionary<string, long>> ModRarityLevelCr => _modRarityLevelCr;
-    private readonly Dictionary<string, double> _agilityRoleTankMastery = new();
+    private readonly Dictionary<string, double> _agilityRoleTankMastery = [];
     public IReadOnlyDictionary<string, double> AgilityRoleTankMastery => _agilityRoleTankMastery;
-    private readonly Dictionary<string, double> _agilityRoleHealerMastery = new();
+    private readonly Dictionary<string, double> _agilityRoleHealerMastery = [];
     public IReadOnlyDictionary<string, double> AgilityRoleHealerMastery => _agilityRoleHealerMastery;
-    private readonly Dictionary<string, double> _strengthRoleSupportMastery = new();
+    private readonly Dictionary<string, double> _strengthRoleSupportMastery = [];
     public IReadOnlyDictionary<string, double> StrengthRoleSupportMastery => _strengthRoleSupportMastery;
-    private readonly Dictionary<string, long> _abilityLevelCr = new();
+    private readonly Dictionary<string, long> _abilityLevelCr = [];
     public IReadOnlyDictionary<string, long> AbilityLevelCr => _abilityLevelCr;
-    private readonly Dictionary<string, long> _unitLevelCr = new();
+    private readonly Dictionary<string, long> _unitLevelCr = [];
     public IReadOnlyDictionary<string, long> UnitLevelCr => _unitLevelCr;
 
     private CrTable(
@@ -192,7 +192,7 @@ public sealed class CrTable : ValueObject
 
     private static Dictionary<string, Dictionary<string, long>> GetModRating(Table crewRatingPerModRarityLevelTierTable)
     {
-        Dictionary<string, Dictionary<string, long>> c = new();
+        Dictionary<string, Dictionary<string, long>> c = [];
         foreach (var row in crewRatingPerModRarityLevelTierTable.Rows.OrderBy(l => int.Parse(l.Key!.Split(':', 4)[1])).ThenBy(p => int.Parse(p.Key!.Split(':', 4)[0])))
         {
             if (row.Key!.Last().ToString() == "0") // only 'select' set 0, as set doesn't affect CR or GP
@@ -206,7 +206,7 @@ public sealed class CrTable : ValueObject
                 if (tier == "1") // tier doesn't affect CR, so only save for tier 1
                 {
                     if (!c.ContainsKey(pips)) // ensure rarity table exists
-                        c[pips] = new Dictionary<string, long>();
+                        c[pips] = [];
                     //         c[pips] = c[pips] || { }; // ensure table exists for that rarity
                     c[pips][level] = long.Parse(row.Value!, System.Globalization.CultureInfo.InvariantCulture);
                 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Titan.DataProvider.Application.Abstractions.Application.Messaging;
+using Resrcify.SharedKernel.Messaging.Abstractions;
 using Titan.DataProvider.Application.Abstractions.Infrastructure;
 
 namespace Titan.DataProvider.Application.Features.Data.Events.LocalizationDataUpdated;
@@ -19,7 +19,8 @@ public sealed class LocalizationDataUpdatedEventHandler : IDomainEventHandler<Lo
 
     public async Task Handle(LocalizationDataUpdatedEvent notification, CancellationToken cancellationToken)
     {
-        if (notification?.Localization?.LocalizationBundle is null) return;
+        if (notification?.Localization?.LocalizationBundle is null)
+            return;
         await CacheLocalization(notification.Localization.LocalizationBundle, cancellationToken);
     }
 
@@ -35,7 +36,8 @@ public sealed class LocalizationDataUpdatedEventHandler : IDomainEventHandler<Lo
     private static IEnumerable<string> GetContents(ZipArchiveEntry e)
     {
         using StreamReader stm = new(e.Open(), Encoding.UTF8);
-        if (stm == null) yield break;
+        if (stm == null)
+            yield break;
         string line;
         while ((line = stm.ReadLine()!) != null)
             yield return line;

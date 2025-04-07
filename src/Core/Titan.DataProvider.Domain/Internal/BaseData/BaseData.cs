@@ -6,28 +6,28 @@ using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.CrTable;
 using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.GearData;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.GpTable;
 using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.ModeSetData;
 using Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.RelicData;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData;
 
-public sealed class BaseData : AggregateRoot
+public sealed class BaseData : AggregateRoot<Guid>
 {
-    private readonly Dictionary<string, GearData> _gear = new();
+    private readonly Dictionary<string, GearData> _gear = [];
     public IReadOnlyDictionary<string, GearData> Gear => _gear;
-    private readonly Dictionary<string, ModSetData> _modSets = new();
+    private readonly Dictionary<string, ModSetData> _modSets = [];
     public IReadOnlyDictionary<string, ModSetData> ModSets => _modSets;
     public CrTable CrTable { get; private set; }
     public GpTable GpTable { get; private set; }
-    private readonly Dictionary<string, RelicData> _relics = new();
+    private readonly Dictionary<string, RelicData> _relics = [];
     public IReadOnlyDictionary<string, RelicData> Relics => _relics;
-    private readonly Dictionary<string, UnitData> _units = new();
+    private readonly Dictionary<string, UnitData> _units = [];
     public IReadOnlyDictionary<string, UnitData> Units => _units;
     public IReadOnlyDictionary<string, DatacronData> Datacrons => _datacrons;
-    private readonly Dictionary<string, DatacronData> _datacrons = new();
+    private readonly Dictionary<string, DatacronData> _datacrons = [];
 
     private BaseData(
         Guid id,
@@ -125,7 +125,7 @@ public sealed class BaseData : AggregateRoot
             var statProgressionId = unit.StatProgressionId;
 
             if (!ul.ContainsKey(baseId!))
-                ul[baseId!] = new Dictionary<string, Dictionary<string, long>>();
+                ul[baseId!] = [];
 
             ul[baseId!][rarity.ToString()] = statsTable[statProgressionId!];
         }

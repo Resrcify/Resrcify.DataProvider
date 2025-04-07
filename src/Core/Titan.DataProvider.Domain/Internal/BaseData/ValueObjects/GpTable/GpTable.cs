@@ -1,41 +1,41 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.GpTable;
 
 public sealed class GpTable : ValueObject
 {
-    private readonly Dictionary<string, double> _crewSizeFactor = new();
+    private readonly Dictionary<string, double> _crewSizeFactor = [];
     public IReadOnlyDictionary<string, double> CrewSizeFactor => _crewSizeFactor;
-    private readonly Dictionary<string, double> _relicTierLevelFactor = new();
+    private readonly Dictionary<string, double> _relicTierLevelFactor = [];
     public IReadOnlyDictionary<string, double> RelicTierLevelFactor => _relicTierLevelFactor;
-    private readonly Dictionary<string, long> _gearLevelGp = new();
+    private readonly Dictionary<string, long> _gearLevelGp = [];
     public IReadOnlyDictionary<string, long> GearLevelGp => _gearLevelGp;
-    private readonly Dictionary<string, long> _relicTierGp = new();
+    private readonly Dictionary<string, long> _relicTierGp = [];
     public IReadOnlyDictionary<string, long> RelicTierGp => _relicTierGp;
-    private readonly Dictionary<string, long> _unitRarityGp = new();
+    private readonly Dictionary<string, long> _unitRarityGp = [];
     public IReadOnlyDictionary<string, long> UnitRarityGp => _unitRarityGp;
-    private readonly Dictionary<string, double> _shipRarityFactor = new();
+    private readonly Dictionary<string, double> _shipRarityFactor = [];
     public IReadOnlyDictionary<string, double> ShipRarityFactor => _shipRarityFactor;
-    private readonly Dictionary<string, long> _abilitySpecialGp = new();
+    private readonly Dictionary<string, long> _abilitySpecialGp = [];
     public IReadOnlyDictionary<string, long> AbilitySpecialGp => _abilitySpecialGp;
-    private readonly Dictionary<string, Dictionary<string, Dictionary<string, long>>> _modRarityLevelTierGp = new();
+    private readonly Dictionary<string, Dictionary<string, Dictionary<string, long>>> _modRarityLevelTierGp = [];
     public IReadOnlyDictionary<string, Dictionary<string, Dictionary<string, long>>> ModRarityLevelTierGp => _modRarityLevelTierGp;
-    private readonly Dictionary<string, Dictionary<string, long>> _gearPieceGp = new();
+    private readonly Dictionary<string, Dictionary<string, long>> _gearPieceGp = [];
     public IReadOnlyDictionary<string, Dictionary<string, long>> GearPieceGp => _gearPieceGp;
-    private readonly Dictionary<string, double> _crewlessAbilityFactor = new();
+    private readonly Dictionary<string, double> _crewlessAbilityFactor = [];
     public IReadOnlyDictionary<string, double> CrewlessAbilityFactor => _crewlessAbilityFactor;
-    private readonly Dictionary<string, long> _shipLevelGp = new();
+    private readonly Dictionary<string, long> _shipLevelGp = [];
     public IReadOnlyDictionary<string, long> ShipLevelGp => _shipLevelGp;
-    private readonly Dictionary<string, long> _abilityLevelGp = new();
+    private readonly Dictionary<string, long> _abilityLevelGp = [];
     public IReadOnlyDictionary<string, long> AbilityLevelGp => _abilityLevelGp;
-    private readonly Dictionary<string, long> _shipAbilityLevelGp = new();
+    private readonly Dictionary<string, long> _shipAbilityLevelGp = [];
     public IReadOnlyDictionary<string, long> ShipAbilityLevelGp => _shipAbilityLevelGp;
-    private readonly Dictionary<string, long> _unitLevelGp = new();
+    private readonly Dictionary<string, long> _unitLevelGp = [];
     public IReadOnlyDictionary<string, long> UnitLevelGp => _unitLevelGp;
 
 
@@ -88,11 +88,16 @@ public sealed class GpTable : ValueObject
         var abilityLevelGpFromCr = abilityLevelGp.ToDictionary(x => x.Key, x => x.Value);
         var galacticPowerModifierPerShipCrewSizeTable = data.Tables.First(x => x.Id == "galactic_power_modifier_per_ship_crew_size_table");
         var galacticPowerPerTierSlotTable = data.Tables.First(x => x.Id == "galactic_power_per_tier_slot_table");
-        var galacticPowerPerTaggedAbilityLevelTable = data.Tables.First(x => x.Id == "galactic_power_per_tagged_ability_level_table"); ;
-        var crewRatingPerModRarityLevelTier = data.Tables.First(x => x.Id == "crew_rating_per_mod_rarity_level_tier"); ;
-        var galacticPowerModifierPerRelicTier = data.Tables.First(x => x.Id == "galactic_power_modifier_per_relic_tier"); ;
-        var galacticPowerPerRelicTier = data.Tables.First(x => x.Id == "galactic_power_per_relic_tier"); ;
-        var galacticPowerModifierPerAbilityCrewlessShips = data.Tables.First(x => x.Id == "galactic_power_modifier_per_ability_crewless_ships"); ;
+        var galacticPowerPerTaggedAbilityLevelTable = data.Tables.First(x => x.Id == "galactic_power_per_tagged_ability_level_table");
+        ;
+        var crewRatingPerModRarityLevelTier = data.Tables.First(x => x.Id == "crew_rating_per_mod_rarity_level_tier");
+        ;
+        var galacticPowerModifierPerRelicTier = data.Tables.First(x => x.Id == "galactic_power_modifier_per_relic_tier");
+        ;
+        var galacticPowerPerRelicTier = data.Tables.First(x => x.Id == "galactic_power_per_relic_tier");
+        ;
+        var galacticPowerModifierPerAbilityCrewlessShips = data.Tables.First(x => x.Id == "galactic_power_modifier_per_ability_crewless_ships");
+        ;
         var galacticPowerPerShipLevelTable = data.XpTables.First(x => x.Id == "galactic_power_per_ship_level_table");
         var galacticPowerPerShipAbilityLevelTable = data.XpTables.First(x => x.Id == "galactic_power_per_ship_ability_level_table");
         var crewSizeFactor = CreateDictionary<double>(galacticPowerModifierPerShipCrewSizeTable.Rows);
@@ -133,7 +138,7 @@ public sealed class GpTable : ValueObject
             var slot = int.Parse(split[1]);
 
             if (!g.ContainsKey(tier))
-                g[tier] = new Dictionary<string, long>();
+                g[tier] = [];
 
             var slotNum = --slot;
             g[tier][slotNum.ToString()] = long.Parse(row.Value!, System.Globalization.CultureInfo.InvariantCulture); // decrement slot by 1 as .help uses 0-based indexing for slot (game table is 1-based)
@@ -155,9 +160,9 @@ public sealed class GpTable : ValueObject
                 var set = split[3];
 
                 if (!g.ContainsKey(pips)) // ensure rarity table exists
-                    g[pips] = new Dictionary<string, Dictionary<string, long>>();
+                    g[pips] = [];
                 if (!g[pips].ContainsKey(level)) // ensure level table exists
-                    g[pips][level] = new Dictionary<string, long>();
+                    g[pips][level] = [];
                 g[pips][level][tier] = long.Parse(row.Value!, System.Globalization.CultureInfo.InvariantCulture);
             }
         }

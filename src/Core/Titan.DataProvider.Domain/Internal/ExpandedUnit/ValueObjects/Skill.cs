@@ -1,12 +1,12 @@
 using System.Linq;
 using System.Collections.Generic;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 using PlayerSkill = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Skill;
 using Unit = Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Unit;
 using Titan.DataProvider.Domain.Errors;
 using UnitData = Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.UnitData.UnitData;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
 
@@ -25,7 +25,19 @@ public sealed class Skill : ValueObject
     public OmicronMode OmicronRestriction { get; private set; }
     public string OmicronRestrictionName { get; private set; }
 
-    private Skill(string id, string name, string nameKey, string image, int tier, int maxTier, bool hasActivatedZeta, int zetaTier, bool hasActivatedOmicron, int omicronTier, OmicronMode omicronMode, string omicronModeName)
+    private Skill(
+        string id,
+        string name,
+        string nameKey,
+        string image,
+        int tier,
+        int maxTier,
+        bool hasActivatedZeta,
+        int zetaTier,
+        bool hasActivatedOmicron,
+        int omicronTier,
+        OmicronMode omicronMode,
+        string omicronModeName)
     {
         Id = id;
         Name = name;
@@ -44,7 +56,8 @@ public sealed class Skill : ValueObject
     public static Result<Skill> Create(PlayerSkill skill, UnitData data)
     {
         var skillData = data.Skills.FirstOrDefault(x => x.Id == skill.Id);
-        if (skillData is null) return Result.Failure<Skill>(DomainErrors.Skill.UnableToFindSkillInGameData);
+        if (skillData is null)
+            return Result.Failure<Skill>(DomainErrors.Skill.UnableToFindSkillInGameData);
         bool hasActivatedZeta = false;
         bool hasActivatedOmicron = false;
         var skillTier = skill.Tier + 2;

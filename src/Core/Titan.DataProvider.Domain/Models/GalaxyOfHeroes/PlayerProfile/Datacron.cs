@@ -10,7 +10,7 @@ public class Datacron
     public bool Locked { get; set; }
     public int RerollIndex { get; set; }
     public int RerollCount { get; set; }
-    public List<string> Tags { get; set; } = new();
-    public List<DatacronAffix> Affixs { get; set; } = new();
-    public List<DatacronAffix> RerollOptions { get; set; } = new();
+    public List<string> Tags { get; set; } = [];
+    public List<DatacronAffix> Affixs { get; set; } = [];
+    public List<DatacronAffix> RerollOptions { get; set; } = [];
 }

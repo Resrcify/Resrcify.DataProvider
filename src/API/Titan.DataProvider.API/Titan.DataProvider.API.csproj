@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <Authors>Rickard Marjanovic (@rmarjanovic)</Authors>
     <Title>Resrcify.DataProvider</Title>
@@ -10,8 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-    <PackageReference Include="MediatR" Version="12.0.1" />
+
+    <PackageReference Include="Resrcify.SharedKernel.Web" Version="1.10.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
   </ItemGroup>
 
   <ItemGroup>

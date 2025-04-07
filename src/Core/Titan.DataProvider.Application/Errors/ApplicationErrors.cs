@@ -1,4 +1,4 @@
-using Titan.DataProvider.Domain.Shared;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Application.Errors;
 
@@ -8,6 +8,7 @@ public static class ApplicationErrors
     {
         public static readonly Error RequestNotSuccessful = new(
             "HttpClient.RequestNotSuccessful",
-            $"The request performed by the HttpClient was not successful.");
+            $"The request performed by the HttpClient was not successful.",
+            ErrorType.Failure);
     }
 }

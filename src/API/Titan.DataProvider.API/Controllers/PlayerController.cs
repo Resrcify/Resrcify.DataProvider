@@ -2,25 +2,22 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Titan.DataProvider.API.Abstractions;
-using Titan.DataProvider.API.Extensions;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
+using Resrcify.SharedKernel.Web.Extensions;
+using Resrcify.SharedKernel.Web.Primitives;
 using Titan.DataProvider.Application.Features.Units.Queries.GetExpandedProfile;
 using Titan.DataProvider.Application.Features.Units.Queries.GetExpandedProfiles;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
-using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.API.Controllers;
 
 [Route("api/[controller]")]
-public class ProfileController : ApiController
+public class ProfileController(ISender sender) : ApiController(sender)
 {
-    public ProfileController(ISender sender) : base(sender)
-    {
-    }
-
     [HttpPost()]
-    public async Task<IActionResult> GetExpandedProfileData(
+    public async Task<IResult> GetExpandedProfileData(
         [FromBody]
         PlayerProfileResponse playerProfile,
         string? definitionId = null,
@@ -31,13 +28,22 @@ public class ProfileController : ApiController
         bool withoutSkills = false,
         bool withoutDatacrons = false,
         CancellationToken cancellationToken = default)
-            => await Result
-                .Create(new GetExpandedProfileQuery(definitionId, playerProfile, GetExpandedProfileQueryRequest.ENG_US, withStats, withoutGp, withoutModStats, withoutMods, withoutSkills, withoutDatacrons))
-                .Bind(request => _sender.Send(request, cancellationToken))
-                .Match(Ok, HandleFailure);
+        => await Result
+            .Create(new GetExpandedProfileQuery(
+                definitionId,
+                playerProfile,
+                GetExpandedProfileQueryRequest.ENG_US,
+                withStats,
+                withoutGp,
+                withoutModStats,
+                withoutMods,
+                withoutSkills,
+                withoutDatacrons))
+            .Bind(request => Sender.Send(request, cancellationToken))
+            .Match(Results.Ok, ToProblemDetails);
 
     [HttpPost("{language}")]
-    public async Task<IActionResult> GetExpandedProfileData(
+    public async Task<IResult> GetExpandedProfileData(
         [FromBody] PlayerProfileResponse playerProfile,
         GetExpandedProfileQueryRequest language,
         string? definitionId = null,
@@ -48,14 +54,23 @@ public class ProfileController : ApiController
         bool withoutSkills = false,
         bool withoutDatacrons = false,
         CancellationToken cancellationToken = default)
-            => await Result
-                .Create(new GetExpandedProfileQuery(definitionId, playerProfile, language, withStats, withoutGp, withoutModStats, withoutMods, withoutSkills, withoutDatacrons))
-                .Bind(request => _sender.Send(request, cancellationToken))
-                .Match(Ok, HandleFailure);
+        => await Result
+            .Create(new GetExpandedProfileQuery(
+                definitionId,
+                playerProfile,
+                language,
+                withStats,
+                withoutGp,
+                withoutModStats,
+                withoutMods,
+                withoutSkills,
+                withoutDatacrons))
+            .Bind(request => Sender.Send(request, cancellationToken))
+            .Match(Results.Ok, ToProblemDetails);
 
     [RequestSizeLimit(int.MaxValue)]
     [HttpPost("/api/profiles")]
-    public async Task<IActionResult> GetExpandedProfilesData(
+    public async Task<IResult> GetExpandedProfilesData(
         [FromBody]
         List<PlayerProfileResponse> playerProfiles,
         bool withStats = true,
@@ -65,9 +80,16 @@ public class ProfileController : ApiController
         bool withoutSkills = false,
         bool withoutDatacrons = false,
         CancellationToken cancellationToken = default)
-    {
-        var request = new GetExpandedProfilesQuery(playerProfiles, GetExpandedProfileQueryRequest.ENG_US, withStats, withoutGp, withoutModStats, withoutMods, withoutSkills, withoutDatacrons);
-        var results = await _sender.Send(request, cancellationToken);
-        return Ok(results);
-    }
+        => await Result
+            .Create(new GetExpandedProfilesQuery(
+                playerProfiles,
+                GetExpandedProfileQueryRequest.ENG_US,
+                withStats,
+                withoutGp,
+                withoutModStats,
+                withoutMods,
+                withoutSkills,
+                withoutDatacrons))
+            .Bind(request => Sender.Send(request, cancellationToken))
+            .Match(Results.Ok, ToProblemDetails);
 }

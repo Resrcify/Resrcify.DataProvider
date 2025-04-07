@@ -1,16 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.Domain.Internal.BaseData.ValueObjects.RelicData;
 
 public sealed class RelicData : ValueObject
 {
-    private readonly Dictionary<string, long> _gms = new();
+    private readonly Dictionary<string, long> _gms = [];
     public IReadOnlyDictionary<string, long> Gms => _gms;
-    private readonly Dictionary<long, long> _stats = new();
+    private readonly Dictionary<long, long> _stats = [];
     public IReadOnlyDictionary<long, long> Stats => _stats;
     private RelicData(Dictionary<string, long> gms, Dictionary<long, long> stats)
     {
@@ -18,9 +18,7 @@ public sealed class RelicData : ValueObject
         _stats = stats;
     }
     public static Result<RelicData> Create(Dictionary<string, long> gms, Dictionary<long, long> stats)
-    {
-        return new RelicData(gms, stats);
-    }
+        => new RelicData(gms, stats);
 
     public override IEnumerable<object> GetAtomicValues()
     {

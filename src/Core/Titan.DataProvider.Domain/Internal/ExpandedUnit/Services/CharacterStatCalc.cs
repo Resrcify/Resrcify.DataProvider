@@ -1,12 +1,12 @@
 using Titan.DataProvider.Domain.Extensions;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 using GameData = Titan.DataProvider.Domain.Internal.BaseData.BaseData;
-using Titan.DataProvider.Domain.Shared;
 using System.Collections.Generic;
 using System;
 using System.Runtime.InteropServices;
 using Titan.DataProvider.Domain.Abstractions;
 using Titan.DataProvider.Domain.Internal.ExpandedUnit.Enums;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedUnit.Services;
 
@@ -29,10 +29,12 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
         {
             CalculateRawStats();
             CalculateBaseStats();
-            if (!withoutMods) CalculateModStats();
+            if (!withoutMods)
+                CalculateModStats();
             FormatStats();
         }
-        if (!withoutGp) BaseGp = CalculateCharacterGp();
+        if (!withoutGp)
+            BaseGp = CalculateCharacterGp();
     }
     public static Result<IStatCalc> Create(Unit unit, GameData gameData, bool withStats, bool withoutGp, bool withoutMods)
     {
@@ -60,7 +62,8 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
     private void CalculateRelicStats(string definitionId, int relicEnumValue)
     {
 
-        if (relicEnumValue <= 2) return;
+        if (relicEnumValue <= 2)
+            return;
         var relic = _gameData.Relics[_gameData.Units[definitionId].Relics[relicEnumValue.ToString()]];
 
         foreach (var stat in relic.Stats)
@@ -71,11 +74,13 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
 
     private void CalculateEquipmentStats()
     {
-        if (_unit.Equipments is null) return;
+        if (_unit.Equipments is null)
+            return;
         foreach (var gearPiece in CollectionsMarshal.AsSpan(_unit.Equipments))
         {
             var gearId = gearPiece.EquipmentId;
-            if (gearId is null || !_gameData.Gear.ContainsKey(gearId)) continue;
+            if (gearId is null || !_gameData.Gear.ContainsKey(gearId))
+                continue;
 
             var gearStats = _gameData.Gear[gearId].Stats;
             foreach (var stat in gearStats)
@@ -165,12 +170,14 @@ public class CharacterStatCalc : StatCalcBase, IStatCalc
         var rawModStats = new Dictionary<long, double>();
         foreach (var mod in CollectionsMarshal.AsSpan(_unit.EquippedStatMods))
         {
-            if (mod?.PrimaryStat?.Stat is null) continue;
+            if (mod?.PrimaryStat?.Stat is null)
+                continue;
             if (!rawModStats.TryAdd((int)mod.PrimaryStat.Stat.UnitStatId, mod.PrimaryStat.Stat.UnscaledDecimalValue))
                 rawModStats[(int)mod.PrimaryStat.Stat.UnitStatId] = rawModStats[(int)mod.PrimaryStat.Stat.UnitStatId] + mod.PrimaryStat.Stat.UnscaledDecimalValue;
             foreach (var secondaryStat in mod.SecondaryStats)
             {
-                if (secondaryStat?.Stat?.UnitStatId is null) continue;
+                if (secondaryStat?.Stat?.UnitStatId is null)
+                    continue;
                 if (!rawModStats.TryAdd((int)secondaryStat.Stat.UnitStatId, secondaryStat.Stat.UnscaledDecimalValue))
                     rawModStats[(int)secondaryStat.Stat.UnitStatId] = rawModStats[(int)secondaryStat.Stat.UnitStatId] + secondaryStat.Stat.UnscaledDecimalValue;
             }

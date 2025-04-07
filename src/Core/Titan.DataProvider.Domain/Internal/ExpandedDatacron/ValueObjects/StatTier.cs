@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.Common;
 using Titan.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
-using Titan.DataProvider.Domain.Primitives;
-using Titan.DataProvider.Domain.Shared;
 
 namespace Titan.DataProvider.Domain.Internal.ExpandedDatacron.ValueObjects;
 public sealed class StatTier : ValueObject
@@ -31,7 +31,8 @@ public sealed class StatTier : ValueObject
     {
         var isPercentage = EnumIsPercentage(playerAffix.StatType);
         var statValue = playerAffix.StatValue / 1e8;
-        if (isPercentage) statValue *= 100;
+        if (isPercentage)
+            statValue *= 100;
         return new StatTier(playerAffix.StatType, tier, playerAffix.RequiredUnitTier, playerAffix.RequiredRelicTier, GetInGameName(playerAffix.StatType), statValue, isPercentage);
     }
 

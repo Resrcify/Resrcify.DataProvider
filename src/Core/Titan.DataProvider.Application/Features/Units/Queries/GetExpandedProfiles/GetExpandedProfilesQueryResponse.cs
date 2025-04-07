@@ -4,9 +4,13 @@ using Titan.DataProvider.Domain.Internal.ExpandedUnit;
 
 namespace Titan.DataProvider.Application.Features.Units.Queries.GetExpandedProfiles;
 
-public sealed record GetExpandedProfilesQueryResponse(string PlayerId, long AllyCode, string Name, ProfileSummary ProfileSummary, Dictionary<string, ExpandedUnit> Units, IEnumerable<ExpandedDatacron> Datacrons)
-{
-}
+public sealed record GetExpandedProfilesQueryResponse(
+    string PlayerId,
+    long AllyCode,
+    string Name,
+    ProfileSummary ProfileSummary,
+    Dictionary<string, ExpandedUnit> Units,
+    IEnumerable<ExpandedDatacron> Datacrons);
 
 public sealed record ProfileSummary(
     int GalacticLegends,

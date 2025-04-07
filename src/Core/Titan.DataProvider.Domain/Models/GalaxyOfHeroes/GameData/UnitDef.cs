@@ -45,16 +45,16 @@ public class UnitDef
     public bool Legend { get; set; }
     public int SquadPositionPriority { get; set; }
     public bool Big { get; set; }
-    public List<string> CategoryIds { get; set; } = new();
-    public List<SkillDefinitionReference> SkillReferences { get; set; } = new();
-    public List<UnitTierDef> UnitTiers { get; set; } = new();
-    public List<Ability> LimitBreaks { get; set; } = new();
-    public List<Ability> UniqueAbilities { get; set; } = new();
-    public List<AbilityReference> LimitBreakRefs { get; set; } = new();
-    public List<AbilityReference> UniqueAbilityRefs { get; set; } = new();
-    public List<CrewMember> Crews { get; set; } = new();
-    public List<UnitModRecommendation> ModRecommendations { get; set; } = new();
-    public List<string> EffectIconPriorityOverrides { get; set; } = new();
-    public List<SummonStatTable> SummonStatTables { get; set; } = new();
-    public List<RecommendedSquad> ExampleSquads { get; set; } = new();
+    public List<string> CategoryIds { get; set; } = [];
+    public List<SkillDefinitionReference> SkillReferences { get; set; } = [];
+    public List<UnitTierDef> UnitTiers { get; set; } = [];
+    public List<Ability> LimitBreaks { get; set; } = [];
+    public List<Ability> UniqueAbilities { get; set; } = [];
+    public List<AbilityReference> LimitBreakRefs { get; set; } = [];
+    public List<AbilityReference> UniqueAbilityRefs { get; set; } = [];
+    public List<CrewMember> Crews { get; set; } = [];
+    public List<UnitModRecommendation> ModRecommendations { get; set; } = [];
+    public List<string> EffectIconPriorityOverrides { get; set; } = [];
+    public List<SummonStatTable> SummonStatTables { get; set; } = [];
+    public List<RecommendedSquad> ExampleSquads { get; set; } = [];
 }

@@ -7,5 +7,5 @@ public class Category
     public string? Id { get; set; }
     public string? DescKey { get; set; }
     public bool Visible { get; set; }
-    public List<CombatType> UiFilters { get; set; } = new();
+    public List<CombatType> UiFilters { get; set; } = [];
 }
