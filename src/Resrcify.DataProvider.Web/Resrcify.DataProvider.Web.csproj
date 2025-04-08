@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <Authors>Rickard Marjanovic (@rmarjanovic)</Authors>
+    <Title>Resrcify.DataProvider.Web</Title>
+    <PackageId>Resrcify.DataProvider.Web</PackageId>
+    <Company>Resrcify AB</Company>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Resrcify.DataProvider.Application/Resrcify.DataProvider.Application.csproj" />
+    <ProjectReference Include="../Resrcify.DataProvider.Domain/Resrcify.DataProvider.Domain.csproj" />
+    <ProjectReference Include="../Resrcify.DataProvider.Infrastructure/Resrcify.DataProvider.Infrastructure.csproj" />
+    <ProjectReference Include="../Resrcify.DataProvider.Presentation/Resrcify.DataProvider.Presentation.csproj" />
+  </ItemGroup>
+</Project>

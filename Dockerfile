@@ -16,19 +16,33 @@ USER appuser
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 # copy all the layers' csproj files into respective folders
-COPY ["src/Core/Titan.DataProvider.Domain/Titan.DataProvider.Domain.csproj", "Core/Titan.DataProvider.Domain/"]
-COPY ["src/Core/Titan.DataProvider.Application/Titan.DataProvider.Application.csproj", "Core/Titan.DataProvider.Application/"]
-COPY ["src/Infrastructure/Titan.DataProvider.Infrastructure/Titan.DataProvider.Infrastructure.csproj", "Infrastructure/Titan.DataProvider.Infrastructure/"]
-COPY ["src/API/Titan.DataProvider.API/Titan.DataProvider.API.csproj", "API/Titan.DataProvider.API/"]
+COPY ["src/Resrcify.DataProvider.Domain/*.csproj", "src/Resrcify.DataProvider.Domain/"]
+COPY ["src/Resrcify.DataProvider.Application/*.csproj", "src/Resrcify.DataProvider.Application/"]
+COPY ["src/Resrcify.DataProvider.Infrastructure/*.csproj", "src/Resrcify.DataProvider.Infrastructure/"]
+COPY ["src/Resrcify.DataProvider.Presentation/*.csproj", "src/Resrcify.DataProvider.Presentation/"]
+COPY ["src/Resrcify.DataProvider.Web/*.csproj", "src/Resrcify.DataProvider.Web/"]
+COPY "*.sln" .
 
-RUN dotnet restore "API/Titan.DataProvider.API/Titan.DataProvider.API.csproj"
-COPY . .
-RUN dotnet build -c Release --property:OutputPath=/app/build
+RUN dotnet restore
 
-FROM build AS publish
-RUN dotnet publish -c Release --property:PublishDir=/app/publish
+COPY src/ src/
 
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Titan.DataProvider.API.dll"]
+FROM build AS debug-build
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends unzip && \
+    rm -rf /var/lib/apt/lists/*
+RUN dotnet publish -c Debug --property:PublishDir=/app/publish --no-restore
+RUN curl -sSL https://aka.ms/getvsdbgsh | /bin/sh /dev/stdin -v latest -l /app/vsdbg
+
+FROM base AS debug
+COPY --from=build /src src/
+COPY --from=debug-build /app/publish .
+COPY --from=debug-build /app/vsdbg /app/vsdbg
+ENTRYPOINT ["dotnet", "Resrcify.DataProvider.Web.dll"]
+
+FROM build AS release-build
+RUN dotnet publish -c Release --property:PublishDir=/app/publish --no-restore
+
+FROM base AS release
+COPY --from=release-build /app/publish .
+ENTRYPOINT ["dotnet", "Resrcify.DataProvider.Web.dll"]

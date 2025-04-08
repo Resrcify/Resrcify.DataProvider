@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <Authors>Rickard Marjanovic (@rmarjanovic)</Authors>
+    <Title>Resrcify.DataProvider.Presentation</Title>
+    <PackageId>Resrcify.DataProvider.Presentation</PackageId>
+    <Company>Resrcify AB</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+    <PackageReference Include="Resrcify.SharedKernel.Web" Version="1.10.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Resrcify.DataProvider.Application/Resrcify.DataProvider.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <RuntimeHostConfigurationOption Include="System.Text.Json.Serialization.EnableSourceGenReflectionFallback" Value="true" />
+  </ItemGroup>
+
+</Project>
