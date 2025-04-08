@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Resrcify.SharedKernel.Web.Extensions;
 using Resrcify.SharedKernel.Web.Primitives;
-using Resrcify.DataProvider.Application.Features.Data.Commands.UpdateRawData;
-using Resrcify.DataProvider.Application.Features.Data.Queries.GetCachedBaseData;
-using Resrcify.DataProvider.Application.Features.Data.Queries.GetCachedLocalizationData;
+using Resrcify.DataProvider.Application.Features.Data.UpdateRawData;
+using Resrcify.DataProvider.Application.Features.Data.GetCachedBaseData;
+using Resrcify.DataProvider.Application.Features.Data.GetCachedLocalizationData;
 
 namespace Resrcify.DataProvider.Presentation.Controllers;
 

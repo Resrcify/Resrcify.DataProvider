@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Resrcify.SharedKernel.Web.Extensions;
 using Resrcify.SharedKernel.Web.Primitives;
-using Resrcify.DataProvider.Application.Features.Units.Queries.GetExpandedProfile;
-using Resrcify.DataProvider.Application.Features.Units.Queries.GetExpandedProfiles;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
+using Resrcify.DataProvider.Application.Features.Units.GetExpandedProfile;
+using Resrcify.DataProvider.Application.Features.Units.GetExpandedProfiles;
 
 namespace Resrcify.DataProvider.Presentation.Controllers;
 

@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using MediatR;
 using Quartz;
 using Resrcify.DataProvider.Application.Abstractions.Infrastructure;
-using Resrcify.DataProvider.Application.Features.Data.Commands.UpdateRawData;
-using Resrcify.DataProvider.Application.Features.Data.Queries.GetMetadataVersion;
+using Resrcify.DataProvider.Application.Features.Data.UpdateRawData;
+using Resrcify.DataProvider.Application.Features.Data.GetMetadataVersion;
 
 namespace Resrcify.DataProvider.Infrastructure.BackgroundJobs;
 

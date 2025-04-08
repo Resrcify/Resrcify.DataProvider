@@ -8,10 +8,10 @@ using PStat = Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.Common.Stat;
 using PSkill = Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile.Skill;
 using System.Collections.Generic;
 using Resrcify.DataProvider.Domain.Internal.ExpandedUnit.ValueObjects;
-using Resrcify.DataProvider.Application.Features.Data.Queries.GetCachedLocalizationData;
-using Resrcify.DataProvider.Application.Features.Data.Queries.GetCachedBaseData;
-using Resrcify.DataProvider.Application.Features.Units.Queries.GetExpandedProfile;
+using Resrcify.DataProvider.Application.Features.Data.GetCachedLocalizationData;
+using Resrcify.DataProvider.Application.Features.Data.GetCachedBaseData;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
+using Resrcify.DataProvider.Application.Features.Units.GetExpandedProfile;
 
 namespace Resrcify.DataProvider.Presentation.JsonContexts;
 [JsonSerializable(typeof(GetCachedLocalizationDataQueryRequest))]
