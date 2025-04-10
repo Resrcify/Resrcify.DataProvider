@@ -26,6 +26,16 @@ public sealed class ModSetData : ValueObject
             value.SetCount,
             value.CompleteBonus.Stat.UnscaledDecimalValue,
             value.MaxLevelBonus!.Stat!.UnscaledDecimalValue);
+    public static Result<ModSetData> Create(
+        long id,
+        long count,
+        long value,
+        long max)
+        => new ModSetData(
+            id,
+            count,
+            value,
+            max);
     public static Result<Dictionary<string, ModSetData>> Create(GameDataResponse data)
     {
         var modSet = new Dictionary<string, ModSetData>();

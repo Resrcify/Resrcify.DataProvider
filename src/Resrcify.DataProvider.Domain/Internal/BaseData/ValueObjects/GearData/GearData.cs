@@ -19,6 +19,10 @@ public sealed class GearData : ValueObject
     {
         return new GearData(ConvertToGearData(data));
     }
+    public static Result<GearData> Create(Dictionary<long, long> stats)
+    {
+        return new GearData(stats);
+    }
 
     private static Dictionary<long, long> ConvertToGearData(EquipmentDef data)
     {

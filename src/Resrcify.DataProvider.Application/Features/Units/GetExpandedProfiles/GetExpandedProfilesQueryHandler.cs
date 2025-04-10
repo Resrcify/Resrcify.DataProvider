@@ -11,6 +11,7 @@ using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Resrcify.SharedKernel.Messaging.Abstractions;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Resrcify.SharedKernel.Caching.Abstractions;
+using Resrcify.DataProvider.Application.Converters;
 
 namespace Resrcify.DataProvider.Application.Features.Units.GetExpandedProfiles;
 
@@ -19,13 +20,13 @@ internal sealed class GetExpandedProfilesQueryHandler(ICachingService _caching)
 {
     public async Task<Result<IEnumerable<GetExpandedProfilesQueryResponse>>> Handle(GetExpandedProfilesQuery request, CancellationToken cancellationToken)
     {
-        var baseData = await _caching.GetAsync<Result<BaseData>>($"BaseData-{request.Language}", null, cancellationToken);
-        if (baseData is null || baseData.IsFailure)
+        var baseData = await _caching.GetAsync<BaseData>($"BaseData-{request.Language}", JsonSerializerExtensions.GetJsonSerializerOptions(), cancellationToken);
+        if (baseData is null)
             return Result.Success(Enumerable.Empty<GetExpandedProfilesQueryResponse>());
 
         var expandedProfiles = GetExpandedPlayerProfiles(
             request,
-            baseData.Value);
+            baseData);
 
         return Result.Success(expandedProfiles);
     }

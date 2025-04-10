@@ -14,6 +14,8 @@ using System.Text;
 using Resrcify.DataProvider.Domain.Internal.BaseData;
 using Resrcify.DataProvider.Application.Features.Data.GetCachedLocalizationData;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
+using System.Text.Json;
+using Resrcify.DataProvider.Application.Converters;
 
 namespace Resrcify.DataProvider.Application.Features.Data.UpdateRawData;
 
@@ -50,9 +52,9 @@ internal sealed class UpdateRawDataCommandHandler(
     {
         var tasks = baseDataDictionary.Select(kvp => _caching.SetAsync(
             $"BaseData-{kvp.Key}",
-            kvp.Value,
+            kvp.Value.Value,
             TimeSpan.MaxValue,
-            null,
+            JsonSerializerExtensions.GetJsonSerializerOptions(),
             cancellationToken));
 
         await Task.WhenAll(tasks);

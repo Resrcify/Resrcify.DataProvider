@@ -11,7 +11,6 @@ using Resrcify.DataProvider.Domain.Internal.BaseData.ValueObjects.ModeSetData;
 using Resrcify.DataProvider.Domain.Internal.BaseData.ValueObjects.RelicData;
 using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
-using System.Text.Json.Serialization;
 
 namespace Resrcify.DataProvider.Domain.Internal.BaseData;
 
@@ -32,22 +31,42 @@ public sealed class BaseData : AggregateRoot<Guid>
 
     private BaseData(
         Guid id,
+        Dictionary<string, GearData> _gear,
+        Dictionary<string, ModSetData> _modSets,
+        CrTable crTable,
+        GpTable gpTable,
+        Dictionary<string, RelicData> _relics,
+        Dictionary<string, UnitData> _units,
+        Dictionary<string, DatacronData> _datacrons)
+        : base(id)
+    {
+        this._gear = _gear;
+        this._modSets = _modSets;
+        CrTable = crTable;
+        GpTable = gpTable;
+        this._relics = _relics;
+        this._units = _units;
+        this._datacrons = _datacrons;
+    }
+    public static BaseData Create(
+        Guid id,
         Dictionary<string, GearData> gear,
         Dictionary<string, ModSetData> modSets,
         CrTable crTable,
         GpTable gpTable,
         Dictionary<string, RelicData> relics,
         Dictionary<string, UnitData> units,
-        Dictionary<string, DatacronData> datacrons
-    ) : base(id)
+        Dictionary<string, DatacronData> datacrons)
     {
-        _gear = gear;
-        _modSets = modSets;
-        CrTable = crTable;
-        GpTable = gpTable;
-        _relics = relics;
-        _units = units;
-        _datacrons = datacrons;
+        return new BaseData(
+            id,
+            gear,
+            modSets,
+            crTable,
+            gpTable,
+            relics,
+            units,
+            datacrons);
     }
     public static Result<BaseData> Create(GameDataResponse data, List<string> localization)
     {
@@ -90,7 +109,8 @@ public sealed class BaseData : AggregateRoot<Guid>
         var statsTable = new Dictionary<string, Dictionary<string, long>>();
         foreach (var table in data.StatProgressions)
         {
-            if (table.Id!.StartsWith("stattable_"))
+            if (table.Id is not null &&
+                table.Id.StartsWith("stattable_"))
             {
                 var statsLine = new Dictionary<string, long>();
                 foreach (var stat in table.Stat!.Stats.OrderBy(s => (int)s.UnitStatId))
@@ -122,13 +142,13 @@ public sealed class BaseData : AggregateRoot<Guid>
         foreach (var unit in data.Units.Where(u => u.Obtainable && u.ObtainableTime == 0).OrderBy(s => (int)s.Rarity))
         {
             var rarity = (int)unit.Rarity;
-            var baseId = unit.BaseId;
+            var baseId = unit.BaseId ?? string.Empty;
             var statProgressionId = unit.StatProgressionId;
 
-            if (!ul.ContainsKey(baseId!))
-                ul[baseId!] = [];
+            if (!ul.ContainsKey(baseId))
+                ul[baseId] = [];
 
-            ul[baseId!][rarity.ToString()] = statsTable[statProgressionId!];
+            ul[baseId][rarity.ToString()] = statsTable[statProgressionId ?? string.Empty];
         }
         return ul;
     }

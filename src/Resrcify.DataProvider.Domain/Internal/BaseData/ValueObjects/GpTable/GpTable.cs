@@ -71,7 +71,39 @@ public sealed class GpTable : ValueObject
         _shipAbilityLevelGp = shipAbilityLevelGp;
         _unitLevelGp = unitLevelGp;
     }
-
+    public static Result<GpTable> Create(
+        Dictionary<string, double> crewSizeFactor,
+        Dictionary<string, double> relicTierLevelFactor,
+        Dictionary<string, long> gearLevelGp,
+        Dictionary<string, long> relicTierGp,
+        Dictionary<string, long> unitRarityGp,
+        Dictionary<string, double> shipRarityFactor,
+        Dictionary<string, long> abilitySpecialGp,
+        Dictionary<string, Dictionary<string, Dictionary<string, long>>> modRarityLevelTierGp,
+        Dictionary<string, Dictionary<string, long>> gearPieceGp,
+        Dictionary<string, double> crewlessAbilityFactor,
+        Dictionary<string, long> shipLevelGp,
+        Dictionary<string, long> abilityLevelGp,
+        Dictionary<string, long> shipAbilityLevelGp,
+        Dictionary<string, long> unitLevelGp
+    )
+    {
+        return new GpTable(
+            crewSizeFactor,
+            relicTierLevelFactor,
+            gearLevelGp,
+            relicTierGp,
+            unitRarityGp,
+            shipRarityFactor,
+            abilitySpecialGp,
+            modRarityLevelTierGp,
+            gearPieceGp,
+            crewlessAbilityFactor,
+            shipLevelGp,
+            abilityLevelGp,
+            shipAbilityLevelGp,
+            unitLevelGp);
+    }
     public static Result<GpTable> Create(
         GameDataResponse data,
         IReadOnlyDictionary<string, long> unitRarityGp,

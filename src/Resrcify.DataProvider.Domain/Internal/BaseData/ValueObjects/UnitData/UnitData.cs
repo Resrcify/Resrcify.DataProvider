@@ -96,6 +96,49 @@ public sealed partial class UnitData : ValueObject
         List<Skill> skills,
         Dictionary<string, string> relics,
         string masteryModifierId,
+        List<ModRecommendation> modRecommendations,
+        Dictionary<long, long> stats,
+        Dictionary<string, long> crewStats,
+        List<string> crew)
+    {
+        return new UnitData(
+            id,
+            nameKey,
+            name,
+            combatType,
+            forceAlignment,
+            categoryIdList,
+            unitClass,
+            isGalacticLegend,
+            image,
+            primaryStat,
+            gearLevels,
+            growthModifiers,
+            skills,
+            relics,
+            masteryModifierId,
+            modRecommendations,
+            stats,
+            crewStats,
+            crew
+            );
+    }
+    public static Result<UnitData> Create(
+        string id,
+        string nameKey,
+        string name,
+        long combatType,
+        long forceAlignment,
+        List<string> categoryIdList,
+        long unitClass,
+        bool isGalacticLegend,
+        string image,
+        long primaryStat,
+        Dictionary<string, GearLevel> gearLevels,
+        Dictionary<string, Dictionary<string, long>> growthModifiers,
+        List<Skill> skills,
+        Dictionary<string, string> relics,
+        string masteryModifierId,
         List<ModRecommendation> modRecommendations)
     {
         Dictionary<long, long> stats = [];

@@ -12,6 +12,7 @@ using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Resrcify.SharedKernel.Messaging.Abstractions;
 using Resrcify.SharedKernel.Caching.Abstractions;
+using Resrcify.DataProvider.Application.Converters;
 
 namespace Resrcify.DataProvider.Application.Features.Units.GetExpandedProfile;
 
@@ -20,17 +21,17 @@ internal sealed class GetExpandedProfileQueryHandler(ICachingService _caching)
 {
     public async Task<Result<GetExpandedProfileQueryResponse>> Handle(GetExpandedProfileQuery request, CancellationToken cancellationToken)
     {
-        var baseData = await _caching.GetAsync<Result<BaseData>>($"BaseData-{request.Language}", null, cancellationToken);
-        if (baseData is null || baseData.IsFailure)
+        var baseData = await _caching.GetAsync<BaseData>($"BaseData-{request.Language}", JsonSerializerExtensions.GetJsonSerializerOptions(), cancellationToken);
+        if (baseData is null)
             return Result.Failure<GetExpandedProfileQueryResponse>(DomainErrors.ExpandedUnit.GameDataFileNotFound);
 
         var units = request.DefinitionId is null ?
-            ExpandedUnit.Create(request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData.Value) :
-            ExpandedUnit.Create(request.DefinitionId, request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData.Value);
+            ExpandedUnit.Create(request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData) :
+            ExpandedUnit.Create(request.DefinitionId, request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData);
 
         var datacrons = Enumerable.Empty<ExpandedDatacron>();
         if (!request.WithoutDatacrons)
-            datacrons = ExpandedDatacron.Create(request.PlayerProfile.Datacrons, baseData.Value);
+            datacrons = ExpandedDatacron.Create(request.PlayerProfile.Datacrons, baseData);
 
         var datacronSummary = ParseDatacronSummary(datacrons);
         var summary = ParseSummaryData(units, datacronSummary);

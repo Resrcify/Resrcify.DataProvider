@@ -5,8 +5,7 @@ using Resrcify.DataProvider.Domain.Errors;
 using Resrcify.SharedKernel.Messaging.Abstractions;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Resrcify.SharedKernel.Caching.Abstractions;
-using System.Text.Json;
-using Resrcify.DataProvider.Application.Resolvers;
+using Resrcify.DataProvider.Application.Converters;
 
 namespace Resrcify.DataProvider.Application.Features.Data.GetCachedBaseData;
 
@@ -15,14 +14,10 @@ public sealed class GetCachedBaseDataQueryHandler(ICachingService _caching)
 {
     public async Task<Result<BaseData>> Handle(GetCachedBaseDataQuery request, CancellationToken cancellationToken)
     {
-        var options = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true,
-            IncludeFields = true
-            // PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
-        options.Converters.Add(new CustomConstructorConverterFactory());
-        var cached = await _caching.GetAsync<Result<BaseData>>($"BaseData-{request.Language}", options, cancellationToken);
+        var cached = await _caching.GetAsync<BaseData>(
+            $"BaseData-{request.Language}",
+            JsonSerializerExtensions.GetJsonSerializerOptions(),
+            cancellationToken);
         if (cached is null)
             return DomainErrors.BaseData.GameDataFileNotFound;
         return cached;

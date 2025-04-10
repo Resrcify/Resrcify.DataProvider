@@ -169,11 +169,11 @@ public sealed partial class DatacronData : ValueObject
         return datacronDataDict;
     }
 
-    private static void AddStats(Dictionary<string, StatEnum> stats, Dictionary<string, Stat> datacronStats, DatacronAffixTemplate affixValue)
+    private static void AddStats(Dictionary<int, StatEnum> stats, Dictionary<string, Stat> datacronStats, DatacronAffixTemplate affixValue)
     {
-        if (affixValue.StatType > 0 && stats.TryGetValue(affixValue.StatType.ToString(), out var stat))
+        if (affixValue.StatType > 0 && stats.TryGetValue((int)affixValue.StatType, out var stat))
         {
-            var statValue = Stat.Create((int)affixValue.StatType, stat.NameKey, affixValue.ScopeIcon!);
+            var statValue = Stat.Create((int)affixValue.StatType, stat.EnumNameKey, affixValue.ScopeIcon!);
             datacronStats.TryAdd($"{(int)affixValue.StatType}", statValue.Value);
         }
     }
@@ -260,33 +260,40 @@ public sealed partial class DatacronData : ValueObject
         return units;
 
     }
-    private static Dictionary<string, StatEnum> MapStatEnums(Dictionary<string, string> local)
+    private static Dictionary<int, StatEnum> MapStatEnums(Dictionary<string, string> local)
     {
-        Dictionary<string, StatEnum> statEnums = [];
+        Dictionary<int, StatEnum> statEnums = [];
         Dictionary<string, StatEnum> tmpLang = [];
         foreach (var item in local.Where(item => item.Key.StartsWith("UnitStat_") || item.Key.StartsWith("UNIT_STAT_")))
         {
             var enumValue = string.Join("", item.Key.Split("_"))?.Split("TU")[0]?.ToUpper()?.Replace("STATVIEW", "")?.Replace("STATSVIEW", "");
             if (enumValue is null)
                 continue;
-            var statEnum = StatEnum.Create(0, "", item.Key, local[item.Key]);
-            tmpLang.TryAdd(enumValue, statEnum.Value);
+            var statEnum = new StatEnum(0, "", item.Key, local[item.Key]);
+            tmpLang.TryAdd(enumValue, statEnum);
         }
+
         foreach (var enumValue in Enum.GetValues(typeof(UnitStat)))
         {
-            Result<StatEnum> statEnumResult = null!;
-            if (tmpLang.TryGetValue(enumValue.ToString()!, out var lang))
-                statEnumResult = StatEnum.Create((int)enumValue, enumValue.ToString()!, lang.LangId, lang.NameKey);
+            StatEnum statEnumResult = null!;
+            if (tmpLang.TryGetValue(enumValue.ToString()!.ToUpper(), out var lang))
+                statEnumResult = new StatEnum((int)enumValue, enumValue.ToString()!, lang.EnumNameKey, lang.EnumName);
 
             var stat = enumValue.ToString()!.Replace("UNITSTATMAX", "UNITSTAT");
             if (tmpLang.TryGetValue(stat, out var newLang))
-                statEnumResult = StatEnum.Create((int)enumValue, enumValue.ToString()!, newLang.LangId, newLang.NameKey);
+                statEnumResult = new StatEnum((int)enumValue, enumValue.ToString()!, newLang.EnumNameKey, newLang.EnumName);
 
             if (statEnumResult is not null)
-                statEnums.TryAdd(enumValue.ToString()!, statEnumResult.Value);
+                statEnums.TryAdd((int)enumValue, statEnumResult);
         }
+
         return statEnums;
     }
+    private record StatEnum(
+        int EnumValue,
+        string EnumString,
+        string EnumNameKey,
+        string EnumName);
 
     public override IEnumerable<object> GetAtomicValues()
     {

@@ -103,7 +103,55 @@ public sealed class CrTable : ValueObject
         _abilityLevelCr = abilityLevelCr;
         _unitLevelCr = unitLevelCr;
     }
-
+    public static Result<CrTable> Create(
+        Dictionary<string, double> agilityRoleAttackerMastery,
+        Dictionary<string, double> agilityRoleTankMastery,
+        Dictionary<string, double> agilityRoleSupportMastery,
+        Dictionary<string, double> agilityRoleHealerMastery,
+        Dictionary<string, double> strengthRoleAttackerMastery,
+        Dictionary<string, double> strengthRoleTankMastery,
+        Dictionary<string, double> strengthRoleSupportMastery,
+        Dictionary<string, double> strengthRoleHealerMastery,
+        Dictionary<string, double> intelligenceRoleAttackerMastery,
+        Dictionary<string, double> intelligenceRoleTankMastery,
+        Dictionary<string, double> intelligenceRoleSupportMastery,
+        Dictionary<string, double> intelligenceRoleHealerMastery,
+        Dictionary<string, long> unitLevelCr,
+        Dictionary<string, long> relicTierCr,
+        Dictionary<string, double> relicTierLevelFactor,
+        Dictionary<string, long> abilityLevelCr,
+        Dictionary<string, Dictionary<string, long>> modRarityLevelCr,
+        Dictionary<string, long> gearLevelCr,
+        Dictionary<string, long> gearPieceCr,
+        Dictionary<string, long> crewRarityCr,
+        Dictionary<string, double> shipRarityFactor,
+        Dictionary<string, double> crewlessAbilityFactor)
+    {
+        return new CrTable(
+            agilityRoleAttackerMastery,
+            agilityRoleTankMastery,
+            agilityRoleSupportMastery,
+            agilityRoleHealerMastery,
+            strengthRoleAttackerMastery,
+            strengthRoleTankMastery,
+            strengthRoleSupportMastery,
+            strengthRoleHealerMastery,
+            intelligenceRoleAttackerMastery,
+            intelligenceRoleTankMastery,
+            intelligenceRoleSupportMastery,
+            intelligenceRoleHealerMastery,
+            unitLevelCr,
+            relicTierCr,
+            relicTierLevelFactor,
+            abilityLevelCr,
+            modRarityLevelCr,
+            gearLevelCr,
+            gearPieceCr,
+            crewRarityCr,
+            shipRarityFactor,
+            crewlessAbilityFactor
+        );
+    }
     public static Result<CrTable> Create(GameDataResponse data)
     {
         var crewContributionMultiplierPerRarityTable = data.Tables.First(x => x.Id == "crew_contribution_multiplier_per_rarity");
