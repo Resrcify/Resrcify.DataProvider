@@ -3,10 +3,10 @@ WORKDIR /app
 EXPOSE 18000
 
 ENV ASPNETCORE_URLS=http://+:18000
-ENV ASPNETCORE_ENVIRONMENT Development
-ENV PORT 3200
-ENV CLIENT_URL http://localhost
-ENV IS_TITAN false
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV PORT=3200
+ENV CLIENT_URL=http://localhost
+ENV IS_TITAN=false
 
 # Creates a non-root user with an explicit UID and adds permission to access the /app folder
 # For more info, please refer to https://aka.ms/vscode-docker-dotnet-configure-containers

@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Resrcify.SharedKernel.Messaging" Version="1.10.2" />
+    <PackageReference Include="Resrcify.SharedKernel.Messaging" Version="1.10.7" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <PackageReference Include="MediatR" Version="12.5.0" />

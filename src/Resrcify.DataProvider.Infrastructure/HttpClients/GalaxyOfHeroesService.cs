@@ -3,26 +3,41 @@ using System.Threading;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Resrcify.DataProvider.Application.Abstractions.Infrastructure;
+using Resrcify.DataProvider.Application.Abstractions;
+using Resrcify.SharedKernel.ResultFramework.Primitives;
+using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
+using Resrcify.DataProvider.Application.Models.GalaxyOfHeroes.Localization;
+using Resrcify.DataProvider.Application.Models.GalaxyOfHeroes.Metadata;
+using Resrcify.SharedKernel.Web.Extensions;
 
 namespace Resrcify.DataProvider.Infrastructure.HttpClients;
 
-public class GalaxyOfHeroesService : IGalaxyOfHeroesService
+public sealed class GalaxyOfHeroesService : IGalaxyOfHeroesService
 {
-    public HttpClient Client { get; }
+    private readonly HttpClient _client;
 
     public GalaxyOfHeroesService(HttpClient client)
     {
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        Client = client;
+        _client = client;
     }
 
-    public async Task<HttpResponseMessage> GetGameData(string? version = null, CancellationToken cancellationToken = default)
-        => await Client.GetAsync("api/data/getgamedata", cancellationToken);
+    public async Task<Result<GameDataResponse>> GetGameData(CancellationToken cancellationToken = default)
+    {
+        var response = await _client.GetAsync("api/data/getgamedata", cancellationToken);
+        return await response.Convert<GameDataResponse>(cancellationToken: cancellationToken);
+    }
 
-    public async Task<HttpResponseMessage> GetLocalization(string? version = null, CancellationToken cancellationToken = default)
-        => await Client.GetAsync("api/data/getlocalizationdata", cancellationToken);
+    public async Task<Result<LocalizationBundleResponse>> GetLocalization(CancellationToken cancellationToken = default)
+    {
+        var response = await _client.GetAsync("api/data/getlocalizationdata", cancellationToken);
+        return await response.Convert<LocalizationBundleResponse>(cancellationToken: cancellationToken);
+    }
 
-    public async Task<HttpResponseMessage> GetMetadata(string? version = null, CancellationToken cancellationToken = default)
-       => await Client.GetAsync("api/content/getmetadata", cancellationToken);
+    public async Task<Result<MetadataResponse>> GetMetadata(CancellationToken cancellationToken = default)
+    {
+        var response = await _client.GetAsync("api/content/getmetadata", cancellationToken);
+        return await response.Convert<MetadataResponse>(cancellationToken: cancellationToken);
+    }
+
 }

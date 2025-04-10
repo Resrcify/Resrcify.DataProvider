@@ -2,149 +2,90 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using Newtonsoft.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Resrcify.DataProvider.Application.Resolvers;
 
-/// <summary>
-/// Provides an enhanced contract resolver for <see cref="JsonConvert"/> which
-/// supports constructors with custom attributes and private constructors.
-/// </summary>
-/// <remarks>
-/// Partially based on https://stackoverflow.com/a/35865022.
-/// </remarks>
-public class CustomConstructorResolver : DefaultContractResolver
+public class CustomConstructorConverterFactory : JsonConverterFactory
 {
-    /// <summary>
-    /// Gets or sets the name of the attribute that marks the constructor to be used
-    /// for deserialization.
-    /// </summary>
     public string ConstructorAttributeName { get; set; } = "JsonConstructorAttribute";
+    public bool IgnoreAttributeConstructor { get; set; }
+    public bool IgnoreSinglePrivateConstructor { get; set; }
+    public bool IgnoreMostSpecificConstructor { get; set; }
 
-    /// <summary>
-    /// Gets or sets a value indicating whether to ignore custom attributes when
-    /// looking for constructors for deserializing types.
-    /// </summary>
-    /// <value>
-    /// <c>true</c> if custom attributes on constructors should be ignored,
-    /// <c>false</c> if a single constructor marked with an attribute named
-    /// <see cref="ConstructorAttributeName"/> should be used for deserialization.
-    /// The default value is <c>false</c>.
-    /// </value>
-    public bool IgnoreAttributeConstructor { get; set; } = false;
+    public override bool CanConvert(Type typeToConvert) => typeToConvert.IsClass;
 
-    /// <summary>
-    /// Gets or sets a value indicating whether to ignore private constructors
-    /// when looking for constructors for deserializing types.
-    /// </summary>
-    /// <value>
-    /// <c>true</c> if private constructors should be ignored,
-    /// <c>false</c> if a single private constructor should be used for deserialization.
-    /// The default value is <c>false</c>.
-    /// </value>
-    public bool IgnoreSinglePrivateConstructor { get; set; } = false;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether to ignore the number of parameters
-    /// when looking for constructors for deserializing types.
-    /// </summary>
-    /// <value>
-    /// <c>true</c> if the number of parameters should be ignored,
-    /// <c>false</c> if the constructor with the greatest number of parameters
-    /// should be used for deserialization.
-    /// The default value is <c>false</c>.
-    /// </value>
-    public bool IgnoreMostSpecificConstructor { get; set; } = false;
-
-    /// <summary>
-    /// Creates a <see cref="JsonObjectContract" /> for the given type.
-    /// </summary>
-    /// <param name="objectType">Type of the object.</param>
-    /// <returns>A <see cref="JsonObjectContract" /> for the given type.</returns>
-    protected override JsonObjectContract CreateObjectContract(Type objectType)
+    public override JsonConverter CreateConverter(Type type, JsonSerializerOptions options)
     {
-        var contract = base.CreateObjectContract(objectType);
+        var ctor = GetConstructor(type) ?? throw new InvalidOperationException($"No suitable constructor found for {type}");
 
-        // Use default contract for non-object types.
-        if (objectType.IsPrimitive || objectType.IsEnum)
-            return contract;
+        var converterType = typeof(CustomConstructorConverter<>).MakeGenericType(type);
+        return (JsonConverter)Activator.CreateInstance(converterType, ctor)!;
+    }
 
-        // Look for constructor with attribute first, then single private, then most specific.
-        var overrideConstructor =
-               (this.IgnoreAttributeConstructor ? null : GetAttributeConstructor(objectType))
-            ?? (this.IgnoreSinglePrivateConstructor ? null : GetSinglePrivateConstructor(objectType))
-            ?? (this.IgnoreMostSpecificConstructor ? null : GetMostSpecificConstructor(objectType));
-
-        // Set override constructor if found, otherwise use default contract.
-        if (overrideConstructor != null)
+    private ConstructorInfo? GetConstructor(Type type)
+    {
+        if (!IgnoreAttributeConstructor)
         {
-            SetOverrideCreator(contract, overrideConstructor);
+            var attrCtor = type
+                .GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .FirstOrDefault(c => c.GetCustomAttributes().Any(a => a.GetType().Name == ConstructorAttributeName));
+            if (attrCtor != null)
+                return attrCtor;
         }
 
-        return contract;
-    }
-
-    private void SetOverrideCreator(JsonObjectContract contract, ConstructorInfo attributeConstructor)
-    {
-        contract.OverrideCreator = CreateParameterizedConstructor(attributeConstructor);
-        contract.CreatorParameters.Clear();
-        foreach (var constructorParameter in base.CreateConstructorParameters(attributeConstructor, contract.Properties))
+        if (!IgnoreSinglePrivateConstructor)
         {
-            contract.CreatorParameters.Add(constructorParameter);
+            var privCtors = type.GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic);
+            if (privCtors.Length == 1)
+                return privCtors[0];
         }
-    }
 
-    private static ObjectConstructor<object>? CreateParameterizedConstructor(MethodBase method)
-    {
-        var c = method as ConstructorInfo;
-        if (c != null)
-            return a => c.Invoke(a);
-        return a => method.Invoke(null, a)!;
-    }
-
-    /// <summary>
-    /// Returns the single constructor marked with a <see cref="ConstructorAttributeName"/>
-    /// for <paramref name="objectType"/> if defined, <c>null</c> otherwise.
-    /// </summary>
-    /// <exception cref="JsonException">More than one constructor is marked with a
-    /// <see cref="ConstructorAttributeName"/>.</exception>
-    protected virtual ConstructorInfo? GetAttributeConstructor(Type objectType)
-    {
-        var constructors = objectType
-            .GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-            .Where(c => c.GetCustomAttributes().Any(a => a.GetType().Name == this.ConstructorAttributeName)).ToList();
-
-        if (constructors.Count == 1)
-            return constructors[0];
-        if (constructors.Count > 1)
-            throw new JsonException($"Multiple constructors with a {this.ConstructorAttributeName}.");
+        if (!IgnoreMostSpecificConstructor)
+        {
+            return type
+                .GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                .OrderByDescending(c => c.GetParameters().Length)
+                .FirstOrDefault();
+        }
 
         return null;
     }
+}
 
-    /// <summary>
-    /// Returns the single non-public constructor for <paramref name="objectType"/>
-    /// if defined, <c>null</c> otherwise.
-    /// </summary>
-    protected virtual ConstructorInfo? GetSinglePrivateConstructor(Type objectType)
+public class CustomConstructorConverter<T> : JsonConverter<T>
+{
+    private readonly ConstructorInfo _constructor;
+    private readonly ParameterInfo[] _parameters;
+
+    public CustomConstructorConverter(ConstructorInfo constructor)
     {
-        var constructors = objectType
-            .GetConstructors(BindingFlags.Instance | BindingFlags.NonPublic);
-
-        return constructors.Length == 1 ? constructors[0] : null;
+        _constructor = constructor;
+        _parameters = constructor.GetParameters();
     }
 
-    /// <summary>
-    /// Returns the constructor with the greatest number of parameters for
-    /// <paramref name="objectType"/>.
-    /// </summary>
-    protected virtual ConstructorInfo? GetMostSpecificConstructor(Type objectType)
+    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var constructors = objectType
-            .GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-            .OrderBy(e => e.GetParameters().Length);
+        using var doc = JsonDocument.ParseValue(ref reader);
+        var root = doc.RootElement;
 
-        var mostSpecific = constructors.LastOrDefault();
-        return mostSpecific;
+        var args = new object?[_parameters.Length];
+
+        for (int i = 0; i < _parameters.Length; i++)
+        {
+            var param = _parameters[i];
+            args[i] = root.TryGetProperty(param.Name!, out var prop)
+                ? JsonSerializer.Deserialize(prop.GetRawText(), param.ParameterType, options)
+                : param.HasDefaultValue ? param.DefaultValue : GetDefault(param.ParameterType);
+        }
+
+        return (T)_constructor.Invoke(args);
     }
+
+    public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+    {
+        JsonSerializer.Serialize(writer, value, options);
+    }
+
+    private static object? GetDefault(Type type) => type.IsValueType ? Activator.CreateInstance(type) : null;
 }

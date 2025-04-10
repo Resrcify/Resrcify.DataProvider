@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Resrcify.DataProvider.Application.Abstractions.Infrastructure;
 using Resrcify.DataProvider.Domain.Internal.BaseData;
 using Resrcify.DataProvider.Domain.Internal.ExpandedUnit;
 using Resrcify.DataProvider.Domain.Errors;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Resrcify.SharedKernel.Messaging.Abstractions;
+using Resrcify.SharedKernel.Caching.Abstractions;
 
 namespace Resrcify.DataProvider.Application.Features.Units.GetExpandedProfile;
 
@@ -20,22 +20,30 @@ internal sealed class GetExpandedProfileQueryHandler(ICachingService _caching)
 {
     public async Task<Result<GetExpandedProfileQueryResponse>> Handle(GetExpandedProfileQuery request, CancellationToken cancellationToken)
     {
-        var baseData = await _caching.GetAsync<BaseData>($"BaseData-{request.Language}", cancellationToken);
-        if (baseData is null)
+        var baseData = await _caching.GetAsync<Result<BaseData>>($"BaseData-{request.Language}", null, cancellationToken);
+        if (baseData is null || baseData.IsFailure)
             return Result.Failure<GetExpandedProfileQueryResponse>(DomainErrors.ExpandedUnit.GameDataFileNotFound);
 
         var units = request.DefinitionId is null ?
-            ExpandedUnit.Create(request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData) :
-            ExpandedUnit.Create(request.DefinitionId, request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData);
+            ExpandedUnit.Create(request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData.Value) :
+            ExpandedUnit.Create(request.DefinitionId, request.PlayerProfile, request.WithStats, request.WithoutGp, request.WithoutModStats, request.WithoutMods, request.WithoutSkills, baseData.Value);
 
         var datacrons = Enumerable.Empty<ExpandedDatacron>();
         if (!request.WithoutDatacrons)
-            datacrons = ExpandedDatacron.Create(request.PlayerProfile.Datacrons, baseData);
+            datacrons = ExpandedDatacron.Create(request.PlayerProfile.Datacrons, baseData.Value);
 
         var datacronSummary = ParseDatacronSummary(datacrons);
         var summary = ParseSummaryData(units, datacronSummary);
 
-        return new GetExpandedProfileQueryResponse(request.PlayerProfile.PlayerId ?? "Unknown", request.PlayerProfile.AllyCode, request.PlayerProfile.Name ?? "Unknown", summary, units.ToDictionary(x => x.Key, x => x.Value), datacrons);
+        return new GetExpandedProfileQueryResponse(
+            request.PlayerProfile.PlayerId ?? "Unknown",
+            request.PlayerProfile.AllyCode,
+            request.PlayerProfile.Name ?? "Unknown",
+            summary,
+            units.ToDictionary(
+                x => x.Key,
+                x => x.Value),
+            datacrons);
     }
     private static DatacronSummary ParseDatacronSummary(IEnumerable<ExpandedDatacron> expandedDatacrons)
     {

@@ -11,6 +11,7 @@ using Resrcify.DataProvider.Domain.Internal.BaseData.ValueObjects.ModeSetData;
 using Resrcify.DataProvider.Domain.Internal.BaseData.ValueObjects.RelicData;
 using Resrcify.SharedKernel.DomainDrivenDesign.Primitives;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
+using System.Text.Json.Serialization;
 
 namespace Resrcify.DataProvider.Domain.Internal.BaseData;
 

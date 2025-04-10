@@ -1,49 +1,119 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using Newtonsoft.Json;
-using Resrcify.DataProvider.Application.Abstractions.Infrastructure;
 using Resrcify.DataProvider.Application.Errors;
-using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using Resrcify.DataProvider.Application.Models.GalaxyOfHeroes.Localization;
-using Resrcify.DataProvider.Application.Models.GalaxyOfHeroes.Metadata;
 using Resrcify.SharedKernel.Messaging.Abstractions;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
-using Resrcify.DataProvider.Application.Features.Data.LocalizationDataUpdated;
-using Resrcify.DataProvider.Application.Features.Data.GameDataUpdated;
+using Resrcify.DataProvider.Application.Abstractions;
+using System.IO.Compression;
+using System.IO;
+using System.Linq;
+using Resrcify.SharedKernel.Caching.Abstractions;
+using System.Collections.Generic;
+using System.Text;
+using Resrcify.DataProvider.Domain.Internal.BaseData;
+using Resrcify.DataProvider.Application.Features.Data.GetCachedLocalizationData;
+using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 namespace Resrcify.DataProvider.Application.Features.Data.UpdateRawData;
 
-public sealed class UpdateRawDataCommandHandler : ICommandHandler<UpdateRawDataCommand>
+internal sealed class UpdateRawDataCommandHandler(
+    IGalaxyOfHeroesService _api,
+    ICachingService _caching)
+    : ICommandHandler<UpdateRawDataCommand>
 {
-    private readonly IGalaxyOfHeroesService _api;
-    private readonly IPublisher _publisher;
-
-    public UpdateRawDataCommandHandler(IGalaxyOfHeroesService api, IPublisher publisher)
-    {
-        _publisher = publisher;
-        _api = api;
-    }
-
     public async Task<Result> Handle(UpdateRawDataCommand request, CancellationToken cancellationToken)
     {
-        var metaDataResponse = await _api.GetMetadata(cancellationToken: cancellationToken);
-        if (!metaDataResponse.IsSuccessStatusCode)
-            return Result.Failure(ApplicationErrors.HttpClient.RequestNotSuccessful);
-        var metaData = JsonConvert.DeserializeObject<MetadataResponse>(await metaDataResponse.Content.ReadAsStringAsync(cancellationToken));
-        if (metaData is null)
-            return Result.Failure(ApplicationErrors.HttpClient.RequestNotSuccessful);
-        var gameDataResponse = await _api.GetGameData(version: metaData.LatestGamedataVersion, cancellationToken: cancellationToken);
-        var localizationResponse = await _api.GetLocalization(version: metaData.LatestLocalizationBundleVersion, cancellationToken: cancellationToken);
+        var gameDataResponse = await _api.GetGameData(cancellationToken: cancellationToken);
+        var localizationResponse = await _api.GetLocalization(cancellationToken: cancellationToken);
 
-        if (!gameDataResponse.IsSuccessStatusCode || !localizationResponse.IsSuccessStatusCode)
+        if (gameDataResponse.IsFailure || localizationResponse.IsFailure)
             return Result.Failure(ApplicationErrors.HttpClient.RequestNotSuccessful);
-        var gameData = JsonConvert.DeserializeObject<GameDataResponse>(await gameDataResponse.Content.ReadAsStringAsync(cancellationToken));
-        var localization = JsonConvert.DeserializeObject<LocalizationBundleResponse>(await localizationResponse.Content.ReadAsStringAsync(cancellationToken));
 
-        await _publisher.Publish(new LocalizationDataUpdatedEvent(Guid.NewGuid(), localization!), cancellationToken);
-        await _publisher.Publish(new GameDataUpdatedEvent(Guid.NewGuid(), gameData!), cancellationToken);
+        var localDictionary = CreateLocalizationDictionary(localizationResponse.Value.LocalizationBundle);
+        var baseDataDictionary = CreateBaseDataDictionary(gameDataResponse.Value, localDictionary);
+
+        await CacheLocalization(
+            localDictionary,
+            cancellationToken);
+
+        await CacheBaseData(
+            baseDataDictionary,
+            cancellationToken);
+
         return Result.Success();
+    }
+
+    private async Task CacheBaseData(
+        Dictionary<string, Result<BaseData>> baseDataDictionary,
+        CancellationToken cancellationToken)
+    {
+        var tasks = baseDataDictionary.Select(kvp => _caching.SetAsync(
+            $"BaseData-{kvp.Key}",
+            kvp.Value,
+            TimeSpan.MaxValue,
+            null,
+            cancellationToken));
+
+        await Task.WhenAll(tasks);
+    }
+
+
+    private static Dictionary<string, Result<BaseData>> CreateBaseDataDictionary(
+        GameDataResponse gameDataResponse,
+        Dictionary<string, List<string>> localDictionary)
+    {
+        return Enum
+            .GetNames<GetCachedLocalizationDataQueryRequest>()
+            .Where(localName => localDictionary.TryGetValue($"Loc_{localName}.txt", out _))
+            .Select(localName => new
+            {
+                Key = localName,
+                Value = BaseData.Create(
+                    gameDataResponse,
+                    localDictionary[$"Loc_{localName}.txt"])
+            })
+            .Where(item => item.Value.IsSuccess)
+            .ToDictionary(
+                item => item.Key,
+                item => item.Value);
+    }
+
+
+    private static Dictionary<string, List<string>> CreateLocalizationDictionary(byte[]? localization)
+    {
+        if (localization is null)
+            return [];
+        using var memoryStream = new MemoryStream(localization);
+        using var archive = new ZipArchive(memoryStream, ZipArchiveMode.Read);
+        return archive.Entries
+            .Select(entry => entry)
+            .ToDictionary(
+                entry => entry.Name,
+                entry => GetContents(entry).ToList());
+    }
+    private async Task CacheLocalization(
+        Dictionary<string, List<string>> localDictionary,
+        CancellationToken cancellationToken = default)
+    {
+        foreach (var (key, value) in localDictionary)
+        {
+            await _caching.SetAsync(
+                key,
+                value,
+                TimeSpan.MaxValue,
+                null,
+                cancellationToken);
+        }
+    }
+
+    private static IEnumerable<string> GetContents(ZipArchiveEntry e)
+    {
+        using StreamReader stm = new(e.Open(), Encoding.UTF8);
+        if (stm == null)
+            yield break;
+        string line;
+        while ((line = stm.ReadLine()!) != null)
+            yield return line;
     }
 }

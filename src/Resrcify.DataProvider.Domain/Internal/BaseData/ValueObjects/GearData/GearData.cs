@@ -19,7 +19,7 @@ public sealed class GearData : ValueObject
     {
         return new GearData(ConvertToGearData(data));
     }
-    //Maps all gear data to { gearData:{ ... } }
+
     private static Dictionary<long, long> ConvertToGearData(EquipmentDef data)
     {
         var stat = new Dictionary<long, long>();

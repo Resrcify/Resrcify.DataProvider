@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Resrcify.DataProvider.Application.Abstractions.Infrastructure;
 using Resrcify.DataProvider.Domain.Internal.BaseData;
 using Resrcify.DataProvider.Domain.Internal.ExpandedUnit;
 using Resrcify.DataProvider.Domain.Internal.ExpandedDatacron;
@@ -11,6 +10,7 @@ using System.Collections.Generic;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Resrcify.SharedKernel.Messaging.Abstractions;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
+using Resrcify.SharedKernel.Caching.Abstractions;
 
 namespace Resrcify.DataProvider.Application.Features.Units.GetExpandedProfiles;
 
@@ -19,11 +19,14 @@ internal sealed class GetExpandedProfilesQueryHandler(ICachingService _caching)
 {
     public async Task<Result<IEnumerable<GetExpandedProfilesQueryResponse>>> Handle(GetExpandedProfilesQuery request, CancellationToken cancellationToken)
     {
-        var baseData = await _caching.GetAsync<BaseData>($"BaseData-{request.Language}", cancellationToken);
-        if (baseData is null)
+        var baseData = await _caching.GetAsync<Result<BaseData>>($"BaseData-{request.Language}", null, cancellationToken);
+        if (baseData is null || baseData.IsFailure)
             return Result.Success(Enumerable.Empty<GetExpandedProfilesQueryResponse>());
 
-        var expandedProfiles = GetExpandedPlayerProfiles(request, baseData);
+        var expandedProfiles = GetExpandedPlayerProfiles(
+            request,
+            baseData.Value);
+
         return Result.Success(expandedProfiles);
     }
 
@@ -35,9 +38,18 @@ internal sealed class GetExpandedProfilesQueryHandler(ICachingService _caching)
             var datacrons = Enumerable.Empty<ExpandedDatacron>();
             if (!request.WithoutDatacrons)
                 datacrons = ExpandedDatacron.Create(profile.Datacrons, baseData);
+
             var datacronSummary = ParseDatacronSummary(datacrons);
             var summary = ParseSummaryData(units, datacronSummary);
-            yield return new GetExpandedProfilesQueryResponse(profile.PlayerId ?? "Unknown", profile.AllyCode, profile.Name ?? "Unknown", summary, units.ToDictionary(x => x.Key, x => x.Value), datacrons);
+
+            yield return new GetExpandedProfilesQueryResponse(
+                profile.PlayerId ?? "Unknown",
+                profile.AllyCode, profile.Name ?? "Unknown",
+                summary,
+                units.ToDictionary(
+                    x => x.Key,
+                    x => x.Value),
+                datacrons);
         }
     }
     private static DatacronSummary ParseDatacronSummary(IEnumerable<ExpandedDatacron> expandedDatacrons)
