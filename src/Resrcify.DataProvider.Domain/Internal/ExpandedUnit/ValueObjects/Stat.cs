@@ -17,7 +17,14 @@ public sealed class Stat : ValueObject
     public double Total { get; private set; }
     public bool IsPercentage { get; private set; }
 
-    private Stat(string name, UnitStat unitStat, double baseValue, double gearValue, double modValue, double crewValue, bool isPercentage)
+    private Stat(
+        string name,
+        UnitStat unitStat,
+        double baseValue,
+        double gearValue,
+        double modValue,
+        double crewValue,
+        bool isPercentage)
     {
         Name = name;
         UnitStat = unitStat;
@@ -38,7 +45,12 @@ public sealed class Stat : ValueObject
         yield return IsPercentage;
 
     }
-    public static Result<Stat> Create(UnitStat unitStat, double baseValue, double gearValue, double modValue, double crewValue)
+    public static Result<Stat> Create(
+        UnitStat unitStat,
+        double baseValue,
+        double gearValue,
+        double modValue,
+        double crewValue)
     {
         if (baseValue == 0 && gearValue == 0 && modValue == 0 && crewValue == 0)
             return Result.Failure<Stat>(DomainErrors.Stat.AllStatValuesZero);
@@ -54,7 +66,14 @@ public sealed class Stat : ValueObject
             modStatValue *= 100;
             crewStatValue *= 100;
         }
-        return new Stat(GetInGameName(unitStat), unitStat, baseStatValue, gearStatValue, modStatValue, crewStatValue, isPercentage);
+        return new Stat(
+            GetInGameName(unitStat),
+            unitStat,
+            baseStatValue,
+            gearStatValue,
+            modStatValue,
+            crewStatValue,
+            isPercentage);
     }
 
     private static bool EnumIsPercentage(UnitStat enumValue)
@@ -67,6 +86,7 @@ public sealed class Stat : ValueObject
              UnitStat.Unitstatarmor or //Actually not percentage, this value is converted to percentage to mimic games presentation
              UnitStat.Unitstatsuppression or  //Actually not percentage, this value is converted to percentage to mimic games presentation
              UnitStat.Unitstatdodgerating or //Actually not percentage, this value is converted to percentage to mimic games presentation
+             UnitStat.Unitstatdeflectionrating or //Actually not percentage, this value is converted to percentage to mimic games presentation
              UnitStat.Unitstatdeflectionnegaterating or //Actually not percentage, this value is converted to percentage to mimic games presentation
              UnitStat.Unitstatattackcriticalrating or //Actually not percentage, however all moved to this value to handle the games using both flat and percentage types
              UnitStat.Unitstatabilitycriticalrating or //Actually not percentage, however all moved to this value to handle the games using both flat and percentage types
@@ -134,8 +154,8 @@ public sealed class Stat : ValueObject
             UnitStat.Unitstatcriticaldamage => "Critical Damage",
             UnitStat.Unitstataccuracy => "Potency",
             UnitStat.Unitstatresistance => "Tenacity",
-            UnitStat.Unitstatdodgepercentadditive => "Dodge",
-            UnitStat.Unitstatdeflectionpercentadditive => "Deflection",
+            UnitStat.Unitstatdodgepercentadditive => "Dodge Chance",
+            UnitStat.Unitstatdeflectionpercentadditive => "Deflection Chance",
             UnitStat.Unitstatattackcriticalpercentadditive => "Physical Critical Chance",
             UnitStat.Unitstatabilitycriticalpercentadditive => "Special Critical Chance",
             UnitStat.Unitstatarmorpercentadditive => "Armor",

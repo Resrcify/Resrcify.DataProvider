@@ -1,8 +1,6 @@
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Resrcify.DataProvider.Application.Models.GalaxyOfHeroes.Localization;
-using Resrcify.DataProvider.Application.Models.GalaxyOfHeroes.Metadata;
+using Resrcify.DataProvider.Application.Models;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
 

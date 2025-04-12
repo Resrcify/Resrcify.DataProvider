@@ -9,12 +9,42 @@ internal sealed class ModSetDataConverter : JsonConverter<ModSetData>
 {
     public override ModSetData Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        using var doc = JsonDocument.ParseValue(ref reader);
-        var root = doc.RootElement;
-        var id = root.GetProperty("id").GetInt64();
-        var count = root.GetProperty("count").GetInt64();
-        var value = root.GetProperty("value").GetInt64();
-        var max = root.GetProperty("max").GetInt64();
+        long id = 0;
+        long count = 0;
+        long value = 0;
+        long max = 0;
+
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException();
+
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+        {
+            if (reader.TokenType == JsonTokenType.PropertyName)
+            {
+                string propertyName = reader.GetString() ?? string.Empty;
+                reader.Read();
+
+                switch (propertyName)
+                {
+                    case "id":
+                        id = reader.TokenType == JsonTokenType.Number ? reader.GetInt64() : 0;
+                        break;
+                    case "count":
+                        count = reader.TokenType == JsonTokenType.Number ? reader.GetInt64() : 0;
+                        break;
+                    case "value":
+                        value = reader.TokenType == JsonTokenType.Number ? reader.GetInt64() : 0;
+                        break;
+                    case "max":
+                        max = reader.TokenType == JsonTokenType.Number ? reader.GetInt64() : 0;
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+        }
+
         return ModSetData.Create(id, count, value, max).Value;
     }
 

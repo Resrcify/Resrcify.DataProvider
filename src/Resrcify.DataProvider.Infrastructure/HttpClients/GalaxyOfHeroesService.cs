@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Resrcify.DataProvider.Application.Abstractions;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using Resrcify.DataProvider.Application.Models.GalaxyOfHeroes.Localization;
-using Resrcify.DataProvider.Application.Models.GalaxyOfHeroes.Metadata;
 using Resrcify.SharedKernel.Web.Extensions;
+using Resrcify.DataProvider.Application.Models;
 
 namespace Resrcify.DataProvider.Infrastructure.HttpClients;
 

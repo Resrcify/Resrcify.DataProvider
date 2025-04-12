@@ -1,7 +1,6 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Resrcify.DataProvider.Application.Errors;
 using Resrcify.SharedKernel.Messaging.Abstractions;
 using Resrcify.SharedKernel.ResultFramework.Primitives;
 using Resrcify.DataProvider.Application.Abstractions;
@@ -14,8 +13,7 @@ using System.Text;
 using Resrcify.DataProvider.Domain.Internal.BaseData;
 using Resrcify.DataProvider.Application.Features.Data.GetCachedLocalizationData;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
-using System.Text.Json;
-using Resrcify.DataProvider.Application.Converters;
+using Resrcify.DataProvider.Application.Extensions;
 
 namespace Resrcify.DataProvider.Application.Features.Data.UpdateRawData;
 
@@ -29,8 +27,10 @@ internal sealed class UpdateRawDataCommandHandler(
         var gameDataResponse = await _api.GetGameData(cancellationToken: cancellationToken);
         var localizationResponse = await _api.GetLocalization(cancellationToken: cancellationToken);
 
-        if (gameDataResponse.IsFailure || localizationResponse.IsFailure)
-            return Result.Failure(ApplicationErrors.HttpClient.RequestNotSuccessful);
+        if (gameDataResponse.IsFailure)
+            return gameDataResponse;
+        if (localizationResponse.IsFailure)
+            return localizationResponse;
 
         var localDictionary = CreateLocalizationDictionary(localizationResponse.Value.LocalizationBundle);
         var baseDataDictionary = CreateBaseDataDictionary(gameDataResponse.Value, localDictionary);
@@ -54,7 +54,7 @@ internal sealed class UpdateRawDataCommandHandler(
             $"BaseData-{kvp.Key}",
             kvp.Value.Value,
             TimeSpan.MaxValue,
-            JsonSerializerExtensions.GetJsonSerializerOptions(),
+            JsonSerializerExtensions.GetDomainSerializerOptions(),
             cancellationToken));
 
         await Task.WhenAll(tasks);
@@ -64,8 +64,7 @@ internal sealed class UpdateRawDataCommandHandler(
     private static Dictionary<string, Result<BaseData>> CreateBaseDataDictionary(
         GameDataResponse gameDataResponse,
         Dictionary<string, List<string>> localDictionary)
-    {
-        return Enum
+        => Enum
             .GetNames<GetCachedLocalizationDataQueryRequest>()
             .Where(localName => localDictionary.TryGetValue($"Loc_{localName}.txt", out _))
             .Select(localName => new
@@ -79,7 +78,6 @@ internal sealed class UpdateRawDataCommandHandler(
             .ToDictionary(
                 item => item.Key,
                 item => item.Value);
-    }
 
 
     private static Dictionary<string, List<string>> CreateLocalizationDictionary(byte[]? localization)

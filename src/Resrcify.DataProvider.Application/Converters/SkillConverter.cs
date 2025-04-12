@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Resrcify.DataProvider.Application.Extensions;
 using Resrcify.DataProvider.Domain.Internal.BaseData.ValueObjects.UnitData;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
@@ -11,21 +12,95 @@ internal sealed class SkillConverter : JsonConverter<Skill>
 {
     public override Skill Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        using var doc = JsonDocument.ParseValue(ref reader);
-        var root = doc.RootElement;
-        var id = root.GetProperty("id").GetString();
-        var name = root.GetProperty("name").GetString();
-        var nameKey = root.GetProperty("nameKey").GetString();
-        var maxTier = root.GetProperty("maxTier").GetInt32();
-        var type = root.GetProperty("type").GetInt64();
-        var image = root.GetProperty("image").GetString();
-        var powerOverrideTags = JsonSerializer.Deserialize<Dictionary<string, string>>(root.GetProperty("powerOverrideTags").GetRawText(), options);
-        var isZeta = root.GetProperty("isZeta").GetBoolean();
-        var zetaTier = root.GetProperty("zetaTier").GetInt32();
-        var isOmicron = root.GetProperty("isOmicron").GetBoolean();
-        var omicronTier = root.GetProperty("omicronTier").GetInt32();
-        var omicronMode = JsonSerializer.Deserialize<OmicronMode>(root.GetProperty("omicronMode").GetRawText(), options);
-        var omicronModeName = root.GetProperty("omicronModeName").GetString();
+        string id = string.Empty;
+        string name = string.Empty;
+        string nameKey = string.Empty;
+        int maxTier = 0;
+        long type = 0;
+        string image = string.Empty;
+        var powerOverrideTags = new Dictionary<string, string>();
+        bool isZeta = false;
+        int zetaTier = 0;
+        bool isOmicron = false;
+        int omicronTier = 0;
+        OmicronMode omicronMode = OmicronMode.OmicronModeDEFAULT;
+        string omicronModeName = string.Empty;
+
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException();
+
+        while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
+        {
+            if (reader.TokenType == JsonTokenType.PropertyName)
+            {
+                string propertyName = reader.GetString() ?? string.Empty;
+                reader.Read();
+
+                switch (propertyName)
+                {
+                    case "id":
+                        id = reader.TokenType == JsonTokenType.String ? reader.GetString() ?? string.Empty : string.Empty;
+                        break;
+                    case "name":
+                        name = reader.TokenType == JsonTokenType.String ? reader.GetString() ?? string.Empty : string.Empty;
+                        break;
+                    case "nameKey":
+                        nameKey = reader.TokenType == JsonTokenType.String ? reader.GetString() ?? string.Empty : string.Empty;
+                        break;
+                    case "maxTier":
+                        maxTier = reader.TokenType == JsonTokenType.Number ? reader.GetInt32() : 0;
+                        break;
+                    case "type":
+                        type = reader.TokenType == JsonTokenType.Number ? reader.GetInt64() : 0;
+                        break;
+                    case "image":
+                        image = reader.TokenType == JsonTokenType.String ? reader.GetString() ?? string.Empty : string.Empty;
+                        break;
+                    case "powerOverrideTags":
+                        if (reader.TokenType == JsonTokenType.StartObject || reader.TokenType == JsonTokenType.StartArray)
+                        {
+                            powerOverrideTags = JsonSerializer.Deserialize<Dictionary<string, string>>(ref reader, options) ?? [];
+                        }
+                        break;
+                    case "isZeta":
+                        isZeta = reader.TokenType == JsonTokenType.True;
+                        break;
+                    case "zetaTier":
+                        zetaTier = reader.TokenType == JsonTokenType.Number ? reader.GetInt32() : 0;
+                        break;
+                    case "isOmicron":
+                        isOmicron = reader.TokenType == JsonTokenType.True;
+                        break;
+                    case "omicronTier":
+                        omicronTier = reader.TokenType == JsonTokenType.Number ? reader.GetInt32() : 0;
+                        break;
+                    case "omicronMode":
+                        if (reader.TokenType == JsonTokenType.String)
+                        {
+                            var omicronModeString = reader.GetString();
+                            if (Enum.TryParse<OmicronMode>(omicronModeString, ignoreCase: true, out var parsedMode))
+                            {
+                                omicronMode = parsedMode;
+                            }
+                        }
+                        else if (reader.TokenType == JsonTokenType.Number)
+                        {
+                            var enumNumber = reader.GetInt32();
+                            if (Enum.IsDefined(typeof(OmicronMode), enumNumber))
+                            {
+                                omicronMode = (OmicronMode)enumNumber;
+                            }
+                        }
+                        break;
+                    case "omicronModeName":
+                        omicronModeName = reader.TokenType == JsonTokenType.String ? reader.GetString() ?? string.Empty : string.Empty;
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+        }
 
         return Skill.Create(
             id ?? string.Empty,
@@ -57,7 +132,7 @@ internal sealed class SkillConverter : JsonConverter<Skill>
         writer.WriteNumber("zetaTier", value.ZetaTier);
         writer.WriteBoolean("isOmicron", value.IsOmicron);
         writer.WriteNumber("omicronTier", value.OmicronTier);
-        writer.WriteStartObjectProperty("omicronMode", value.OmicronMode, options);
+        writer.WriteNumber("omicronMode", (int)value.OmicronMode);
         writer.WriteString("omicronModeName", value.OmicronModeName);
         writer.WriteEndObject();
     }

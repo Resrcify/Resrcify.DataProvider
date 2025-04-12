@@ -12,6 +12,7 @@ public sealed partial class DatacronData : ValueObject
 {
     public string Id { get; private set; }
     public int SetId { get; private set; }
+    public bool IsFocused { get; private set; }
     public string NameKey { get; private set; }
     public string IconKey { get; private set; }
     public string DetailPrefab { get; private set; }
@@ -38,6 +39,7 @@ public sealed partial class DatacronData : ValueObject
     private DatacronData(
         string id,
         int setId,
+        bool isFocused,
         string nameKey,
         string iconKey,
         string detailPrefab,
@@ -56,6 +58,7 @@ public sealed partial class DatacronData : ValueObject
     {
         Id = id;
         SetId = setId;
+        IsFocused = isFocused;
         NameKey = nameKey;
         IconKey = iconKey;
         DetailPrefab = detailPrefab;
@@ -76,6 +79,7 @@ public sealed partial class DatacronData : ValueObject
     public static Result<DatacronData> Create(
         string id,
         int setId,
+        bool isFocused,
         string nameKey,
         string iconKey,
         string detailPrefab,
@@ -91,10 +95,28 @@ public sealed partial class DatacronData : ValueObject
         List<DatacronAffixTemplateSet> affixSet,
         Dictionary<string, Ability> abilities,
         Dictionary<string, Stat> stats)
-    {
-        return new DatacronData(id, setId, nameKey, iconKey, detailPrefab, expirationTimeMs, allowReroll, initialTiers, maxRerolls, referenceTemplateId, setMaterial, fixedTag, setTier, tier, affixSet, abilities, stats);
-    }
-    public static Result<Dictionary<string, DatacronData>> Create(GameDataResponse data, Dictionary<string, string> local, bool onlyActive = false)
+        => new DatacronData(
+            id,
+            setId,
+            isFocused,
+            nameKey,
+            iconKey,
+            detailPrefab,
+            expirationTimeMs,
+            allowReroll,
+            initialTiers,
+            maxRerolls,
+            referenceTemplateId,
+            setMaterial,
+            fixedTag,
+            setTier,
+            tier,
+            affixSet,
+            abilities,
+            stats);
+    public static Result<Dictionary<string, DatacronData>> Create(
+        GameDataResponse data,
+        Dictionary<string, string> local, bool onlyActive = false)
     {
         var abilities = MapAbilites(data, local);
         var factions = MapFactions(data, local);
@@ -104,12 +126,13 @@ public sealed partial class DatacronData : ValueObject
         Dictionary<string, DatacronAffixTemplateSet> affixSetDict = data.DatacronAffixTemplateSets.ToDictionary(x => x.Id ?? string.Empty);
         Dictionary<string, EffectTarget> targetingRulesDict = data.BattleTargetingRules.ToDictionary(x => x.Id ?? string.Empty);
         var affixSetList = new List<DatacronAffixTemplateSet>();
-
+        var datacronSetDict = data.DatacronSets.ToDictionary(x => x.Id);
         foreach (var cron in data.DatacronTemplates)
         {
             Dictionary<string, Ability> datacronAbilities = [];
             Dictionary<string, Stat> datacronStats = [];
-            var cronSet = data.DatacronSets.FirstOrDefault(x => x.Id == cron.SetId);
+            if (!datacronSetDict.TryGetValue(cron.SetId, out var cronSet))
+                continue;
 
             var unixEpochNow = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             if (cronSet?.ExpirationTimeMs is null || onlyActive && cronSet.ExpirationTimeMs < unixEpochNow)
@@ -147,95 +170,132 @@ public sealed partial class DatacronData : ValueObject
 
             var nameKey = local[cronSet?.DisplayName ?? ""];
             var datacron = Create(
-                cron.Id!,
-                cronSet!.Id,
+                cron.Id ?? string.Empty,
+                cronSet?.Id ?? 0,
+                cron.Focused,
                 nameKey,
-                cronSet.Icon!,
-                cronSet.DetailPrefab!,
-                cronSet.ExpirationTimeMs,
+                cron.Focused
+                    ? cron.FocusedIcon ?? string.Empty
+                    : cronSet?.Icon ?? string.Empty,
+                cron.Focused
+                    ? cron.FocusedPrefab ?? string.Empty
+                    : cronSet?.DetailPrefab ?? string.Empty,
+                cronSet?.ExpirationTimeMs ?? 0,
                 cron.AllowReroll,
                 cron.InitialTiers,
                 cron.MaxRerolls,
-                cron.ReferenceTemplateId!,
-                cronSet.SetMaterials,
+                cron.ReferenceTemplateId ?? string.Empty,
+                cronSet?.SetMaterials ?? [],
                 cron.FixedTags,
-                cronSet.Tiers,
+                cron.Focused
+                    ? cronSet?.FocusedTiers ?? []
+                    : cronSet?.Tiers ?? [],
                 cron.Tiers,
                 affixSetList,
                 datacronAbilities,
                 datacronStats.OrderBy(x => x.Value.Id).ToDictionary(x => x.Key, x => x.Value));
-            datacronDataDict.TryAdd(cron.Id!, datacron.Value);
+            datacronDataDict.TryAdd(cron?.Id ?? string.Empty, datacron.Value);
         }
         return datacronDataDict;
     }
 
-    private static void AddStats(Dictionary<int, StatEnum> stats, Dictionary<string, Stat> datacronStats, DatacronAffixTemplate affixValue)
+    private static void AddStats(
+        Dictionary<int, StatEnum> stats,
+        Dictionary<string, Stat> datacronStats,
+        DatacronAffixTemplate affixValue)
     {
         if (affixValue.StatType > 0 && stats.TryGetValue((int)affixValue.StatType, out var stat))
         {
-            var statValue = Stat.Create((int)affixValue.StatType, stat.EnumNameKey, affixValue.ScopeIcon!);
+            var statValue = Stat.Create((int)affixValue.StatType, stat.EnumNameKey, affixValue.ScopeIcon ?? string.Empty);
             datacronStats.TryAdd($"{(int)affixValue.StatType}", statValue.Value);
         }
     }
 
-    private static Dictionary<string, Target> GetTargets(Dictionary<string, Faction> factions, DatacronAffixTemplate affixValue, MappedAbility mappedAbility, EffectTarget? target)
+    private static Dictionary<string, Target> GetTargets(
+        Dictionary<string, Faction> factions,
+        DatacronAffixTemplate affixValue,
+        MappedAbility mappedAbility,
+        EffectTarget? target)
     {
+        if (target?.Category?.Categories is null)
+            return [];
+
         var targets = new Dictionary<string, Target>();
-        foreach (var categoryValue in target!.Category!.Categories)
+        foreach (var categoryValue in target.Category.Categories)
         {
-            if (categoryValue.Exclude || !factions.TryGetValue(categoryValue.CategoryId!, out var faction))
+            if (categoryValue.Exclude || !factions.TryGetValue(categoryValue?.CategoryId ?? string.Empty, out var faction))
                 continue;
 
-            Unit unit = null!;
+            Unit? unit = null;
             if (faction.Units.Count == 1)
             {
-                var foundUnit = faction.Units[0]!;
+                var foundUnit = faction.Units[0];
                 unit = Unit.Create(foundUnit.BaseId, foundUnit.NameKey, foundUnit.CombatType).Value;
             }
             var targetNameKey = string.Format(mappedAbility.NameKey, faction.NameKey);
             var targetDescKey = string.Format(mappedAbility.DescKey, faction.NameKey);
             var newTarget = Target.Create(
-                affixValue.TargetRule!,
+                affixValue?.TargetRule ?? string.Empty,
                 targetNameKey,
                 targetDescKey,
-                affixValue.ScopeIcon!,
+                affixValue?.ScopeIcon ?? string.Empty,
                 unit
             );
-            targets.TryAdd(affixValue.TargetRule!, newTarget.Value);
+            targets.TryAdd(affixValue?.TargetRule ?? string.Empty, newTarget.Value);
         }
 
         return targets;
     }
 
-    private static Dictionary<string, MappedAbility> MapAbilites(GameDataResponse data, Dictionary<string, string> local)
+    private static Dictionary<string, MappedAbility> MapAbilites(
+        GameDataResponse data,
+        Dictionary<string, string> local)
     {
         Dictionary<string, MappedAbility> abilities = [];
-        foreach (var ability in data.Abilities.Where(x => x.NameKey!.Contains("DATACRON")))
+        foreach (var ability in data.Abilities.Where(x =>
+            x.NameKey is not null &&
+            x.NameKey.Contains("DATACRON")))
         {
-            if (ability is null)
+            if (ability is null ||
+                ability.Id is null ||
+                ability.Icon is null ||
+                ability.NameKey is null ||
+                ability.DescKey is null ||
+                !local.TryGetValue(ability.NameKey, out var abilityName) ||
+                !local.TryGetValue(ability.DescKey, out var abilityDescription))
                 continue;
+
             var newAbility = MappedAbility.Create(
-                local[ability.NameKey!] ?? ability.NameKey!,
-                local[ability.DescKey!] ?? ability.DescKey!,
-                ability.Icon!);
-            abilities.Add(ability.Id!, newAbility.Value);
+                abilityName,
+                abilityDescription,
+                ability.Icon);
+
+            abilities.Add(ability.Id, newAbility.Value);
         }
         return abilities;
     }
-    private static Dictionary<string, Faction> MapFactions(GameDataResponse data, Dictionary<string, string> local)
+    private static Dictionary<string, Faction> MapFactions(
+        GameDataResponse data,
+        Dictionary<string, string> local)
     {
         Dictionary<string, Faction> factions = [];
         foreach (var faction in data.Categories)
         {
-            if (faction?.DescKey is null || faction.DescKey == "PLACEHOLDER" || !local.TryGetValue(faction.DescKey, out var name))
+            if (faction?.Id is null ||
+                faction?.DescKey is null ||
+                faction.DescKey == "PLACEHOLDER" ||
+                !local.TryGetValue(faction.DescKey, out var name))
                 continue;
 
-            var newFaction = Faction.Create(faction.Id!, name, faction.Visible);
-            factions.Add(faction.Id!, newFaction.Value);
+            var newFaction = Faction.Create(faction.Id, name, faction.Visible);
+            factions.Add(faction.Id, newFaction.Value);
         }
         return factions;
     }
-    private static Dictionary<string, Unit> MapUnits(GameDataResponse data, Dictionary<string, string> local, Dictionary<string, Faction> factions)
+    private static Dictionary<string, Unit> MapUnits(
+        GameDataResponse data,
+        Dictionary<string, string> local,
+        Dictionary<string, Faction> factions)
     {
         Dictionary<string, Unit> units = [];
         foreach (var unit in data.Units)
@@ -275,7 +335,7 @@ public sealed partial class DatacronData : ValueObject
 
         foreach (var enumValue in Enum.GetValues(typeof(UnitStat)))
         {
-            StatEnum statEnumResult = null!;
+            StatEnum? statEnumResult = null;
             if (tmpLang.TryGetValue(enumValue.ToString()!.ToUpper(), out var lang))
                 statEnumResult = new StatEnum((int)enumValue, enumValue.ToString()!, lang.EnumNameKey, lang.EnumName);
 

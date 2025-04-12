@@ -11,6 +11,7 @@ public sealed class ExpandedDatacron
     public string Id { get; private set; }
     public string TemplateId { get; private set; }
     public int SetId { get; private set; }
+    public bool IsFocused { get; private set; }
     public string SetName { get; private set; }
     public string Image { get; private set; }
     public int MaxTiers { get; private set; }
@@ -21,11 +22,23 @@ public sealed class ExpandedDatacron
     public IReadOnlyList<StatTier> Stats => _stats;
     public int RerollCount { get; private set; }
 
-    private ExpandedDatacron(string id, string templateId, int setId, string setName, string iconKey, int maxTiers, int activatedTiers, List<AbilityTier> abilites, List<StatTier> stats, int rerollCount)
+    private ExpandedDatacron(
+        string id,
+        string templateId,
+        int setId,
+        bool isFocused,
+        string setName,
+        string iconKey,
+        int maxTiers,
+        int activatedTiers,
+        List<AbilityTier> abilites,
+        List<StatTier> stats,
+        int rerollCount)
     {
         Id = id;
         TemplateId = templateId;
         SetId = setId;
+        IsFocused = isFocused;
         SetName = setName;
         Image = iconKey;
         MaxTiers = maxTiers;
@@ -35,10 +48,30 @@ public sealed class ExpandedDatacron
         RerollCount = rerollCount;
     }
 
-    public static Result<ExpandedDatacron> Create(string id, string templateId, int setId, string setName, string iconKey, int maxTiers, int activatedTiers, List<AbilityTier> abilites, List<StatTier> stats, int rerollCount)
-    {
-        return new ExpandedDatacron(id, templateId, setId, setName, iconKey, maxTiers, activatedTiers, abilites, stats, rerollCount);
-    }
+    public static Result<ExpandedDatacron> Create(
+        string id,
+        string templateId,
+        int setId,
+        bool isFocused,
+        string setName,
+        string iconKey,
+        int maxTiers,
+        int activatedTiers,
+        List<AbilityTier> abilites,
+        List<StatTier> stats,
+        int rerollCount)
+        => new ExpandedDatacron(
+            id,
+            templateId,
+            setId,
+            isFocused,
+            setName,
+            iconKey,
+            maxTiers,
+            activatedTiers,
+            abilites,
+            stats,
+            rerollCount);
     public static IEnumerable<ExpandedDatacron> Create(List<Datacron> playerDatacrons, GameData gameData)
     {
         foreach (var playerDatacron in playerDatacrons)
@@ -48,7 +81,8 @@ public sealed class ExpandedDatacron
                 continue;
 
             var setId = playerDatacron.SetId;
-            var gameDataDatacron = gameData.Datacrons[playerDatacron.TemplateId];
+            if (!gameData.Datacrons.TryGetValue(playerDatacron.TemplateId, out var gameDataDatacron))
+                continue;
             var setName = gameDataDatacron.NameKey;
             var maxTiers = gameDataDatacron.Tier.Count;
             var abilites = new List<AbilityTier>();
@@ -56,22 +90,38 @@ public sealed class ExpandedDatacron
             int tier = 1;
             foreach (var playerAffix in playerDatacron.Affixs)
             {
-                if (tier is 1 or 2 or 4 or 5 or 7 or 8)
+                if (!string.IsNullOrEmpty(playerAffix.AbilityId) &&
+                    !string.IsNullOrEmpty(playerAffix.TargetRule) &&
+                    gameDataDatacron.Abilities.TryGetValue(playerAffix.AbilityId, out var gameDataAbility) &&
+                    gameDataAbility.Targets.TryGetValue(playerAffix.TargetRule, out var gameDataAbilityTarget))
+                {
+                    var ability = AbilityTier.Create(tier, playerAffix, gameDataAbilityTarget);
+                    if (ability.IsFailure)
+                        continue;
+                    abilites.Add(ability.Value);
+                }
+                else
                 {
                     var stat = StatTier.Create(tier, playerAffix);
+                    if (stat.IsFailure)
+                        continue;
                     stats.Add(stat.Value);
-                }
-
-                if (tier is 3 or 6 or 9)
-                {
-                    var gameDataAbility = gameDataDatacron.Abilities[playerAffix.AbilityId!].Targets[playerAffix.TargetRule!];
-                    var ability = AbilityTier.Create(tier, playerAffix, gameDataAbility);
-                    abilites.Add(ability.Value);
                 }
                 tier++;
             }
             var activatedTiers = stats.Count + abilites.Count;
-            var expandedDatacron = Create(id, playerDatacron.TemplateId, setId, setName, gameDataDatacron.IconKey, maxTiers, activatedTiers, abilites, stats, playerDatacron.RerollCount);
+            var expandedDatacron = Create(
+                id,
+                playerDatacron.TemplateId,
+                setId,
+                gameDataDatacron.IsFocused,
+                setName,
+                gameDataDatacron.IconKey,
+                maxTiers,
+                activatedTiers,
+                abilites,
+                stats,
+                playerDatacron.RerollCount);
             yield return expandedDatacron.Value;
         }
     }

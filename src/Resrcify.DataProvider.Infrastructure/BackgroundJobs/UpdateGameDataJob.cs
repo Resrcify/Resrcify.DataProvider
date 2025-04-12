@@ -9,11 +9,13 @@ using System;
 namespace Resrcify.DataProvider.Infrastructure.BackgroundJobs;
 
 [DisallowConcurrentExecution]
-internal sealed class CheckMetadataVersionJob(
+internal sealed class UpdateGameDataJob(
     ICachingService _cache,
     ISender _sender)
     : IJob
 {
+    private const string CachedLocalKey = "LatestLocalizationBundleVersion";
+    private const string CachedGameDataKey = "LatestGameDataVersion";
     public async Task Execute(IJobExecutionContext context)
     {
         var metadata = await _sender.Send(new GetMetadataVersionQuery(), context.CancellationToken);
@@ -22,8 +24,8 @@ internal sealed class CheckMetadataVersionJob(
         var latestGameDataVersion = metadata.Value?.LatestGamedataVersion?.Split(":")[1];
         var latestLocalizationBundleVersion = metadata.Value?.LatestLocalizationBundleVersion;
 
-        var cachedLocalVersion = await _cache.GetAsync<string>("LatestLocalizationBundleVersion", null, context.CancellationToken);
-        var cachedGameDataVersion = await _cache.GetAsync<string>("LatestGameDataVersion", null, context.CancellationToken);
+        var cachedLocalVersion = await _cache.GetAsync<string>(CachedLocalKey, null, context.CancellationToken);
+        var cachedGameDataVersion = await _cache.GetAsync<string>(CachedGameDataKey, null, context.CancellationToken);
 
         if (latestGameDataVersion is null || latestLocalizationBundleVersion is null)
             return;
@@ -37,7 +39,18 @@ internal sealed class CheckMetadataVersionJob(
         if (result.IsFailure)
             return;
 
-        await _cache.SetAsync("LatestLocalizationBundleVersion", latestLocalizationBundleVersion, TimeSpan.MaxValue, null, context.CancellationToken);
-        await _cache.SetAsync("LatestGameDataVersion", latestGameDataVersion, TimeSpan.MaxValue, null, context.CancellationToken);
+        await _cache.SetAsync(
+            CachedLocalKey,
+            latestLocalizationBundleVersion,
+            TimeSpan.MaxValue,
+            null,
+            context.CancellationToken);
+
+        await _cache.SetAsync(
+            CachedGameDataKey,
+            latestGameDataVersion,
+            TimeSpan.MaxValue,
+            null,
+            context.CancellationToken);
     }
 }

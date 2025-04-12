@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Resrcify.DataProvider.Application.Extensions;
 using Resrcify.DataProvider.Domain.Internal.BaseData.ValueObjects.CrTable;
 
 namespace Resrcify.DataProvider.Application.Converters;
@@ -10,31 +11,116 @@ internal sealed class CrTableConverter : JsonConverter<CrTable>
 {
     public override CrTable Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        using var doc = JsonDocument.ParseValue(ref reader);
-        var rootElement = doc.RootElement;
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException();
 
-        var agilityRoleAttackerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("agilityRoleAttackerMastery").GetRawText());
-        var agilityRoleTankMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("agilityRoleTankMastery").GetRawText());
-        var agilityRoleSupportMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("agilityRoleSupportMastery").GetRawText());
-        var agilityRoleHealerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("agilityRoleHealerMastery").GetRawText());
-        var strengthRoleAttackerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("strengthRoleAttackerMastery").GetRawText());
-        var strengthRoleTankMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("strengthRoleTankMastery").GetRawText());
-        var strengthRoleSupportMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("strengthRoleSupportMastery").GetRawText());
-        var strengthRoleHealerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("strengthRoleHealerMastery").GetRawText());
-        var intelligenceRoleAttackerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("intelligenceRoleAttackerMastery").GetRawText());
-        var intelligenceRoleTankMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("intelligenceRoleTankMastery").GetRawText());
-        var intelligenceRoleSupportMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("intelligenceRoleSupportMastery").GetRawText());
-        var intelligenceRoleHealerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("intelligenceRoleHealerMastery").GetRawText());
-        var unitLevelCr = JsonSerializer.Deserialize<Dictionary<string, long>>(rootElement.GetProperty("unitLevelCr").GetRawText());
-        var relicTierCr = JsonSerializer.Deserialize<Dictionary<string, long>>(rootElement.GetProperty("relicTierCr").GetRawText());
-        var relicTierLevelFactor = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("relicTierLevelFactor").GetRawText());
-        var abilityLevelCr = JsonSerializer.Deserialize<Dictionary<string, long>>(rootElement.GetProperty("abilityLevelCr").GetRawText());
-        var modRarityLevelCr = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, long>>>(rootElement.GetProperty("modRarityLevelCr").GetRawText());
-        var gearLevelCr = JsonSerializer.Deserialize<Dictionary<string, long>>(rootElement.GetProperty("gearLevelCr").GetRawText());
-        var gearPieceCr = JsonSerializer.Deserialize<Dictionary<string, long>>(rootElement.GetProperty("gearPieceCr").GetRawText());
-        var crewRarityCr = JsonSerializer.Deserialize<Dictionary<string, long>>(rootElement.GetProperty("crewRarityCr").GetRawText());
-        var shipRarityFactor = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("shipRarityFactor").GetRawText());
-        var crewlessAbilityFactor = JsonSerializer.Deserialize<Dictionary<string, double>>(rootElement.GetProperty("crewlessAbilityFactor").GetRawText());
+        Dictionary<string, double>? agilityRoleAttackerMastery = null;
+        Dictionary<string, double>? agilityRoleTankMastery = null;
+        Dictionary<string, double>? agilityRoleSupportMastery = null;
+        Dictionary<string, double>? agilityRoleHealerMastery = null;
+        Dictionary<string, double>? strengthRoleAttackerMastery = null;
+        Dictionary<string, double>? strengthRoleTankMastery = null;
+        Dictionary<string, double>? strengthRoleSupportMastery = null;
+        Dictionary<string, double>? strengthRoleHealerMastery = null;
+        Dictionary<string, double>? intelligenceRoleAttackerMastery = null;
+        Dictionary<string, double>? intelligenceRoleTankMastery = null;
+        Dictionary<string, double>? intelligenceRoleSupportMastery = null;
+        Dictionary<string, double>? intelligenceRoleHealerMastery = null;
+        Dictionary<string, long>? unitLevelCr = null;
+        Dictionary<string, long>? relicTierCr = null;
+        Dictionary<string, double>? relicTierLevelFactor = null;
+        Dictionary<string, long>? abilityLevelCr = null;
+        Dictionary<string, Dictionary<string, long>>? modRarityLevelCr = null;
+        Dictionary<string, long>? gearLevelCr = null;
+        Dictionary<string, long>? gearPieceCr = null;
+        Dictionary<string, long>? crewRarityCr = null;
+        Dictionary<string, double>? shipRarityFactor = null;
+        Dictionary<string, double>? crewlessAbilityFactor = null;
+
+        while (reader.Read())
+        {
+            if (reader.TokenType == JsonTokenType.EndObject)
+                break;
+
+            if (reader.TokenType != JsonTokenType.PropertyName)
+                throw new JsonException();
+
+            string propName = reader.GetString()!;
+            reader.Read();
+
+            switch (propName)
+            {
+                case "agilityRoleAttackerMastery":
+                    agilityRoleAttackerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "agilityRoleTankMastery":
+                    agilityRoleTankMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "agilityRoleSupportMastery":
+                    agilityRoleSupportMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "agilityRoleHealerMastery":
+                    agilityRoleHealerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "strengthRoleAttackerMastery":
+                    strengthRoleAttackerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "strengthRoleTankMastery":
+                    strengthRoleTankMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "strengthRoleSupportMastery":
+                    strengthRoleSupportMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "strengthRoleHealerMastery":
+                    strengthRoleHealerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "intelligenceRoleAttackerMastery":
+                    intelligenceRoleAttackerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "intelligenceRoleTankMastery":
+                    intelligenceRoleTankMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "intelligenceRoleSupportMastery":
+                    intelligenceRoleSupportMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "intelligenceRoleHealerMastery":
+                    intelligenceRoleHealerMastery = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "unitLevelCr":
+                    unitLevelCr = JsonSerializer.Deserialize<Dictionary<string, long>>(ref reader, options);
+                    break;
+                case "relicTierCr":
+                    relicTierCr = JsonSerializer.Deserialize<Dictionary<string, long>>(ref reader, options);
+                    break;
+                case "relicTierLevelFactor":
+                    relicTierLevelFactor = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "abilityLevelCr":
+                    abilityLevelCr = JsonSerializer.Deserialize<Dictionary<string, long>>(ref reader, options);
+                    break;
+                case "modRarityLevelCr":
+                    modRarityLevelCr = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, long>>>(ref reader, options);
+                    break;
+                case "gearLevelCr":
+                    gearLevelCr = JsonSerializer.Deserialize<Dictionary<string, long>>(ref reader, options);
+                    break;
+                case "gearPieceCr":
+                    gearPieceCr = JsonSerializer.Deserialize<Dictionary<string, long>>(ref reader, options);
+                    break;
+                case "crewRarityCr":
+                    crewRarityCr = JsonSerializer.Deserialize<Dictionary<string, long>>(ref reader, options);
+                    break;
+                case "shipRarityFactor":
+                    shipRarityFactor = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                case "crewlessAbilityFactor":
+                    crewlessAbilityFactor = JsonSerializer.Deserialize<Dictionary<string, double>>(ref reader, options);
+                    break;
+                default:
+                    reader.Skip();
+                    break;
+            }
+        }
 
         return CrTable.Create(
             agilityRoleAttackerMastery ?? [],

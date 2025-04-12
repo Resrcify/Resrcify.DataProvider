@@ -38,22 +38,9 @@ public static class InfrastructureServiceRegistration
         services.AddDistributedMemoryCache();
         services.AddSingleton<ICachingService, InMemoryCachingService>();
 
-        services.AddQuartz(configure =>
-        {
-            var jobKey = new JobKey(nameof(CheckMetadataVersionJob));
-            configure
-                .AddJob<CheckMetadataVersionJob>(jobKey)
-                .AddTrigger(
-                    trigger =>
-                        trigger.ForJob(jobKey)
-                            .StartAt(DateTime.UtcNow.AddSeconds(30))
-                            .WithSimpleSchedule(
-                                schedule =>
-                                    schedule.WithIntervalInMinutes(15)
-                                        .RepeatForever()));
-        });
-
-        services.AddQuartzHostedService();
+        services.AddQuartz();
+        services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+        services.ConfigureOptions<UpdateGameDataJobSetup>();
         return services;
     }
 

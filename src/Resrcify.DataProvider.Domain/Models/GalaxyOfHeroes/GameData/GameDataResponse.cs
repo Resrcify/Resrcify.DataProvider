@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
 namespace Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 

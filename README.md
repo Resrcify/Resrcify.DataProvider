@@ -1,7 +1,7 @@
 # Resrcify.DataProvider
 A rebuilt microservice version of Crinolo's stat calc which goal is to provide all the latest data needs.<br>
 Now supports parsing of ***mods***, ***skills***, ***datacrons***, ***profile summary*** and more. DataProvider updates to the latest GameData file on a timely basis.<br>
-DataProvider works directly with the [swgoh-comlink](https://github.com/swgoh-utils/swgoh-comlink), and accepts data in raw format.
+~~DataProvider works directly with the [swgoh-comlink](https://github.com/swgoh-utils/swgoh-comlink), and accepts data in raw format.~~
 
 For further help using this tool see below or you can access Swagger API documentation from a web browser at http://localhost:18000/swagger
 
@@ -59,7 +59,7 @@ docker run --name=dataprovider \
   ghcr.io/resrcify/Resrcify.dataprovider:latest
 ```
 ### Example building and running with command line
-- Download and install the required [runtime](https://dotnet.microsoft.com/en-us/download) (currently DataProvider is using .NET7)
+- Download and install the required [runtime](https://dotnet.microsoft.com/en-us/download) (currently DataProvider is using .NET8)
 - Pull the source code from git (use one of the below links depending on your preference)
   - git clone git@github.com:Resrcify/Resrcify.DataProvider.git
   - git clone https://github.com/Resrcify/Resrcify.DataProvider.git

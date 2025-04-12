@@ -5,34 +5,35 @@ using Resrcify.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 
 namespace Resrcify.DataProvider.Application.Converters;
 
-internal sealed class StatConverter : JsonConverter<Stat>
+internal sealed class UnitConverter : JsonConverter<Unit>
 {
-    public override Stat Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override Unit Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        int id = 0;
-        string nameKey = string.Empty;
-        string iconKey = string.Empty;
-
         if (reader.TokenType != JsonTokenType.StartObject)
             throw new JsonException();
+
+        string baseId = string.Empty;
+        string nameKey = string.Empty;
+        int combatType = 0;
 
         while (reader.Read() && reader.TokenType != JsonTokenType.EndObject)
         {
             if (reader.TokenType == JsonTokenType.PropertyName)
             {
                 string propertyName = reader.GetString() ?? string.Empty;
+
                 reader.Read();
 
                 switch (propertyName)
                 {
-                    case "id":
-                        id = reader.TokenType == JsonTokenType.Number ? reader.GetInt32() : 0;
+                    case "baseId":
+                        baseId = reader.TokenType == JsonTokenType.String ? reader.GetString() ?? string.Empty : string.Empty;
                         break;
                     case "nameKey":
                         nameKey = reader.TokenType == JsonTokenType.String ? reader.GetString() ?? string.Empty : string.Empty;
                         break;
-                    case "iconKey":
-                        iconKey = reader.TokenType == JsonTokenType.String ? reader.GetString() ?? string.Empty : string.Empty;
+                    case "combatType":
+                        combatType = reader.TokenType == JsonTokenType.Number ? reader.GetInt32() : 0;
                         break;
                     default:
                         reader.Skip();
@@ -40,15 +41,19 @@ internal sealed class StatConverter : JsonConverter<Stat>
                 }
             }
         }
-        return Stat.Create(id, nameKey ?? string.Empty, iconKey ?? string.Empty).Value;
+        return Unit.Create(
+            baseId ?? string.Empty,
+            nameKey ?? string.Empty,
+            combatType).Value;
     }
 
-    public override void Write(Utf8JsonWriter writer, Stat value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, Unit value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
-        writer.WriteNumber("id", value.Id);
+        writer.WriteString("baseId", value.BaseId);
         writer.WriteString("nameKey", value.NameKey);
-        writer.WriteString("iconKey", value.IconKey);
+        writer.WriteNumber("combatType", value.CombatType);
+
         writer.WriteEndObject();
     }
 }

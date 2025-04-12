@@ -12,5 +12,7 @@ public class DatacronTemplate
     public bool AllowReroll { get; set; }
     public List<string> FixedTags { get; set; } = [];
     public List<DatacronTemplateTier> Tiers { get; set; } = [];
-
+    public bool Focused { get; set; }
+    public string? FocusedIcon { get; set; }
+    public string? FocusedPrefab { get; set; }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Resrcify.DataProvider.Application.Extensions;
 using Resrcify.DataProvider.Domain.Internal.BaseData.ValueObjects.DatacronData;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.GameData;
 
@@ -11,31 +12,101 @@ internal sealed class DatacronDataConverter : JsonConverter<DatacronData>
 {
     public override DatacronData Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        using var doc = JsonDocument.ParseValue(ref reader);
-        var root = doc.RootElement;
+        string id = string.Empty, nameKey = string.Empty, iconKey = string.Empty, detailPrefab = string.Empty, referenceTemplateId = string.Empty;
+        int setId = 0, initialTiers = 0, maxRerolls = 0;
+        long expirationTimeMs = 0;
+        bool allowReroll = false;
+        bool isFocused = false;
 
-        var id = root.GetProperty("id").GetString();
-        var setId = root.GetProperty("setId").GetInt32();
-        var nameKey = root.GetProperty("nameKey").GetString();
-        var iconKey = root.GetProperty("iconKey").GetString();
-        var detailPrefab = root.GetProperty("detailPrefab").GetString();
-        var expirationTimeMs = root.GetProperty("expirationTimeMs").GetInt64();
-        var allowReroll = root.GetProperty("allowReroll").GetBoolean();
-        var initialTiers = root.GetProperty("initialTiers").GetInt32();
-        var maxRerolls = root.GetProperty("maxRerolls").GetInt32();
-        var referenceTemplateId = root.GetProperty("referenceTemplateId").GetString();
+        List<DatacronSetMaterial>? setMaterial = null;
+        List<string>? fixedTag = null;
+        List<DatacronSetTier>? setTier = null;
+        List<DatacronTemplateTier>? tier = null;
+        List<DatacronAffixTemplateSet>? affixSet = null;
+        Dictionary<string, Domain.Internal.BaseData.ValueObjects.DatacronData.Ability>? abilities = null;
+        Dictionary<string, Stat>? stats = null;
 
-        var setMaterial = JsonSerializer.Deserialize<List<DatacronSetMaterial>>(root.GetProperty("setMaterial").GetRawText(), options);
-        var fixedTag = JsonSerializer.Deserialize<List<string>>(root.GetProperty("fixedTag").GetRawText(), options);
-        var setTier = JsonSerializer.Deserialize<List<DatacronSetTier>>(root.GetProperty("setTier").GetRawText(), options);
-        var tier = JsonSerializer.Deserialize<List<DatacronTemplateTier>>(root.GetProperty("tier").GetRawText(), options);
-        var affixSet = JsonSerializer.Deserialize<List<DatacronAffixTemplateSet>>(root.GetProperty("affixSet").GetRawText(), options);
-        var abilities = JsonSerializer.Deserialize<Dictionary<string, Domain.Internal.BaseData.ValueObjects.DatacronData.Ability>>(root.GetProperty("abilities").GetRawText(), options);
-        var stats = JsonSerializer.Deserialize<Dictionary<string, Stat>>(root.GetProperty("stats").GetRawText(), options);
+        if (reader.TokenType != JsonTokenType.StartObject)
+            throw new JsonException();
+
+        while (reader.Read())
+        {
+            if (reader.TokenType == JsonTokenType.EndObject)
+                break;
+
+            if (reader.TokenType == JsonTokenType.PropertyName)
+            {
+                string propName = reader.GetString() ?? string.Empty;
+
+                reader.Read();
+
+                switch (propName)
+                {
+                    case "id":
+                        id = reader.GetString() ?? string.Empty;
+                        break;
+                    case "setId":
+                        setId = reader.GetInt32();
+                        break;
+                    case "isFocused":
+                        isFocused = reader.GetBoolean();
+                        break;
+                    case "nameKey":
+                        nameKey = reader.GetString() ?? string.Empty;
+                        break;
+                    case "iconKey":
+                        iconKey = reader.GetString() ?? string.Empty;
+                        break;
+                    case "detailPrefab":
+                        detailPrefab = reader.GetString() ?? string.Empty;
+                        break;
+                    case "expirationTimeMs":
+                        expirationTimeMs = reader.GetInt64();
+                        break;
+                    case "allowReroll":
+                        allowReroll = reader.GetBoolean();
+                        break;
+                    case "initialTiers":
+                        initialTiers = reader.GetInt32();
+                        break;
+                    case "maxRerolls":
+                        maxRerolls = reader.GetInt32();
+                        break;
+                    case "referenceTemplateId":
+                        referenceTemplateId = reader.GetString() ?? string.Empty;
+                        break;
+                    case "setMaterial":
+                        setMaterial = JsonSerializer.Deserialize<List<DatacronSetMaterial>>(ref reader, options);
+                        break;
+                    case "fixedTag":
+                        fixedTag = JsonSerializer.Deserialize<List<string>>(ref reader, options);
+                        break;
+                    case "setTier":
+                        setTier = JsonSerializer.Deserialize<List<DatacronSetTier>>(ref reader, options);
+                        break;
+                    case "tier":
+                        tier = JsonSerializer.Deserialize<List<DatacronTemplateTier>>(ref reader, options);
+                        break;
+                    case "affixSet":
+                        affixSet = JsonSerializer.Deserialize<List<DatacronAffixTemplateSet>>(ref reader, options);
+                        break;
+                    case "abilities":
+                        abilities = JsonSerializer.Deserialize<Dictionary<string, Domain.Internal.BaseData.ValueObjects.DatacronData.Ability>>(ref reader, options);
+                        break;
+                    case "stats":
+                        stats = JsonSerializer.Deserialize<Dictionary<string, Stat>>(ref reader, options);
+                        break;
+                    default:
+                        reader.Skip();
+                        break;
+                }
+            }
+        }
 
         return DatacronData.Create(
             id ?? string.Empty,
             setId,
+            isFocused,
             nameKey ?? string.Empty,
             iconKey ?? string.Empty,
             detailPrefab ?? string.Empty,
@@ -59,6 +130,7 @@ internal sealed class DatacronDataConverter : JsonConverter<DatacronData>
 
         writer.WriteString("id", value.Id);
         writer.WriteNumber("setId", value.SetId);
+        writer.WriteBoolean("isFocused", value.IsFocused);
         writer.WriteString("nameKey", value.NameKey);
         writer.WriteString("iconKey", value.IconKey);
         writer.WriteString("detailPrefab", value.DetailPrefab);

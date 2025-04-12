@@ -10,5 +10,6 @@ public class DatacronSet
     public string? Icon { get; set; }
     public string? DetailPrefab { get; set; }
     public List<DatacronSetTier> Tiers { get; set; } = [];
+    public List<DatacronSetTier> FocusedTiers { get; set; } = [];
     public List<DatacronSetMaterial> SetMaterials { get; set; } = [];
 }

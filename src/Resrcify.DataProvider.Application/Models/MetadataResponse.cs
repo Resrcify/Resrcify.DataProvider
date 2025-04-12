@@ -1,4 +1,4 @@
-namespace Resrcify.DataProvider.Application.Models.GalaxyOfHeroes.Metadata;
+namespace Resrcify.DataProvider.Application.Models;
 
 public class MetadataResponse
 {
