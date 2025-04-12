@@ -23,19 +23,19 @@ public sealed class GalaxyOfHeroesService : IGalaxyOfHeroesService
 
     public async Task<Result<GameDataResponse>> GetGameData(CancellationToken cancellationToken = default)
     {
-        var response = await _client.GetAsync("api/data/getgamedata", cancellationToken);
+        using var response = await _client.GetAsync("api/data/getgamedata", cancellationToken);
         return await response.Convert<GameDataResponse>(cancellationToken: cancellationToken);
     }
 
     public async Task<Result<LocalizationBundleResponse>> GetLocalization(CancellationToken cancellationToken = default)
     {
-        var response = await _client.GetAsync("api/data/getlocalizationdata", cancellationToken);
+        using var response = await _client.GetAsync("api/data/getlocalizationdata", cancellationToken);
         return await response.Convert<LocalizationBundleResponse>(cancellationToken: cancellationToken);
     }
 
     public async Task<Result<MetadataResponse>> GetMetadata(CancellationToken cancellationToken = default)
     {
-        var response = await _client.GetAsync("api/content/getmetadata", cancellationToken);
+        using var response = await _client.GetAsync("api/content/getmetadata", cancellationToken);
         return await response.Convert<MetadataResponse>(cancellationToken: cancellationToken);
     }
 
