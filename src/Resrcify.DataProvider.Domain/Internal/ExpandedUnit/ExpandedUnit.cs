@@ -17,7 +17,7 @@ namespace Resrcify.DataProvider.Domain.Internal.ExpandedUnit;
 
 public sealed class ExpandedUnit
 {
-    public ExpandedUnit(
+    private ExpandedUnit(
         string id,
         string definitionId,
         string name,

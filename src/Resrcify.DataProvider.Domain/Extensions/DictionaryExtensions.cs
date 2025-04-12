@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Resrcify.DataProvider.Domain.Extensions;
 
-public static class Extensions
+public static class DictionaryExtensions
 {
     public static double GetOrDefault<TKey>(this IDictionary<TKey, double> dict, TKey key, double defaultValue = 0)
     {

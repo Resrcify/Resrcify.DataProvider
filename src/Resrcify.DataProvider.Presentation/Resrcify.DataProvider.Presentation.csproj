@@ -2,16 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Authors>Rickard Marjanovic (@rmarjanovic)</Authors>
-    <Title>Resrcify.DataProvider.Presentation</Title>
-    <PackageId>Resrcify.DataProvider.Presentation</PackageId>
-    <Company>Resrcify AB</Company>
   </PropertyGroup>
 
   <ItemGroup>
 
-    <PackageReference Include="Resrcify.SharedKernel.Web" Version="1.10.7" />
+    <PackageReference Include="Resrcify.SharedKernel.Web" Version="1.10.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
     <PackageReference Include="MediatR" Version="12.5.0" />
   </ItemGroup>

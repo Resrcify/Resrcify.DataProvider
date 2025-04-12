@@ -2,11 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Authors>Rickard Marjanovic (@rmarjanovic)</Authors>
-    <Title>Resrcify.DataProvider.Web</Title>
-    <PackageId>Resrcify.DataProvider.Web</PackageId>
-    <Company>Resrcify AB</Company>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Resrcify.DataProvider.Application/Resrcify.DataProvider.Application.csproj" />

@@ -2,18 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Authors>Rickard Marjanovic (@rmarjanovic)</Authors>
-    <Title>Resrcify.DataProvider.Infrastructure</Title>
-    <PackageId>Resrcify.DataProvider.Infrastructure</PackageId>
-    <Company>Resrcify AB</Company>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Resrcify.DataProvider.Application/Resrcify.DataProvider.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Resrcify.SharedKernel.Web" Version="1.10.7" />
+    <PackageReference Include="Resrcify.SharedKernel.Web" Version="1.10.8" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.15" />
     <PackageReference Include="Quartz" Version="3.14.0" />

@@ -1,16 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <Authors>Rickard Marjanovic (@rmarjanovic)</Authors>
-    <Title>Resrcify.DataProvider.Domain</Title>
     <PackageId>Resrcify.DataProvider.Domain</PackageId>
+    <Authors>Rickard Marjanovic (@rmarjanovic)</Authors>
     <Company>Resrcify AB</Company>
+    <Title>Resrcify.DataProvider.Domain</Title>
+    <Description>Adds logic to create a slimmed down version of the GameData object used in calculations. Furthermore adds logic to expand player and datacron objects in a similar way as the SWGoH client.</Description>
+    <Summary>Adds logic to create a slimmed down version of the GameData object used in calculations. Furthermore adds logic to expand player and datacron objects in a similar way as the SWGoH client.</Summary>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Resrcify.SharedKernel.ResultFramework" Version="1.10.7" />
-    <PackageReference Include="Resrcify.SharedKernel.DomainDrivenDesign" Version="1.10.7" />
+    <PackageReference Include="Resrcify.SharedKernel.ResultFramework" Version="1.10.8" />
+    <PackageReference Include="Resrcify.SharedKernel.DomainDrivenDesign" Version="1.10.8" />
     <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
   </ItemGroup>
 </Project>

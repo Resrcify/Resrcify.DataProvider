@@ -11,6 +11,9 @@ public sealed class GetCachedLocalizationDataQueryHandler(ICachingService _cachi
     : IQueryHandler<GetCachedLocalizationDataQuery, List<string>>
 {
     public async Task<Result<List<string>>> Handle(GetCachedLocalizationDataQuery request, CancellationToken cancellationToken)
-        => Result.Create(await _caching.GetAsync<List<string>>($"Loc_{request.Language}.txt", null, cancellationToken));
+        => Result.Create(
+            await _caching.GetAsync<List<string>>(
+                $"Loc_{request.Language}.txt",
+                cancellationToken));
 
 }

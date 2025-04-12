@@ -2,11 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Authors>Rickard Marjanovic (@rmarjanovic)</Authors>
-    <Title>Resrcify.DataProvider.Application</Title>
-    <PackageId>Resrcify.DataProvider.Application</PackageId>
-    <Company>Resrcify AB</Company>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,10 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Resrcify.SharedKernel.Messaging" Version="1.10.7" />
+    <PackageReference Include="Resrcify.SharedKernel.Messaging" Version="1.10.8" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <PackageReference Include="MediatR" Version="12.5.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="8.0.0" />
   </ItemGroup>
 </Project>

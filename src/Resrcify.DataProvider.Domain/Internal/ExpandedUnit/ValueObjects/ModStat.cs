@@ -41,6 +41,7 @@ public sealed class ModStat : ValueObject
              UnitStat.Unitstatarmor or //Actually not percentage, this value is converted to percentage to mimic games presentation
              UnitStat.Unitstatsuppression or  //Actually not percentage, this value is converted to percentage to mimic games presentation
              UnitStat.Unitstatdodgerating or //Actually not percentage, this value is converted to percentage to mimic games presentation
+             UnitStat.Unitstatdeflectionrating or //Actually not percentage, this value is converted to percentage to mimic games presentation
              UnitStat.Unitstatdeflectionnegaterating or //Actually not percentage, this value is converted to percentage to mimic games presentation
              UnitStat.Unitstatattackcriticalrating or //Actually not percentage, however all moved to this value to handle the games using both flat and percentage types
              UnitStat.Unitstatabilitycriticalrating or //Actually not percentage, however all moved to this value to handle the games using both flat and percentage types
@@ -108,8 +109,8 @@ public sealed class ModStat : ValueObject
             UnitStat.Unitstatcriticaldamage => "Critical Damage",
             UnitStat.Unitstataccuracy => "Potency",
             UnitStat.Unitstatresistance => "Tenacity",
-            UnitStat.Unitstatdodgepercentadditive => "Dodge",
-            UnitStat.Unitstatdeflectionpercentadditive => "Deflection",
+            UnitStat.Unitstatdodgepercentadditive => "Dodge Chance",
+            UnitStat.Unitstatdeflectionpercentadditive => "Deflection Chance",
             UnitStat.Unitstatattackcriticalpercentadditive => "Physical Critical Chance",
             UnitStat.Unitstatabilitycriticalpercentadditive => "Special Critical Chance",
             UnitStat.Unitstatarmorpercentadditive => "Armor",
