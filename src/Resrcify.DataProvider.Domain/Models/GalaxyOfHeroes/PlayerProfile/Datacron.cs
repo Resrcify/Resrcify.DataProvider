@@ -8,6 +8,7 @@ public class Datacron
     public int SetId { get; set; }
     public string? TemplateId { get; set; }
     public bool Locked { get; set; }
+    public bool Focused { get; set; }
     public int RerollIndex { get; set; }
     public int RerollCount { get; set; }
     public List<string> Tags { get; set; } = [];
