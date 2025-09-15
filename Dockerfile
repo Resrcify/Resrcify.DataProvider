@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:9.0.305 AS base
 WORKDIR /app
 EXPOSE 18000
 
@@ -13,7 +13,7 @@ ENV IS_TITAN=false
 RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
 USER appuser
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0.305 AS build
 
 # copy all the layers' csproj files into respective folders
 COPY ["src/Resrcify.DataProvider.Domain/*.csproj", "src/Resrcify.DataProvider.Domain/"]
@@ -22,6 +22,9 @@ COPY ["src/Resrcify.DataProvider.Infrastructure/*.csproj", "src/Resrcify.DataPro
 COPY ["src/Resrcify.DataProvider.Presentation/*.csproj", "src/Resrcify.DataProvider.Presentation/"]
 COPY ["src/Resrcify.DataProvider.Web/*.csproj", "src/Resrcify.DataProvider.Web/"]
 COPY "*.sln" .
+COPY ".editorconfig" .
+COPY "Directory.Build.props" .
+COPY "Directory.Packages.props" .
 
 RUN dotnet restore
 

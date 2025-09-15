@@ -1,16 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
   <ItemGroup>
 
-    <PackageReference Include="Resrcify.SharedKernel.Web" Version="1.10.8" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
-    <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Resrcify.SharedKernel.Web"/>
+    <PackageReference Include="Swashbuckle.AspNetCore"/>
+    <PackageReference Include="MediatR"/>
   </ItemGroup>
 
   <ItemGroup>

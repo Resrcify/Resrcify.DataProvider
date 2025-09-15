@@ -18,14 +18,18 @@ using Resrcify.DataProvider.Application.Extensions;
 namespace Resrcify.DataProvider.Application.Features.Data.UpdateRawData;
 
 internal sealed class UpdateRawDataCommandHandler(
-    IGalaxyOfHeroesService _api,
+    ISwgohApiService _api,
     ICachingService _caching)
     : ICommandHandler<UpdateRawDataCommand>
 {
     public async Task<Result> Handle(UpdateRawDataCommand request, CancellationToken cancellationToken)
     {
-        var gameDataResponse = await _api.GetGameData(cancellationToken: cancellationToken);
-        var localizationResponse = await _api.GetLocalization(cancellationToken: cancellationToken);
+        var gameDataResponse = await _api.GetGameData(
+            request.MetadataResponse,
+            cancellationToken: cancellationToken);
+        var localizationResponse = await _api.GetLocalization(
+            request.MetadataResponse,
+            cancellationToken);
 
         if (gameDataResponse.IsFailure)
             return gameDataResponse;

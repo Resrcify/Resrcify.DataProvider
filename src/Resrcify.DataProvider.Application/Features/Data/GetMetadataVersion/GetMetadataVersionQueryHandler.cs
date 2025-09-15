@@ -7,7 +7,7 @@ using Resrcify.DataProvider.Application.Models;
 
 namespace Resrcify.DataProvider.Application.Features.Data.GetMetadataVersion;
 
-internal sealed class GetMetadataVersionQueryHandler(IGalaxyOfHeroesService _api)
+internal sealed class GetMetadataVersionQueryHandler(ISwgohApiService _api)
     : IQueryHandler<GetMetadataVersionQuery, MetadataResponse>
 {
     public async Task<Result<MetadataResponse>> Handle(GetMetadataVersionQuery request, CancellationToken cancellationToken)

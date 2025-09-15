@@ -17,7 +17,10 @@ internal sealed class GetExpandedProfileQueryHandler(ICachingService _caching)
 {
     public async Task<Result<GetExpandedProfileQueryResponse>> Handle(GetExpandedProfileQuery request, CancellationToken cancellationToken)
     {
-        var baseData = await _caching.GetAsync<BaseData>($"BaseData-{request.Language}", JsonSerializerExtensions.GetDomainSerializerOptions(), cancellationToken);
+        var baseData = await _caching.GetAsync<BaseData>(
+            $"BaseData-{request.Language}",
+            JsonSerializerExtensions.GetDomainSerializerOptions(),
+            cancellationToken);
         if (baseData is null)
             return Result.Failure<GetExpandedProfileQueryResponse>(DomainErrors.ExpandedUnit.GameDataFileNotFound);
 

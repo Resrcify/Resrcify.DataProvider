@@ -21,7 +21,7 @@ public static class InfrastructureServiceRegistration
         var clientUrl = Environment.GetEnvironmentVariable("CLIENT_URL") ?? configuration.GetValue<string>("ClientUrl");
         var port = Environment.GetEnvironmentVariable("PORT") ?? configuration.GetValue<string>("ClientPort");
 
-        services.AddHttpClient<IGalaxyOfHeroesService, GalaxyOfHeroesService>(c =>
+        services.AddHttpClient<ISwgohApiService, SwgohApiService>(c =>
         {
             var uri = clientUrl + ":" + port;
             c.BaseAddress = new Uri(uri);
@@ -36,7 +36,7 @@ public static class InfrastructureServiceRegistration
         });
 
         services.AddDistributedMemoryCache();
-        services.AddSingleton<ICachingService, InMemoryCachingService>();
+        services.AddSingleton<ICachingService, DistributedCachingService>();
 
         services.AddQuartz();
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);

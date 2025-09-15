@@ -73,6 +73,7 @@ public static class ExpandedProfileExtensions
         DatacronSummary datacronSummary)
     {
         var glCount = 0;
+        var capShipCount = 0;
         var characters = 0;
         var characterGp = 0.0;
         var ships = 0;
@@ -135,7 +136,8 @@ public static class ExpandedProfileExtensions
             }
             if (unit.Value.IsGalacticLegend)
                 glCount++;
-
+            if (unit.Value.IsCapital)
+                capShipCount++;
             ExtractModData(
                 ref sixDotModsCount,
                 ref speedUnder10,
@@ -258,6 +260,7 @@ public static class ExpandedProfileExtensions
 
         return new ProfileSummary(
             glCount,
+            capShipCount,
             characters,
             ships,
             characterGp,

@@ -19,6 +19,7 @@ internal sealed class UnitDataConverter : JsonConverter<UnitData>
         List<string> categoryIdList = [];
         long unitClass = 0;
         bool isGalacticLegend = false;
+        bool isCapital = false;
         string image = string.Empty;
         long primaryStat = 0;
         Dictionary<string, GearLevel> gearLevels = [];
@@ -69,6 +70,9 @@ internal sealed class UnitDataConverter : JsonConverter<UnitData>
                         break;
                     case "isGalacticLegend":
                         isGalacticLegend = reader.TokenType == JsonTokenType.True;
+                        break;
+                    case "isCapital":
+                        isCapital = reader.TokenType == JsonTokenType.True;
                         break;
                     case "image":
                         image = reader.TokenType == JsonTokenType.String ? reader.GetString() ?? string.Empty : string.Empty;
@@ -143,6 +147,7 @@ internal sealed class UnitDataConverter : JsonConverter<UnitData>
             categoryIdList ?? [],
             unitClass,
             isGalacticLegend,
+            isCapital,
             image ?? string.Empty,
             primaryStat,
             gearLevels ?? [],

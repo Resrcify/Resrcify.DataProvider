@@ -35,7 +35,12 @@ internal sealed class UpdateGameDataJob(
             latestLocalizationBundleVersion == cachedLocalVersion)
             return;
 
-        var result = await _sender.Send(new UpdateRawDataCommand());
+        if (metadata.Value is null)
+            return;
+
+        var result = await _sender.Send(
+            new UpdateRawDataCommand(metadata.Value),
+            context.CancellationToken);
         if (result.IsFailure)
             return;
 

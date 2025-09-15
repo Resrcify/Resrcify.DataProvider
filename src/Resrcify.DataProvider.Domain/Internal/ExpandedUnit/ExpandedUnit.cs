@@ -29,6 +29,7 @@ public sealed class ExpandedUnit
         UnitTier gearTier,
         RelicTier relicTier,
         bool isGalacticLegend,
+        bool isCapital,
         List<Stat> stats,
         double gp,
         double crewGp,
@@ -46,6 +47,7 @@ public sealed class ExpandedUnit
         GearTier = gearTier;
         RelicTier = relicTier;
         IsGalacticLegend = isGalacticLegend;
+        IsCapital = isCapital;
         _stats = stats;
         Gp = gp;
         CrewGp = crewGp;
@@ -63,6 +65,7 @@ public sealed class ExpandedUnit
     public UnitTier GearTier { get; private set; }
     public RelicTier RelicTier { get; private set; }
     public bool IsGalacticLegend { get; private set; }
+    public bool IsCapital { get; private set; }
     public double Gp { get; private set; }
     public double CrewGp { get; private set; }
     public IReadOnlyList<Stat> Stats => _stats;
@@ -71,9 +74,27 @@ public sealed class ExpandedUnit
     private readonly List<Stat> _stats = [];
     private readonly List<Mod> _mods = [];
     private readonly List<Skill> _skills = [];
-    public static Result<ExpandedUnit> Create(string id, string definitionId, CombatType combatType, Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp, bool withoutModStats, bool withoutMods, bool withoutSkills)
+    public static Result<ExpandedUnit> Create(
+        string id,
+        string definitionId,
+        CombatType combatType,
+        Unit unit,
+        GameData gameData,
+        List<Unit> crew,
+        bool withStats,
+        bool withoutGp,
+        bool withoutModStats,
+        bool withoutMods,
+        bool withoutSkills)
     {
-        var stats = GetStats(combatType, unit, gameData, crew, withStats, withoutGp, withoutModStats);
+        var stats = GetStats(
+            combatType,
+            unit,
+            gameData,
+            crew,
+            withStats,
+            withoutGp,
+            withoutModStats);
         if (stats.IsFailure)
             return Result.Failure<ExpandedUnit>(stats.Errors);
         var formattedStats = GetFormattedStats(stats.Value);
@@ -81,6 +102,7 @@ public sealed class ExpandedUnit
         var gameDataUnit = gameData.Units[definitionId];
         var alignment = gameDataUnit.ForceAlignment;
         var isGalacticLegend = gameDataUnit.IsGalacticLegend;
+        var isCapital = gameDataUnit.UnitClass == (int)UnitClass.Unitclasscommander;
         var skills = new List<Skill>();
         if (!withoutSkills)
             skills = Skill.Create(unit, gameDataUnit).Value;
@@ -94,7 +116,24 @@ public sealed class ExpandedUnit
         var level = unit.CurrentLevel;
         var gear = unit.CurrentTier;
 
-        return new ExpandedUnit(id, definitionId, gameDataUnit.Name, gameDataUnit.Image, combatType, (ForceAlignment)(int)alignment, rarity, level, gear, relic, isGalacticLegend, formattedStats.ToList(), stats.Value.Gp, stats.Value.CrewGp, skills, mods);
+        return new ExpandedUnit(
+            id,
+            definitionId,
+            gameDataUnit.Name,
+            gameDataUnit.Image,
+            combatType,
+            (ForceAlignment)(int)alignment,
+            rarity,
+            level,
+            gear,
+            relic,
+            isGalacticLegend,
+            isCapital,
+            formattedStats.ToList(),
+            stats.Value.Gp,
+            stats.Value.CrewGp,
+            skills,
+            mods);
     }
 
     private static IEnumerable<Stat> GetFormattedStats(IStatCalc stats)
@@ -111,7 +150,14 @@ public sealed class ExpandedUnit
         }
     }
 
-    public static IEnumerable<KeyValuePair<string, ExpandedUnit>> Create(PlayerProfileResponse playerProfile, bool withStats, bool withoutGp, bool withoutModStats, bool withoutMods, bool withoutSkills, GameData gameData)
+    public static IEnumerable<KeyValuePair<string, ExpandedUnit>> Create(
+        PlayerProfileResponse playerProfile,
+        bool withStats,
+        bool withoutGp,
+        bool withoutModStats,
+        bool withoutMods,
+        bool withoutSkills,
+        GameData gameData)
     {
         var characterUnits = new Dictionary<string, Unit>();
         foreach (var unit in playerProfile.RosterUnits
@@ -127,11 +173,32 @@ public sealed class ExpandedUnit
             if (IsCombatType(gameData, unit, CombatType.Ship))
                 crew = GetCrewUnits(gameData, characterUnits, definitionId);
 
-            var expandedUnit = Create(unit.Id, definitionId, GetCombatType(gameData, unit), unit, gameData, crew.ToList(), withStats, withoutGp, withoutModStats, withoutMods, withoutSkills);
-            yield return new(definitionId, expandedUnit.Value);
+            var expandedUnit = Create(
+                unit.Id,
+                definitionId,
+                GetCombatType(gameData, unit),
+                unit,
+                gameData,
+                crew.ToList(),
+                withStats,
+                withoutGp,
+                withoutModStats,
+                withoutMods,
+                withoutSkills);
+            yield return new(
+                definitionId,
+                expandedUnit.Value);
         }
     }
-    public static IEnumerable<KeyValuePair<string, ExpandedUnit>> Create(string definitionId, PlayerProfileResponse playerProfile, bool withStats, bool withoutGp, bool withoutModStats, bool withoutMods, bool withoutSkills, GameData gameData)
+    public static IEnumerable<KeyValuePair<string, ExpandedUnit>> Create(
+        string definitionId,
+        PlayerProfileResponse playerProfile,
+        bool withStats,
+        bool withoutGp,
+        bool withoutModStats,
+        bool withoutMods,
+        bool withoutSkills,
+        GameData gameData)
     {
         var unit = playerProfile.RosterUnits.FirstOrDefault(x => x.DefinitionId!.Split(":")[0] == definitionId);
         if (unit is null || unit.Id is null)
@@ -151,11 +218,27 @@ public sealed class ExpandedUnit
             crew = GetCrewUnits(gameData, characterUnits, definitionId);
         }
 
-        var expandedUnit = Create(unit.Id, definitionId, GetCombatType(gameData, unit), unit, gameData, crew.ToList(), withStats, withoutGp, withoutModStats, withoutMods, withoutSkills);
-        yield return new(definitionId, expandedUnit.Value);
+        var expandedUnit = Create(
+            unit.Id,
+            definitionId,
+            GetCombatType(gameData, unit),
+            unit,
+            gameData,
+            crew.ToList(),
+            withStats,
+            withoutGp,
+            withoutModStats,
+            withoutMods,
+            withoutSkills);
+        yield return new(
+            definitionId,
+            expandedUnit.Value);
     }
 
-    private static IEnumerable<Unit> GetCrewUnits(GameData gameData, Dictionary<string, Unit> characterUnits, string definitionId)
+    private static IEnumerable<Unit> GetCrewUnits(
+        GameData gameData,
+        Dictionary<string, Unit> characterUnits,
+        string definitionId)
     {
         foreach (var crewId in gameData.Units[definitionId].Crew)
         {
@@ -165,20 +248,42 @@ public sealed class ExpandedUnit
 
     }
 
-    private static bool IsCombatType(GameData gameData, Unit unit, CombatType combatType)
+    private static bool IsCombatType(
+        GameData gameData,
+        Unit unit,
+        CombatType combatType)
         => GetCombatType(gameData, unit) == combatType;
 
-    private static CombatType GetCombatType(GameData gameData, Unit unit)
+    private static CombatType GetCombatType(
+        GameData gameData,
+        Unit unit)
     {
         var definitionId = unit.DefinitionId!.Split(":")[0];
         return (CombatType)gameData.Units[definitionId].CombatType;
     }
 
-    private static Result<IStatCalc> GetStats(CombatType type, Unit unit, GameData gameData, List<Unit> crew, bool withStats, bool withoutGp, bool withoutMods)
+    private static Result<IStatCalc> GetStats(
+        CombatType type,
+        Unit unit,
+        GameData gameData,
+        List<Unit> crew,
+        bool withStats,
+        bool withoutGp,
+        bool withoutMods)
         => type switch
         {
-            CombatType.Character => CharacterStatCalc.Create(unit, gameData, withStats, withoutGp, withoutMods),
-            CombatType.Ship => ShipStatCalc.Create(unit, gameData, crew, withStats, withoutGp),
+            CombatType.Character => CharacterStatCalc.Create(
+                unit,
+                gameData,
+                withStats,
+                withoutGp,
+                withoutMods),
+            CombatType.Ship => ShipStatCalc.Create(
+                unit,
+                gameData,
+                crew,
+                withStats,
+                withoutGp),
             _ => Result.Failure<IStatCalc>(DomainErrors.ExpandedUnit.CombatTypeNotFound)
         };
 }

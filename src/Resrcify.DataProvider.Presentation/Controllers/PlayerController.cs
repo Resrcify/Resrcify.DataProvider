@@ -14,7 +14,9 @@ using Resrcify.DataProvider.Application.Features.Units.GetExpandedProfiles;
 namespace Resrcify.DataProvider.Presentation.Controllers;
 
 [Route("api/[controller]")]
-internal sealed class ProfileController(ISender sender) : ApiController(sender)
+internal sealed class ProfileController(
+    ISender sender)
+    : ApiController(sender)
 {
     [HttpPost()]
     public async Task<IResult> GetExpandedProfileData(

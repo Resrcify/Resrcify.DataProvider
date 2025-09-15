@@ -19,6 +19,7 @@ public sealed partial class UnitData : ValueObject
     private readonly List<string> _categoryIdList = [];
     public long UnitClass { get; private set; }
     public bool IsGalacticLegend { get; private set; }
+    public bool IsCapital { get; private set; }
     public string Image { get; private set; }
     public long PrimaryStat { get; private set; }
     public IReadOnlyDictionary<string, GearLevel> GearLevels => _gearLevels;
@@ -48,6 +49,7 @@ public sealed partial class UnitData : ValueObject
         List<string> categoryIdList,
         long unitClass,
         bool isGalacticLegend,
+        bool isCapital,
         string image,
         long primaryStat,
         Dictionary<string, GearLevel> gearLevels,
@@ -68,6 +70,7 @@ public sealed partial class UnitData : ValueObject
         _categoryIdList = categoryIdList;
         UnitClass = unitClass;
         IsGalacticLegend = isGalacticLegend;
+        IsCapital = isCapital;
         Image = image;
         PrimaryStat = primaryStat;
         _gearLevels = gearLevels;
@@ -89,6 +92,7 @@ public sealed partial class UnitData : ValueObject
         List<string> categoryIdList,
         long unitClass,
         bool isGalacticLegend,
+        bool isCapital,
         string image,
         long primaryStat,
         Dictionary<string, GearLevel> gearLevels,
@@ -110,6 +114,7 @@ public sealed partial class UnitData : ValueObject
             categoryIdList,
             unitClass,
             isGalacticLegend,
+            isCapital,
             image,
             primaryStat,
             gearLevels,
@@ -132,6 +137,7 @@ public sealed partial class UnitData : ValueObject
         List<string> categoryIdList,
         long unitClass,
         bool isGalacticLegend,
+        bool isCapital,
         string image,
         long primaryStat,
         Dictionary<string, GearLevel> gearLevels,
@@ -153,6 +159,7 @@ public sealed partial class UnitData : ValueObject
             categoryIdList,
             unitClass,
             isGalacticLegend,
+            isCapital,
             image,
             primaryStat,
             gearLevels,
@@ -163,8 +170,7 @@ public sealed partial class UnitData : ValueObject
             modRecommendations,
             stats,
             crewStats,
-            crew
-            );
+            crew);
     }
 
     public static Result<UnitData> Create(
@@ -176,6 +182,7 @@ public sealed partial class UnitData : ValueObject
         List<string> categoryIdList,
         long unitClass,
         bool isGalacticLegend,
+        bool isCapital,
         string image,
         long primaryStat,
         Dictionary<string, Dictionary<string, long>> growthModifiers,
@@ -197,6 +204,7 @@ public sealed partial class UnitData : ValueObject
             categoryIdList,
             unitClass,
             isGalacticLegend,
+            isCapital,
             image,
             primaryStat,
             gearLevels,
@@ -232,7 +240,8 @@ public sealed partial class UnitData : ValueObject
             var baseStat = unit.BaseStat;
             var unitClass = (int)unit.UnitClass;
             var relicDefinition = unit.RelicDefinition;
-            var isGalacticLegend = unit.LimitBreakRefs.Any(x => x.PowerAdditiveTag == "ultimate");
+            var isCapital = unit.UnitClass == Models.GalaxyOfHeroes.GameData.UnitClass.Unitclasscommander;
+            var isGalacticLegend = unit.Legend;
 
             var skillRef = skillReferenceList.Select(skill => skills[skill!.SkillId!]).ToList();
 
@@ -272,13 +281,15 @@ public sealed partial class UnitData : ValueObject
                         categoryIdList,
                         unitClass,
                         isGalacticLegend,
+                        isCapital,
                         thumbnailName!,
                         primaryUnitStat,
                         tierData,
                         growthModifiers[baseId!],
                         skillRef,
                         relicData,
-                        FetchMasteryMultiplierName(primaryUnitStat.ToString(), categoryIdList),
+                        FetchMasteryMultiplierName(
+                            primaryUnitStat.ToString(), categoryIdList),
                         modRecommendationList
                     )
                     .Value;
@@ -309,6 +320,7 @@ public sealed partial class UnitData : ValueObject
                         categoryIdList,
                         unitClass,
                         isGalacticLegend,
+                        isCapital,
                         thumbnailName!,
                         primaryUnitStat,
                         growthModifiers[baseId!],
