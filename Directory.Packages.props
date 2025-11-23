@@ -3,23 +3,23 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
     <ItemGroup>
-    <PackageVersion Include="Resrcify.SharedKernel.Messaging" Version="1.13.0" />
-    <PackageVersion Include="FluentValidation" Version="12.0.0" />
-    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
-    <PackageVersion Include="MediatR" Version="12.5.0" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.9" />
-    <PackageVersion Include="Resrcify.SharedKernel.ResultFramework" Version="1.13.0" />
-    <PackageVersion Include="Resrcify.SharedKernel.DomainDrivenDesign" Version="1.13.0" />
+    <PackageVersion Include="Resrcify.SharedKernel.Messaging" Version="1.14.0" />
+    <PackageVersion Include="FluentValidation" Version="12.1.0" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
+    <PackageVersion Include="MediatR" Version="13.1.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.11" />
+    <PackageVersion Include="Resrcify.SharedKernel.ResultFramework" Version="1.14.0" />
+    <PackageVersion Include="Resrcify.SharedKernel.DomainDrivenDesign" Version="1.14.0" />
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
-    <PackageVersion Include="Resrcify.SharedKernel.Web" Version="1.13.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="9.0.9" />
-    <PackageVersion Include="Quartz" Version="3.15.0" />
-    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.15.0" />
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.9" />
-    <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageVersion Include="Resrcify.SharedKernel.Web" Version="1.14.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http" Version="9.0.11" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Polly" Version="9.0.11" />
+    <PackageVersion Include="Quartz" Version="3.15.1" />
+    <PackageVersion Include="Quartz.Extensions.Hosting" Version="3.15.1" />
+    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.11" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.4" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.6" />
   </ItemGroup>
 </Project>

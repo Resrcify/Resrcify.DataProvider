@@ -10,6 +10,7 @@ using Resrcify.SharedKernel.Web.Primitives;
 using Resrcify.DataProvider.Domain.Models.GalaxyOfHeroes.PlayerProfile;
 using Resrcify.DataProvider.Application.Features.Units.GetExpandedProfile;
 using Resrcify.DataProvider.Application.Features.Units.GetExpandedProfiles;
+using ResultExtensions = Resrcify.SharedKernel.Web.Extensions.ResultExtensions;
 
 namespace Resrcify.DataProvider.Presentation.Controllers;
 
@@ -42,7 +43,9 @@ internal sealed class ProfileController(
                 withoutSkills,
                 withoutDatacrons))
             .Bind(request => Sender.Send(request, cancellationToken))
-            .Match(Results.Ok, ToProblemDetails);
+            .Match(
+                Results.Ok,
+                ResultExtensions.ToProblemDetails);
 
     [HttpPost("{language}")]
     public async Task<IResult> GetExpandedProfileData(
@@ -68,7 +71,9 @@ internal sealed class ProfileController(
                 withoutSkills,
                 withoutDatacrons))
             .Bind(request => Sender.Send(request, cancellationToken))
-            .Match(Results.Ok, ToProblemDetails);
+            .Match(
+                Results.Ok,
+                ResultExtensions.ToProblemDetails);
 
     [RequestSizeLimit(int.MaxValue)]
     [HttpPost("/api/profiles")]
@@ -93,5 +98,7 @@ internal sealed class ProfileController(
                 withoutSkills,
                 withoutDatacrons))
             .Bind(request => Sender.Send(request, cancellationToken))
-            .Match(Results.Ok, ToProblemDetails);
+            .Match(
+                Results.Ok,
+                ResultExtensions.ToProblemDetails);
 }

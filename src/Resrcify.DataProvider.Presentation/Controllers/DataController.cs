@@ -9,6 +9,7 @@ using Resrcify.SharedKernel.Web.Primitives;
 using Resrcify.DataProvider.Application.Features.Data.UpdateRawData;
 using Resrcify.DataProvider.Application.Features.Data.GetCachedBaseData;
 using Resrcify.DataProvider.Application.Features.Data.GetCachedLocalizationData;
+using ResultExtensions = Resrcify.SharedKernel.Web.Extensions.ResultExtensions;
 
 namespace Resrcify.DataProvider.Presentation.Controllers;
 
@@ -25,7 +26,9 @@ internal sealed class DataController(
             .Bind(request => Sender.Send(
                 request,
                 cancellationToken))
-            .Match(Results.NoContent, ToProblemDetails);
+            .Match(
+                Results.NoContent,
+                ResultExtensions.ToProblemDetails);
 
     [HttpGet("localization/{language}")]
     public async Task<IResult> GetCachedLocalization(
@@ -36,7 +39,9 @@ internal sealed class DataController(
             .Bind(request => Sender.Send(
                 request,
                 cancellationToken))
-            .Match(Results.Ok, ToProblemDetails);
+            .Match(
+                Results.Ok,
+                ResultExtensions.ToProblemDetails);
 
     [HttpGet("localization")]
     public async Task<IResult> GetCachedLocalization(
@@ -44,7 +49,9 @@ internal sealed class DataController(
         => await Result
             .Create(new GetCachedLocalizationDataQuery(GetCachedLocalizationDataQueryRequest.ENG_US))
             .Bind(request => Sender.Send(request, cancellationToken))
-            .Match(Results.Ok, ToProblemDetails);
+            .Match(
+                Results.Ok,
+                ResultExtensions.ToProblemDetails);
 
     [HttpGet("base/{language}")]
     public async Task<IResult> GetCachedBaseData(
@@ -53,7 +60,9 @@ internal sealed class DataController(
         => await Result
             .Create(new GetCachedBaseDataQuery(language))
             .Bind(request => Sender.Send(request, cancellationToken))
-            .Match(Results.Ok, ToProblemDetails);
+            .Match(
+                Results.Ok,
+                ResultExtensions.ToProblemDetails);
 
     [HttpGet("base")]
     public async Task<IResult> GetCachedBaseData(
@@ -61,5 +70,7 @@ internal sealed class DataController(
         => await Result
             .Create(new GetCachedBaseDataQuery(GetCachedBaseDataQueryRequest.ENG_US))
             .Bind(request => Sender.Send(request, cancellationToken))
-            .Match(Results.Ok, ToProblemDetails);
+            .Match(
+                Results.Ok,
+                ResultExtensions.ToProblemDetails);
 }
