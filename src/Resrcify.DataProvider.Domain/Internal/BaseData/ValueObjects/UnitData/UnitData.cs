@@ -265,12 +265,17 @@ public sealed partial class UnitData : ValueObject
                     tierData[tier.ToString()] = GearLevel.Create(gearTier.EquipmentSets, stats).Value;
                 }
 
-                var relicData = new Dictionary<string, string>();
-                foreach (var relic in relicDefinition!.RelicTierDefinitionIds.OrderBy(s => s[^1..] + 2))
-                {
-                    var id = int.Parse(relic[^1..]) + 2;
-                    relicData[id.ToString()] = relic;
-                }
+                var relicData = relicDefinition!.RelicTierDefinitionIds
+                    .Select(id => new
+                    {
+                        Id = id,
+                        Tier = GetTier(id)
+                    })
+                    .OrderBy(r => r.Tier)
+                    .ToDictionary(
+                        r => (r.Tier + 2).ToString(),
+                        r => r.Id);
+
                 unitData[baseId!] =
                     Create(
                         baseId!,
@@ -335,7 +340,11 @@ public sealed partial class UnitData : ValueObject
         }
         return unitData;
     }
-
+    private static int GetTier(string relicId)
+    {
+        var parts = relicId.Split('_');
+        return int.Parse(parts[^1]);
+    }
     private static string FetchMasteryMultiplierName(string primaryStatId, List<string> tags)
     {
         var primaryStats = new Dictionary<string, string>
