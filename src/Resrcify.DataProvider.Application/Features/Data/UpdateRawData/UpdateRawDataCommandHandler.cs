@@ -24,15 +24,22 @@ internal sealed class UpdateRawDataCommandHandler(
 {
     public async Task<Result> Handle(UpdateRawDataCommand request, CancellationToken cancellationToken)
     {
-        var gameDataResponse = await _api.GetGameData(
-            request.MetadataResponse,
+        var metaDataResponse = await _api.GetMetadata(
             cancellationToken: cancellationToken);
-        var localizationResponse = await _api.GetLocalization(
-            request.MetadataResponse,
-            cancellationToken);
+        if (metaDataResponse.IsFailure)
+            return metaDataResponse;
+
+        var gameDataResponse = await _api.GetGameData(
+            metaDataResponse.Value,
+            cancellationToken: cancellationToken);
 
         if (gameDataResponse.IsFailure)
             return gameDataResponse;
+
+        var localizationResponse = await _api.GetLocalization(
+            metaDataResponse.Value,
+            cancellationToken: cancellationToken);
+
         if (localizationResponse.IsFailure)
             return localizationResponse;
 
@@ -47,6 +54,37 @@ internal sealed class UpdateRawDataCommandHandler(
             baseDataDictionary,
             cancellationToken);
 
+        var errors = new List<Error>();
+        foreach (var key in localDictionary.Keys)
+        {
+            var local = await _caching.GetAsync<List<string>>(
+                $"{key}",
+                null,
+                cancellationToken);
+            if (local is null)
+            {
+                errors.Add(
+                    Error.Failure(
+                        "LocalizationCache.Empty",
+                        $"Failed to cache localization file: {key}"));
+            }
+        }
+        foreach (var key in baseDataDictionary.Keys)
+        {
+            var baseData = await _caching.GetAsync<BaseData>(
+                $"BaseData-{key}",
+                JsonSerializerExtensions.GetDomainSerializerOptions(),
+                cancellationToken);
+            if (baseData is null)
+            {
+                errors.Add(
+                    Error.Failure(
+                        "BaseDataCache.Empty",
+                        $"Failed to cache base data for locale: {key}"));
+            }
+        }
+        if (errors.Count > 0)
+            return Result.Failure([.. errors]);
         return Result.Success();
     }
 
@@ -63,7 +101,6 @@ internal sealed class UpdateRawDataCommandHandler(
 
         await Task.WhenAll(tasks);
     }
-
 
     private static Dictionary<string, Result<BaseData>> CreateBaseDataDictionary(
         GameDataResponse gameDataResponse,
@@ -83,7 +120,6 @@ internal sealed class UpdateRawDataCommandHandler(
                 item => item.Key,
                 item => item.Value);
 
-
     private static Dictionary<string, List<string>> CreateLocalizationDictionary(byte[]? localization)
     {
         if (localization is null)
@@ -100,15 +136,14 @@ internal sealed class UpdateRawDataCommandHandler(
         Dictionary<string, List<string>> localDictionary,
         CancellationToken cancellationToken = default)
     {
-        foreach (var (key, value) in localDictionary)
-        {
-            await _caching.SetAsync(
-                key,
-                value,
-                TimeSpan.MaxValue,
-                null,
-                cancellationToken);
-        }
+        var tasks = localDictionary.Select(kvp => _caching.SetAsync(
+            kvp.Key,
+            kvp.Value,
+            TimeSpan.MaxValue,
+            null,
+            cancellationToken));
+
+        await Task.WhenAll(tasks);
     }
 
     private static IEnumerable<string> GetContents(ZipArchiveEntry e)

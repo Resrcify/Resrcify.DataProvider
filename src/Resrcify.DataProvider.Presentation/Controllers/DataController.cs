@@ -9,7 +9,6 @@ using Resrcify.SharedKernel.Web.Primitives;
 using Resrcify.DataProvider.Application.Features.Data.UpdateRawData;
 using Resrcify.DataProvider.Application.Features.Data.GetCachedBaseData;
 using Resrcify.DataProvider.Application.Features.Data.GetCachedLocalizationData;
-using Resrcify.DataProvider.Application.Features.Data.GetMetadataVersion;
 
 namespace Resrcify.DataProvider.Presentation.Controllers;
 
@@ -22,12 +21,9 @@ internal sealed class DataController(
     public async Task<IResult> UpdateRawData(
         CancellationToken cancellationToken = default)
         => await Result
-            .Create(new GetMetadataVersionQuery())
+            .Create(new UpdateRawDataCommand())
             .Bind(request => Sender.Send(
                 request,
-                cancellationToken))
-            .Bind(response => Sender.Send(
-                new UpdateRawDataCommand(response),
                 cancellationToken))
             .Match(Results.NoContent, ToProblemDetails);
 

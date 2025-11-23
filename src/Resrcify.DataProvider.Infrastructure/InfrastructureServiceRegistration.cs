@@ -35,7 +35,7 @@ public static class InfrastructureServiceRegistration
             return handler;
         });
 
-        services.AddDistributedMemoryCache();
+        services.AddDistributedMemoryCache(options => options.SizeLimit = 1024 * 1024 * 1024);
         services.AddSingleton<ICachingService, DistributedCachingService>();
 
         services.AddQuartz();
@@ -45,11 +45,9 @@ public static class InfrastructureServiceRegistration
     }
 
     private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
-    {
-        return HttpPolicyExtensions
+        => HttpPolicyExtensions
             .HandleTransientHttpError()
             .OrResult(msg => msg.StatusCode == HttpStatusCode.TooManyRequests)
             .OrResult(msg => msg.StatusCode == HttpStatusCode.Unauthorized)
             .WaitAndRetryAsync(6, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
-    }
 }
