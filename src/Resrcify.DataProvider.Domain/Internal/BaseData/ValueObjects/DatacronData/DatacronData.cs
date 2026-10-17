@@ -199,11 +199,20 @@ public sealed partial class DatacronData : ValueObject
         return datacronDataDict;
     }
 
+    /// <remarks>
+    /// The game leaves <c>stat_type</c> unset on an ability affix, and since the proto2 contract
+    /// (Resrcify.SwgohApi 3.12.0) an unset <c>DatacronAffixTemplate.stat_type</c> reads as the game's declared
+    /// default, <c>UNITSTATMAXHEALTH</c> (1), instead of 0. <c>StatType</c> no longer tells the two kinds apart; the
+    /// ability id does, since only an ability affix carries one.
+    /// </remarks>
     private static void AddStats(
         Dictionary<int, StatEnum> stats,
         Dictionary<string, Stat> datacronStats,
         DatacronAffixTemplate affixValue)
     {
+        if (!string.IsNullOrEmpty(affixValue.AbilityId))
+            return;
+
         if (affixValue.StatType > 0 && stats.TryGetValue((int)affixValue.StatType, out var stat))
         {
             var statValue = Stat.Create((int)affixValue.StatType, stat.EnumNameKey, affixValue.ScopeIcon ?? string.Empty);

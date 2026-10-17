@@ -1,0 +1,1557 @@
+{
+ "id": "00000000-0000-0000-0000-000000000036",
+ "datacrons": {
+  "datacron_set_36_base": {
+   "id": "datacron_set_36_base",
+   "setId": 36,
+   "isFocused": false,
+   "nameKey": "The Legend Codex",
+   "iconKey": "tex.datacron_d",
+   "detailPrefab": "prefab.datacron_c",
+   "expirationTimeMs": 1800432000000,
+   "allowReroll": true,
+   "initialTiers": 0,
+   "maxRerolls": 0,
+   "referenceTemplateId": "",
+   "setMaterial": [],
+   "fixedTag": [],
+   "setTier": [
+    {
+     "id": 0,
+     "upgradeCostRecipeId": "",
+     "dustGrantRecipeId": "datacron_set_36_dust_grant_t0",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 1,
+     "upgradeCostRecipeId": "datacron_set_36_upgrade_cost_t1",
+     "dustGrantRecipeId": "datacron_set_36_dust_grant_t1",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": [
+      "datacron_set_36_reroll_cost_a_1",
+      "datacron_set_36_reroll_cost_a_2",
+      "datacron_set_36_reroll_cost_a_3",
+      "datacron_set_36_reroll_cost_a_4",
+      "datacron_set_36_reroll_cost_a_5"
+     ]
+    },
+    {
+     "id": 2,
+     "upgradeCostRecipeId": "datacron_set_36_upgrade_cost_t2",
+     "dustGrantRecipeId": "datacron_set_36_dust_grant_t2",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": [
+      "datacron_set_36_reroll_cost_a_1",
+      "datacron_set_36_reroll_cost_a_2",
+      "datacron_set_36_reroll_cost_a_3",
+      "datacron_set_36_reroll_cost_a_4",
+      "datacron_set_36_reroll_cost_a_5"
+     ]
+    },
+    {
+     "id": 3,
+     "upgradeCostRecipeId": "datacron_set_36_upgrade_cost_t3",
+     "dustGrantRecipeId": "datacron_set_36_dust_grant_t3",
+     "scopeIdentifier": 2,
+     "rerollCostRecipeIds": [
+      "datacron_set_36_reroll_cost_a_1",
+      "datacron_set_36_reroll_cost_a_2",
+      "datacron_set_36_reroll_cost_a_3",
+      "datacron_set_36_reroll_cost_a_4",
+      "datacron_set_36_reroll_cost_a_5"
+     ]
+    },
+    {
+     "id": 4,
+     "upgradeCostRecipeId": "datacron_set_36_upgrade_cost_t4",
+     "dustGrantRecipeId": "datacron_set_36_dust_grant_t4",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": [
+      "datacron_set_36_reroll_cost_b_1",
+      "datacron_set_36_reroll_cost_b_2",
+      "datacron_set_36_reroll_cost_b_3",
+      "datacron_set_36_reroll_cost_b_4",
+      "datacron_set_36_reroll_cost_b_5"
+     ]
+    },
+    {
+     "id": 5,
+     "upgradeCostRecipeId": "datacron_set_36_upgrade_cost_t5",
+     "dustGrantRecipeId": "datacron_set_36_dust_grant_t5",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": [
+      "datacron_set_36_reroll_cost_b_1",
+      "datacron_set_36_reroll_cost_b_2",
+      "datacron_set_36_reroll_cost_b_3",
+      "datacron_set_36_reroll_cost_b_4",
+      "datacron_set_36_reroll_cost_b_5"
+     ]
+    },
+    {
+     "id": 6,
+     "upgradeCostRecipeId": "datacron_set_36_upgrade_cost_t6",
+     "dustGrantRecipeId": "datacron_set_36_dust_grant_t6",
+     "scopeIdentifier": 3,
+     "rerollCostRecipeIds": [
+      "datacron_set_36_reroll_cost_b_1",
+      "datacron_set_36_reroll_cost_b_2",
+      "datacron_set_36_reroll_cost_b_3",
+      "datacron_set_36_reroll_cost_b_4",
+      "datacron_set_36_reroll_cost_b_5"
+     ]
+    },
+    {
+     "id": 7,
+     "upgradeCostRecipeId": "datacron_set_36_upgrade_cost_t7",
+     "dustGrantRecipeId": "datacron_set_36_dust_grant_t7",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": [
+      "datacron_set_36_reroll_cost_c_1",
+      "datacron_set_36_reroll_cost_c_2",
+      "datacron_set_36_reroll_cost_c_3",
+      "datacron_set_36_reroll_cost_c_4",
+      "datacron_set_36_reroll_cost_c_5"
+     ]
+    },
+    {
+     "id": 8,
+     "upgradeCostRecipeId": "datacron_set_36_upgrade_cost_t8",
+     "dustGrantRecipeId": "datacron_set_36_dust_grant_t8",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": [
+      "datacron_set_36_reroll_cost_c_1",
+      "datacron_set_36_reroll_cost_c_2",
+      "datacron_set_36_reroll_cost_c_3",
+      "datacron_set_36_reroll_cost_c_4",
+      "datacron_set_36_reroll_cost_c_5"
+     ]
+    },
+    {
+     "id": 9,
+     "upgradeCostRecipeId": "datacron_set_36_upgrade_cost_t9",
+     "dustGrantRecipeId": "datacron_set_36_dust_grant_t9",
+     "scopeIdentifier": 4,
+     "rerollCostRecipeIds": [
+      "datacron_set_36_reroll_cost_c_1",
+      "datacron_set_36_reroll_cost_c_2",
+      "datacron_set_36_reroll_cost_c_3",
+      "datacron_set_36_reroll_cost_c_4",
+      "datacron_set_36_reroll_cost_c_5"
+     ]
+    }
+   ],
+   "tier": [
+    {
+     "id": 1,
+     "requiredUnitTier": 2,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_001"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 2,
+     "requiredUnitTier": 2,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_001"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 3,
+     "requiredUnitTier": 2,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "ability_set_darkside_generic_036",
+      "ability_set_lightside_generic_037"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 4,
+     "requiredUnitTier": 4,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_002"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 5,
+     "requiredUnitTier": 4,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_002"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 6,
+     "requiredUnitTier": 0,
+     "requiredRelicTier": 6,
+     "affixTemplateSetIds": [
+      "ability_set_jedi_005",
+      "ability_set_bountyhunters_002"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 7,
+     "requiredUnitTier": 0,
+     "requiredRelicTier": 8,
+     "affixTemplateSetIds": [
+      "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_003"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 8,
+     "requiredUnitTier": 0,
+     "requiredRelicTier": 8,
+     "affixTemplateSetIds": [
+      "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_003"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 9,
+     "requiredUnitTier": 0,
+     "requiredRelicTier": 8,
+     "affixTemplateSetIds": [
+      "ability_set_bossk_003",
+      "ability_set_bobafettscion_001"
+     ],
+     "initialAffixTemplateSetIds": []
+    }
+   ],
+   "affixSet": [
+    {
+     "id": "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_001",
+     "affixs": [
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 49,
+       "statValueMin": 25000000,
+       "statValueMax": 50000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_armor",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 56,
+       "statValueMin": 5000000,
+       "statValueMax": 10000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_protection",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 55,
+       "statValueMin": 5000000,
+       "statValueMax": 10000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_maxhealth",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 48,
+       "statValueMin": 1000000,
+       "statValueMax": 5000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_damage",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 25,
+       "statValueMin": 35000000,
+       "statValueMax": 50000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_penetration",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 16,
+       "statValueMin": 10000000,
+       "statValueMax": 25000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_criticaldamage",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 18,
+       "statValueMin": 10000000,
+       "statValueMax": 25000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_tenacity",
+       "tags": []
+      }
+     ]
+    },
+    {
+     "id": "ability_set_darkside_generic_036",
+     "affixs": [
+      {
+       "abilityId": "datacron_alignment_generic_036",
+       "targetRule": "target_datacron_darkside",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_darkside",
+       "tags": [
+        "darkside"
+       ]
+      },
+      {
+       "abilityId": "datacron_alignment_generic_017",
+       "targetRule": "target_datacron_darkside",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_darkside",
+       "tags": [
+        "darkside"
+       ]
+      },
+      {
+       "abilityId": "datacron_alignment_generic_008",
+       "targetRule": "target_datacron_darkside",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_darkside",
+       "tags": [
+        "darkside"
+       ]
+      },
+      {
+       "abilityId": "datacron_alignment_generic_020",
+       "targetRule": "target_datacron_darkside",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_darkside",
+       "tags": [
+        "darkside"
+       ]
+      },
+      {
+       "abilityId": "datacron_alignment_dark_001",
+       "targetRule": "target_datacron_darkside",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_darkside",
+       "tags": [
+        "darkside"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "ability_set_lightside_generic_037",
+     "affixs": [
+      {
+       "abilityId": "datacron_alignment_generic_012",
+       "targetRule": "target_datacron_lightside",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_lightside",
+       "tags": [
+        "lightside"
+       ]
+      },
+      {
+       "abilityId": "datacron_alignment_generic_015",
+       "targetRule": "target_datacron_lightside",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_lightside",
+       "tags": [
+        "lightside"
+       ]
+      },
+      {
+       "abilityId": "datacron_alignment_generic_035",
+       "targetRule": "target_datacron_lightside",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_lightside",
+       "tags": [
+        "lightside"
+       ]
+      },
+      {
+       "abilityId": "datacron_alignment_generic_032",
+       "targetRule": "target_datacron_lightside",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_lightside",
+       "tags": [
+        "lightside"
+       ]
+      },
+      {
+       "abilityId": "datacron_alignment_light_001",
+       "targetRule": "target_datacron_lightside",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_lightside",
+       "tags": [
+        "lightside"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_002",
+     "affixs": [
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 49,
+       "statValueMin": 50000000,
+       "statValueMax": 75000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_armor",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 56,
+       "statValueMin": 10000000,
+       "statValueMax": 20000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_protection",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 55,
+       "statValueMin": 10000000,
+       "statValueMax": 20000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_maxhealth",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 48,
+       "statValueMin": 5000000,
+       "statValueMax": 10000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_damage",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 25,
+       "statValueMin": 50000000,
+       "statValueMax": 70000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_penetration",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 16,
+       "statValueMin": 25000000,
+       "statValueMax": 35000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_criticaldamage",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 18,
+       "statValueMin": 25000000,
+       "statValueMax": 35000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_tenacity",
+       "tags": []
+      }
+     ]
+    },
+    {
+     "id": "ability_set_jedi_005",
+     "affixs": [
+      {
+       "abilityId": "datacron_faction_generic_023",
+       "targetRule": "target_datacron_jedi",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_jedi",
+       "tags": [
+        "lightside",
+        "jedi"
+       ]
+      },
+      {
+       "abilityId": "datacron_faction_generic_021",
+       "targetRule": "target_datacron_jedi",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_jedi",
+       "tags": [
+        "lightside",
+        "jedi"
+       ]
+      },
+      {
+       "abilityId": "datacron_faction_generic_025",
+       "targetRule": "target_datacron_jedi",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_jedi",
+       "tags": [
+        "lightside",
+        "jedi"
+       ]
+      },
+      {
+       "abilityId": "datacron_faction_jedi_001",
+       "targetRule": "target_datacron_jedi",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_jedi",
+       "tags": [
+        "lightside",
+        "jedi"
+       ]
+      },
+      {
+       "abilityId": "datacron_faction_jedi_003",
+       "targetRule": "target_datacron_jedi",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_jedi",
+       "tags": [
+        "lightside",
+        "jedi"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "ability_set_bountyhunters_002",
+     "affixs": [
+      {
+       "abilityId": "datacron_faction_generic_007",
+       "targetRule": "target_datacron_bountyhunter",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_bountyhunter",
+       "tags": [
+        "bountyhunter",
+        "darkside"
+       ]
+      },
+      {
+       "abilityId": "datacron_faction_generic_004",
+       "targetRule": "target_datacron_bountyhunter",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_bountyhunter",
+       "tags": [
+        "bountyhunter",
+        "darkside"
+       ]
+      },
+      {
+       "abilityId": "datacron_faction_generic_013",
+       "targetRule": "target_datacron_bountyhunter",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_bountyhunter",
+       "tags": [
+        "bountyhunter",
+        "darkside"
+       ]
+      },
+      {
+       "abilityId": "datacron_faction_generic_037",
+       "targetRule": "target_datacron_bountyhunter",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_bountyhunter",
+       "tags": [
+        "bountyhunter",
+        "darkside"
+       ]
+      },
+      {
+       "abilityId": "datacron_faction_bountyhunter_004",
+       "targetRule": "target_datacron_bountyhunter",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.datacronui_affix_bountyhunter",
+       "tags": [
+        "bountyhunter",
+        "darkside"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_003",
+     "affixs": [
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 49,
+       "statValueMin": 75000000,
+       "statValueMax": 100000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_armor",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 56,
+       "statValueMin": 20000000,
+       "statValueMax": 35000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_protection",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 55,
+       "statValueMin": 20000000,
+       "statValueMax": 35000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_maxhealth",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 48,
+       "statValueMin": 10000000,
+       "statValueMax": 20000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_damage",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 25,
+       "statValueMin": 70000000,
+       "statValueMax": 100000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_penetration",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 16,
+       "statValueMin": 35000000,
+       "statValueMax": 45000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_criticaldamage",
+       "tags": []
+      },
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 18,
+       "statValueMin": 35000000,
+       "statValueMax": 45000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_tenacity",
+       "tags": []
+      }
+     ]
+    },
+    {
+     "id": "ability_set_bossk_003",
+     "affixs": [
+      {
+       "abilityId": "datacron_character_generic_049",
+       "targetRule": "target_datacron_bossk",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.charui_bossk",
+       "tags": [
+        "bountyhunter",
+        "darkside"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "ability_set_bobafettscion_001",
+     "affixs": [
+      {
+       "abilityId": "datacron_character_bobafettscion_002",
+       "targetRule": "target_datacron_bobafettscion",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.charui_bobafettold",
+       "tags": [
+        "bountyhunter",
+        "darkside"
+       ]
+      }
+     ]
+    }
+   ],
+   "abilities": {
+    "datacron_alignment_generic_036": {
+     "id": "datacron_alignment_generic_036",
+     "targets": {
+      "target_datacron_darkside": {
+       "id": "target_datacron_darkside",
+       "nameKey": "Bonus mechanics for Dark Side characters",
+       "descKey": "Whenever Dark Side allies resist a debuff, they recover 10% Health and Protection.",
+       "iconKey": "tex.datacronui_affix_darkside",
+       "unit": null
+      }
+     }
+    },
+    "datacron_alignment_generic_017": {
+     "id": "datacron_alignment_generic_017",
+     "targets": {
+      "target_datacron_darkside": {
+       "id": "target_datacron_darkside",
+       "nameKey": "Bonus mechanics for Dark Side characters",
+       "descKey": "Whenever Dark Side allies are dispelled, at the end of that turn they gain Potency Up and Tenacity Up for 2 turns.",
+       "iconKey": "tex.datacronui_affix_darkside",
+       "unit": null
+      }
+     }
+    },
+    "datacron_alignment_generic_008": {
+     "id": "datacron_alignment_generic_008",
+     "targets": {
+      "target_datacron_darkside": {
+       "id": "target_datacron_darkside",
+       "nameKey": "Bonus mechanics for Dark Side characters",
+       "descKey": "Whenever Dark Side allies gain Tenacity Up, they gain Protection Up (10%, stacking) for 2 turns.",
+       "iconKey": "tex.datacronui_affix_darkside",
+       "unit": null
+      }
+     }
+    },
+    "datacron_alignment_generic_020": {
+     "id": "datacron_alignment_generic_020",
+     "targets": {
+      "target_datacron_darkside": {
+       "id": "target_datacron_darkside",
+       "nameKey": "Bonus mechanics for Dark Side characters",
+       "descKey": "Whenever Dark Side allies inflict Damage Over Time on an enemy, they gain a stack of Protection Up (5%, stacking) until the end of the encounter.",
+       "iconKey": "tex.datacronui_affix_darkside",
+       "unit": null
+      }
+     }
+    },
+    "datacron_alignment_dark_001": {
+     "id": "datacron_alignment_dark_001",
+     "targets": {
+      "target_datacron_darkside": {
+       "id": "target_datacron_darkside",
+       "nameKey": "Bonus mechanics for Dark Side characters",
+       "descKey": "The first time each Dark Side ally reaches 90%, 70%, and 50% Health inflict Doubt on a random enemy that doesn't have it for 2 turns, which can't be dispelled or prevented.",
+       "iconKey": "tex.datacronui_affix_darkside",
+       "unit": null
+      }
+     }
+    },
+    "datacron_alignment_generic_012": {
+     "id": "datacron_alignment_generic_012",
+     "targets": {
+      "target_datacron_lightside": {
+       "id": "target_datacron_lightside",
+       "nameKey": "Bonus mechanics for Light Side characters",
+       "descKey": "Whenever Light Side allies are evaded by an enemy, that ally gains Accuracy Up for 2 turns, and they inflict Evasion Down for 2 turns on that enemy, which can't be evaded.",
+       "iconKey": "tex.datacronui_affix_lightside",
+       "unit": null
+      }
+     }
+    },
+    "datacron_alignment_generic_015": {
+     "id": "datacron_alignment_generic_015",
+     "targets": {
+      "target_datacron_lightside": {
+       "id": "target_datacron_lightside",
+       "nameKey": "Bonus mechanics for Light Side characters",
+       "descKey": "Whenever Light Side allies evade an attack, they gain Offense Up for 1 turn.",
+       "iconKey": "tex.datacronui_affix_lightside",
+       "unit": null
+      }
+     }
+    },
+    "datacron_alignment_generic_035": {
+     "id": "datacron_alignment_generic_035",
+     "targets": {
+      "target_datacron_lightside": {
+       "id": "target_datacron_lightside",
+       "nameKey": "Bonus mechanics for Light Side characters",
+       "descKey": "Whenever Light Side allies evade an attack, they gain 5% Max Health and Max Protection until the end of battle.",
+       "iconKey": "tex.datacronui_affix_lightside",
+       "unit": null
+      }
+     }
+    },
+    "datacron_alignment_generic_032": {
+     "id": "datacron_alignment_generic_032",
+     "targets": {
+      "target_datacron_lightside": {
+       "id": "target_datacron_lightside",
+       "nameKey": "Bonus mechanics for Light Side characters",
+       "descKey": "Whenever Light Side allies grant a buff to another ally, that ally gains 5% Turn Meter (limit once per turn per ally).",
+       "iconKey": "tex.datacronui_affix_lightside",
+       "unit": null
+      }
+     }
+    },
+    "datacron_alignment_light_001": {
+     "id": "datacron_alignment_light_001",
+     "targets": {
+      "target_datacron_lightside": {
+       "id": "target_datacron_lightside",
+       "nameKey": "Bonus mechanics for Light Side characters",
+       "descKey": "The first time each Light Side ally reaches 75%, 50%, and 25% Health grant them Protection Up (50%) for 2 turns, which can't be dispelled or prevented.",
+       "iconKey": "tex.datacronui_affix_lightside",
+       "unit": null
+      }
+     }
+    },
+    "datacron_faction_generic_023": {
+     "id": "datacron_faction_generic_023",
+     "targets": {
+      "target_datacron_jedi": {
+       "id": "target_datacron_jedi",
+       "nameKey": "Bonus mechanics for Jedi characters",
+       "descKey": "At the start of battle, Jedi allies gain Retribution for 3 turns, which can't be dispelled.",
+       "iconKey": "tex.datacronui_affix_jedi",
+       "unit": null
+      }
+     }
+    },
+    "datacron_faction_generic_021": {
+     "id": "datacron_faction_generic_021",
+     "targets": {
+      "target_datacron_jedi": {
+       "id": "target_datacron_jedi",
+       "nameKey": "Bonus mechanics for Jedi characters",
+       "descKey": "At the start of each Jedi ally's turn, if they have not taken damage since their last turn, they gain Critical Chance Up and Offense Up for 1 turn.",
+       "iconKey": "tex.datacronui_affix_jedi",
+       "unit": null
+      }
+     }
+    },
+    "datacron_faction_generic_025": {
+     "id": "datacron_faction_generic_025",
+     "targets": {
+      "target_datacron_jedi": {
+       "id": "target_datacron_jedi",
+       "nameKey": "Bonus mechanics for Jedi characters",
+       "descKey": "Whenever a Jedi ally has full Health and Protection at the start of their turn, they deal +100% more Damage on their turn.",
+       "iconKey": "tex.datacronui_affix_jedi",
+       "unit": null
+      }
+     }
+    },
+    "datacron_faction_jedi_001": {
+     "id": "datacron_faction_jedi_001",
+     "targets": {
+      "target_datacron_jedi": {
+       "id": "target_datacron_jedi",
+       "nameKey": "Bonus mechanics for Jedi characters",
+       "descKey": "Whenever a Jedi ally gains Foresight, they deal 20% more damage (stacking, max 100%) until the end of battle.",
+       "iconKey": "tex.datacronui_affix_jedi",
+       "unit": null
+      }
+     }
+    },
+    "datacron_faction_jedi_003": {
+     "id": "datacron_faction_jedi_003",
+     "targets": {
+      "target_datacron_jedi": {
+       "id": "target_datacron_jedi",
+       "nameKey": "Bonus mechanics for Jedi characters",
+       "descKey": "At the start of the battle, all Jedi allies have +50% counter chance.\\n\\nAt the start of their turn, Jedi dispel all debuffs on another random debuffed Jedi ally. If more than 5 debuffs were dispelled, they gain Defense Penetration Up and Offense Up for 2 turns, which can't be dispelled. If Ability Block, Daze, or Stun were dispelled, they gain Foresight for 2 turns, and 15% Turn Meter. While a Jedi ally has Foresight, they have +50% Critical Damage.",
+       "iconKey": "tex.datacronui_affix_jedi",
+       "unit": null
+      }
+     }
+    },
+    "datacron_faction_generic_007": {
+     "id": "datacron_faction_generic_007",
+     "targets": {
+      "target_datacron_bountyhunter": {
+       "id": "target_datacron_bountyhunter",
+       "nameKey": "Bonus mechanics for Bounty Hunter characters",
+       "descKey": "Whenever Bounty Hunter allies inflict a debuff on an enemy during their turn, they deal bonus damage equal to 10% of that enemy's Max Health, which can't be evaded.",
+       "iconKey": "tex.datacronui_affix_bountyhunter",
+       "unit": null
+      }
+     }
+    },
+    "datacron_faction_generic_004": {
+     "id": "datacron_faction_generic_004",
+     "targets": {
+      "target_datacron_bountyhunter": {
+       "id": "target_datacron_bountyhunter",
+       "nameKey": "Bonus mechanics for Bounty Hunter characters",
+       "descKey": "Whenever Bounty Hunter allies use a Special ability during their turn, they Stun target enemy for 1 turn, which can't be evaded or resisted.",
+       "iconKey": "tex.datacronui_affix_bountyhunter",
+       "unit": null
+      }
+     }
+    },
+    "datacron_faction_generic_013": {
+     "id": "datacron_faction_generic_013",
+     "targets": {
+      "target_datacron_bountyhunter": {
+       "id": "target_datacron_bountyhunter",
+       "nameKey": "Bonus mechanics for Bounty Hunter characters",
+       "descKey": "Whenever Bounty Hunter allies recover Health, they recover Protection equal to the amount of Health recovered. Bounty Hunter allies can't recover Protection this way more than once per turn or if their Health was full.",
+       "iconKey": "tex.datacronui_affix_bountyhunter",
+       "unit": null
+      }
+     }
+    },
+    "datacron_faction_generic_037": {
+     "id": "datacron_faction_generic_037",
+     "targets": {
+      "target_datacron_bountyhunter": {
+       "id": "target_datacron_bountyhunter",
+       "nameKey": "Bonus mechanics for Bounty Hunter characters",
+       "descKey": "Whenever a Bounty Hunter ally deals damage to an enemy and no other enemy is Marked, inflict Marked for 1 turn on the target enemy, which can't be evaded or resisted.",
+       "iconKey": "tex.datacronui_affix_bountyhunter",
+       "unit": null
+      }
+     }
+    },
+    "datacron_faction_bountyhunter_004": {
+     "id": "datacron_faction_bountyhunter_004",
+     "targets": {
+      "target_datacron_bountyhunter": {
+       "id": "target_datacron_bountyhunter",
+       "nameKey": "Bonus mechanics for Bounty Hunter characters",
+       "descKey": "At the start of battle, Bounty Hunter allies have +100% Defense.\\n\\nThe first time a Bounty Hunter ally loses all Protection: Bounty Hunter allies recover 50% Protection, gain 50% Offense, Potency, and 25 Speed until the end of battle. If the ally in the Leader slot is a Bounty Hunter, complete Payout for all Bounty Hunter allies.",
+       "iconKey": "tex.datacronui_affix_bountyhunter",
+       "unit": null
+      }
+     }
+    },
+    "datacron_character_generic_049": {
+     "id": "datacron_character_generic_049",
+     "targets": {
+      "target_datacron_bossk": {
+       "id": "target_datacron_bossk",
+       "nameKey": "Bonus mechanics for Bossk",
+       "descKey": "Whenever Bossk is dealt damage, reflect 50% of the damage dealt back onto the attacker as True damage, which can't be evaded. This damage can't defeat enemies.",
+       "iconKey": "tex.charui_bossk",
+       "unit": {
+        "baseId": "BOSSK",
+        "nameKey": "Bossk",
+        "combatType": 1
+       }
+      }
+     }
+    },
+    "datacron_character_bobafettscion_002": {
+     "id": "datacron_character_bobafettscion_002",
+     "targets": {
+      "target_datacron_bobafettscion": {
+       "id": "target_datacron_bobafettscion",
+       "nameKey": "Bonus mechanics for Boba Fett, Scion of Jango",
+       "descKey": "When Boba Fett, Scion of Jango, gains a stack of Momentum during his turn, Fennec Shand gains Tenacity Up for 2 turns, and all allies with Disciple gain 10% Turn Meter (once per turn). Whenever an ally with Disciple uses a Special ability, Boba Fett, Scion of Jango assists dealing 10% more damage.\\n\\nAt the start of Boba Fett, Scion of Jango's turn, all Bounty Hunter allies gain 1% Defense per stack of Momentum until the end of his next turn.",
+       "iconKey": "tex.charui_bobafettold",
+       "unit": {
+        "baseId": "BOBAFETTSCION",
+        "nameKey": "Boba Fett, Scion of Jango",
+        "combatType": 1
+       }
+      }
+     }
+    }
+   },
+   "stats": {
+    "16": {
+     "id": 16,
+     "nameKey": "UnitStat_CriticalDamage",
+     "iconKey": "icon_stat_criticaldamage"
+    },
+    "18": {
+     "id": 18,
+     "nameKey": "UnitStat_Resistance",
+     "iconKey": "icon_stat_tenacity"
+    },
+    "25": {
+     "id": 25,
+     "nameKey": "UnitStat_ArmorPenetrationPercentAdditive",
+     "iconKey": "icon_stat_penetration"
+    },
+    "48": {
+     "id": 48,
+     "nameKey": "UnitStat_OffensePercentAdditive",
+     "iconKey": "icon_stat_damage"
+    },
+    "49": {
+     "id": 49,
+     "nameKey": "UnitStat_DefensePercentAdditive",
+     "iconKey": "icon_stat_armor"
+    },
+    "55": {
+     "id": 55,
+     "nameKey": "UnitStat_MaxHealthPercentAdditive",
+     "iconKey": "icon_stat_maxhealth"
+    },
+    "56": {
+     "id": 56,
+     "nameKey": "UnitStat_MaxShieldPercentAdditive",
+     "iconKey": "icon_stat_protection"
+    }
+   }
+  },
+  "datacron_set_36_focused_jaxxon": {
+   "id": "datacron_set_36_focused_jaxxon",
+   "setId": 36,
+   "isFocused": true,
+   "nameKey": "The Legend Codex",
+   "iconKey": "tex.datacron_b_focused",
+   "detailPrefab": "prefab.datacron_b_focused",
+   "expirationTimeMs": 1800432000000,
+   "allowReroll": false,
+   "initialTiers": 0,
+   "maxRerolls": 0,
+   "referenceTemplateId": "",
+   "setMaterial": [],
+   "fixedTag": [
+    "jaxxon"
+   ],
+   "setTier": [
+    {
+     "id": 0,
+     "upgradeCostRecipeId": "",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t0",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 1,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t1",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t1",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 2,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t2",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t2",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 3,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t3",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t3",
+     "scopeIdentifier": 2,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 4,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t4",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t4",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 5,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t5",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t5",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 6,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t6",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t6",
+     "scopeIdentifier": 2,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 7,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t7",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t7",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 8,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t8",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t8",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 9,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t9",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t9",
+     "scopeIdentifier": 2,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 10,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t10",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t10",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 11,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t11",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t11",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 12,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t12",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t12",
+     "scopeIdentifier": 2,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 13,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t13",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t13",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 14,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t14",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t14",
+     "scopeIdentifier": 1,
+     "rerollCostRecipeIds": []
+    },
+    {
+     "id": 15,
+     "upgradeCostRecipeId": "datacron_set_36_focused_upgrade_cost_t15",
+     "dustGrantRecipeId": "datacron_set_36_focused_dust_grant_t15",
+     "scopeIdentifier": 4,
+     "rerollCostRecipeIds": []
+    }
+   ],
+   "tier": [
+    {
+     "id": 1,
+     "requiredUnitTier": 1,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "stat_set_focused_offense_15"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 2,
+     "requiredUnitTier": 1,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "stat_set_focused_criticaldamage_20"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 3,
+     "requiredUnitTier": 1,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "ability_set_jaxxon_administratorlando_001"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 4,
+     "requiredUnitTier": 2,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "stat_set_focused_offense_20"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 5,
+     "requiredUnitTier": 2,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "stat_set_focused_criticaldamage_25"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 6,
+     "requiredUnitTier": 2,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "ability_set_jaxxon_younglando_001"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 7,
+     "requiredUnitTier": 3,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "stat_set_focused_health_50"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 8,
+     "requiredUnitTier": 3,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "stat_set_focused_protection_50"
+     ],
+     "initialAffixTemplateSetIds": []
+    },
+    {
+     "id": 9,
+     "requiredUnitTier": 3,
+     "requiredRelicTier": 1,
+     "affixTemplateSetIds": [
+      "ability_set_jaxxon_001"
+     ],
+     "initialAffixTemplateSetIds": []
+    }
+   ],
+   "affixSet": [
+    {
+     "id": "stat_set_focused_offense_15",
+     "affixs": [
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 48,
+       "statValueMin": 15000000,
+       "statValueMax": 15000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_damage",
+       "tags": []
+      }
+     ]
+    },
+    {
+     "id": "stat_set_focused_criticaldamage_20",
+     "affixs": [
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 16,
+       "statValueMin": 20000000,
+       "statValueMax": 20000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_criticaldamage",
+       "tags": []
+      }
+     ]
+    },
+    {
+     "id": "ability_set_jaxxon_administratorlando_001",
+     "affixs": [
+      {
+       "abilityId": "datacron_character_adminitratorlando_002",
+       "targetRule": "target_datacron_administratorlando",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.charui_landobespin",
+       "tags": [
+        "jaxxon"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "stat_set_focused_offense_20",
+     "affixs": [
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 48,
+       "statValueMin": 20000000,
+       "statValueMax": 20000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_damage",
+       "tags": []
+      }
+     ]
+    },
+    {
+     "id": "stat_set_focused_criticaldamage_25",
+     "affixs": [
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 16,
+       "statValueMin": 25000000,
+       "statValueMax": 25000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_criticaldamage",
+       "tags": []
+      }
+     ]
+    },
+    {
+     "id": "ability_set_jaxxon_younglando_001",
+     "affixs": [
+      {
+       "abilityId": "datacron_character_generic_025",
+       "targetRule": "target_datacron_younglando",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.charui_younglando",
+       "tags": [
+        "jaxxon"
+       ]
+      }
+     ]
+    },
+    {
+     "id": "stat_set_focused_health_50",
+     "affixs": [
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 55,
+       "statValueMin": 50000000,
+       "statValueMax": 50000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_maxhealth",
+       "tags": []
+      }
+     ]
+    },
+    {
+     "id": "stat_set_focused_protection_50",
+     "affixs": [
+      {
+       "abilityId": "",
+       "targetRule": "",
+       "statType": 56,
+       "statValueMin": 50000000,
+       "statValueMax": 50000000,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "icon_stat_protection",
+       "tags": []
+      }
+     ]
+    },
+    {
+     "id": "ability_set_jaxxon_001",
+     "affixs": [
+      {
+       "abilityId": "datacron_character_jaxxon_001",
+       "targetRule": "target_datacron_jaxxon",
+       "statType": 1,
+       "statValueMin": 0,
+       "statValueMax": 0,
+       "minTier": 0,
+       "maxTier": 0,
+       "scopeIcon": "tex.charui_jaxxon",
+       "tags": [
+        "jaxxon"
+       ]
+      }
+     ]
+    }
+   ],
+   "abilities": {
+    "datacron_character_adminitratorlando_002": {
+     "id": "datacron_character_adminitratorlando_002",
+     "targets": {
+      "target_datacron_administratorlando": {
+       "id": "target_datacron_administratorlando",
+       "nameKey": "Bonus mechanics for Lando Calrissian",
+       "descKey": "Whenever Lando Calrissian scores a critical hit, Double Down deals 50% more damage (stacking, max 300%) for the rest of the battle.",
+       "iconKey": "tex.charui_landobespin",
+       "unit": {
+        "baseId": "ADMINISTRATORLANDO",
+        "nameKey": "Lando Calrissian",
+        "combatType": 1
+       }
+      }
+     }
+    },
+    "datacron_character_generic_025": {
+     "id": "datacron_character_generic_025",
+     "targets": {
+      "target_datacron_younglando": {
+       "id": "target_datacron_younglando",
+       "nameKey": "Bonus mechanics for Young Lando Calrissian",
+       "descKey": "Young Lando Calrissian gains 15% Turn Meter when other allies use a Special ability on their turn.",
+       "iconKey": "tex.charui_younglando",
+       "unit": {
+        "baseId": "YOUNGLANDO",
+        "nameKey": "Young Lando Calrissian",
+        "combatType": 1
+       }
+      }
+     }
+    },
+    "datacron_character_jaxxon_001": {
+     "id": "datacron_character_jaxxon_001",
+     "targets": {
+      "target_datacron_jaxxon": {
+       "id": "target_datacron_jaxxon",
+       "nameKey": "Bonus mechanics for Jaxxon",
+       "descKey": "At the start of the battle:\\n\\n- Scoundrel Tank allies have 200% Defense until the end of battle and gain Critical Hit Immunity\u00a0for 2 turns.\\n- Scoundrel Attacker allies have 100% Health Steal.\\n- Scoundrel Support allies have 100% Max Health and Max Protection.\\n\\nWhenever Jaxxon deals damage to a Stunned enemy, he deals 100% bonus damage, and all allies recover 25% Health and Protection. Whenever an ally with Prepared uses their Special ability, Jaxxon assists.",
+       "iconKey": "tex.charui_jaxxon",
+       "unit": {
+        "baseId": "JAXXON",
+        "nameKey": "Jaxxon",
+        "combatType": 1
+       }
+      }
+     }
+    }
+   },
+   "stats": {
+    "16": {
+     "id": 16,
+     "nameKey": "UnitStat_CriticalDamage",
+     "iconKey": "icon_stat_criticaldamage"
+    },
+    "48": {
+     "id": 48,
+     "nameKey": "UnitStat_OffensePercentAdditive",
+     "iconKey": "icon_stat_damage"
+    },
+    "55": {
+     "id": 55,
+     "nameKey": "UnitStat_MaxHealthPercentAdditive",
+     "iconKey": "icon_stat_maxhealth"
+    },
+    "56": {
+     "id": 56,
+     "nameKey": "UnitStat_MaxShieldPercentAdditive",
+     "iconKey": "icon_stat_protection"
+    }
+   }
+  }
+ }
+}

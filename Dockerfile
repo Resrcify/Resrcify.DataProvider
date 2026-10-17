@@ -26,7 +26,8 @@ COPY ".editorconfig" .
 COPY "Directory.Build.props" .
 COPY "Directory.Packages.props" .
 
-RUN dotnet restore
+# Restore and publish the host only: the solution also lists the test projects, which the image doesn't copy.
+RUN dotnet restore src/Resrcify.DataProvider.Web/Resrcify.DataProvider.Web.csproj
 
 COPY src/ src/
 
@@ -34,7 +35,7 @@ FROM build AS debug-build
 RUN apt-get update && \
     apt-get install -y --no-install-recommends unzip && \
     rm -rf /var/lib/apt/lists/*
-RUN dotnet publish -c Debug --property:PublishDir=/app/publish --no-restore
+RUN dotnet publish src/Resrcify.DataProvider.Web/Resrcify.DataProvider.Web.csproj -c Debug --property:PublishDir=/app/publish --no-restore
 RUN curl -sSL https://aka.ms/getvsdbgsh | /bin/sh /dev/stdin -v latest -l /app/vsdbg
 
 FROM base AS debug
@@ -44,7 +45,7 @@ COPY --from=debug-build /app/vsdbg /app/vsdbg
 ENTRYPOINT ["dotnet", "Resrcify.DataProvider.Web.dll"]
 
 FROM build AS release-build
-RUN dotnet publish -c Release --property:PublishDir=/app/publish --no-restore
+RUN dotnet publish src/Resrcify.DataProvider.Web/Resrcify.DataProvider.Web.csproj -c Release --property:PublishDir=/app/publish --no-restore
 
 FROM base AS release
 COPY --from=release-build /app/publish .
