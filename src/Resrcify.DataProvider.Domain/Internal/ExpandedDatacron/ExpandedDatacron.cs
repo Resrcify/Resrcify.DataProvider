@@ -90,15 +90,21 @@ public sealed class ExpandedDatacron
             int tier = 1;
             foreach (var playerAffix in playerDatacron.Affixs)
             {
-                if (!string.IsNullOrEmpty(playerAffix.AbilityId) &&
-                    !string.IsNullOrEmpty(playerAffix.TargetRule) &&
-                    gameDataDatacron.Abilities.TryGetValue(playerAffix.AbilityId, out var gameDataAbility) &&
-                    gameDataAbility.Targets.TryGetValue(playerAffix.TargetRule, out var gameDataAbilityTarget))
+                // An ability affix carries an ability id and no stat type. Since the proto2 contract
+                // (Resrcify.SwgohApi 3.12.0) its unset stat_type reads as UNITSTATMAXHEALTH (1), so an ability
+                // affix the game data has no ability for is skipped rather than taken for a Health stat. Its tier
+                // still counts as activated.
+                if (!string.IsNullOrEmpty(playerAffix.AbilityId))
                 {
-                    var ability = AbilityTier.Create(tier, playerAffix, gameDataAbilityTarget);
-                    if (ability.IsFailure)
-                        continue;
-                    abilites.Add(ability.Value);
+                    if (!string.IsNullOrEmpty(playerAffix.TargetRule) &&
+                        gameDataDatacron.Abilities.TryGetValue(playerAffix.AbilityId, out var gameDataAbility) &&
+                        gameDataAbility.Targets.TryGetValue(playerAffix.TargetRule, out var gameDataAbilityTarget))
+                    {
+                        var ability = AbilityTier.Create(tier, playerAffix, gameDataAbilityTarget);
+                        if (ability.IsFailure)
+                            continue;
+                        abilites.Add(ability.Value);
+                    }
                 }
                 else
                 {
@@ -109,7 +115,7 @@ public sealed class ExpandedDatacron
                 }
                 tier++;
             }
-            var activatedTiers = stats.Count + abilites.Count;
+            var activatedTiers = tier - 1;
             var expandedDatacron = Create(
                 id,
                 playerDatacron.TemplateId,

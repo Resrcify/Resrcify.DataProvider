@@ -1,0 +1,88 @@
+{
+  "Abilities": [
+    {
+      "Id": "datacron_alignment_generic_036",
+      "NameKey": "DATACRON_ALIGNMENT_GENERIC_036_NAME",
+      "DescKey": "DATACRON_ALIGNMENT_GENERIC_036_DESC",
+      "Icon": "tex.datacronui_affix_darkside"
+    }
+  ],
+  "Categories": [
+    {
+      "Id": "alignment_dark",
+      "DescKey": "CATEGORY_ALIGNMENT_DARK_NAME",
+      "Visible": true
+    }
+  ],
+  "BattleTargetingRules": [
+    {
+      "Id": "target_datacron_darkside",
+      "Category": {
+        "Exclude": false,
+        "CategoryIds": [],
+        "Categories": [
+          {
+            "Exclude": false,
+            "CategoryId": "alignment_dark"
+          }
+        ]
+      }
+    }
+  ],
+  "DatacronSets": [
+    {
+      "Id": 36,
+      "DisplayName": "DATACRON_SET_36_NAME",
+      "ExpirationTimeMs": 1800432000000,
+      "Icon": "tex.datacron_d",
+      "DetailPrefab": "prefab.datacron_c",
+      "Tiers": [],
+      "FocusedTiers": [],
+      "SetMaterials": []
+    }
+  ],
+  "DatacronTemplates": [
+    {
+      "Id": "datacron_set_36_base",
+      "SetId": 36,
+      "InitialTiers": 0,
+      "ReferenceTemplateId": "",
+      "MaxRerolls": 0,
+      "AllowReroll": true,
+      "FixedTags": [],
+      "Focused": false,
+      "Tiers": [
+        {
+          "Id": 1,
+          "RequiredUnitTier": 2,
+          "RequiredRelicTier": 1,
+          "AffixTemplateSetIds": [ "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_001" ],
+          "InitialAffixTemplateSetIds": []
+        },
+        {
+          "Id": 3,
+          "RequiredUnitTier": 2,
+          "RequiredRelicTier": 1,
+          "AffixTemplateSetIds": [ "ability_set_darkside_generic_036" ],
+          "InitialAffixTemplateSetIds": []
+        }
+      ]
+    }
+  ],
+  "DatacronAffixTemplateSets": [
+    {
+      "Id": "stat_set_defper_maxshield_maxhealth_offense_armorpen_criticaldamage_resistance_001",
+      "Affixs": [
+        { "AbilityId": "", "TargetRule": "", "StatType": 49, "StatValueMin": 25000000, "StatValueMax": 50000000, "MinTier": 0, "MaxTier": 0, "ScopeIcon": "icon_stat_armor", "Tags": [] },
+        { "AbilityId": "", "TargetRule": "", "StatType": 56, "StatValueMin": 5000000, "StatValueMax": 10000000, "MinTier": 0, "MaxTier": 0, "ScopeIcon": "icon_stat_protection", "Tags": [] },
+        { "AbilityId": "", "TargetRule": "", "StatType": 55, "StatValueMin": 5000000, "StatValueMax": 10000000, "MinTier": 0, "MaxTier": 0, "ScopeIcon": "icon_stat_maxhealth", "Tags": [] }
+      ]
+    },
+    {
+      "Id": "ability_set_darkside_generic_036",
+      "Affixs": [
+        { "AbilityId": "datacron_alignment_generic_036", "TargetRule": "target_datacron_darkside", "StatType": 1, "StatValueMin": 0, "StatValueMax": 0, "MinTier": 0, "MaxTier": 0, "ScopeIcon": "tex.datacronui_affix_darkside", "Tags": [ "darkside" ] }
+      ]
+    }
+  ]
+}
